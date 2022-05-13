@@ -37,39 +37,41 @@ const UserNav = () => {
   return (
     <TabNav.Navigator
       initialRouteName="HOME"
-    
       screenOptions={({ route }) => ({
-      
-        tabBarIcon: ({ focused, color, size }) => {
+        tabBarIcon: ({ focused, color }) => {
           let iconName;
           if (route.name === "HOME") {
             iconName = focused
-              ? "ios-information-circle"
-              : "ios-information-circle-outline";
+              ? "ios-home-outline":"ios-home"
+              ;
           } else if (route.name === "PROFILE") {
-            iconName = focused ? "heart" : "ios-list";
+            iconName = focused ? "ios-person-circle-outline":"ios-person-circle" ;
+          }else if(route.name === "LOG-OUT"){
+            iconName = focused ? "md-log-in-outline":"md-log-in";
           }
-          return <Ionicons name={iconName} size={size} color={color} />;
+          return <Ionicons name={iconName} size={25} color={color} />;
         },
         //EDICION DE LA BARRA DE MENU
-        tabBarActiveTintColor: "tomato",
-        tabBarActiveBackgroundColor:"tomato",
-        tabBarInactiveBackgroundColor: "red",
-        tabBarInactiveTintColor: "gray",
+        tabBarActiveTintColor: "#6DC0D5",
+        tabBarActiveBackgroundColor: "#282828",
+        tabBarInactiveBackgroundColor: "#3D3D3D",
+        tabBarInactiveTintColor: "white",
+        tabBarStyle: {height:50},
+        tabBarShowLabel: false,
       })}
     >
-      <TabNav.Screen
-        name="HOME"
-        component={HomeScreen}
-        options={{ headerShown: false }}
-      ></TabNav.Screen>
       <TabNav.Screen
         name="PROFILE"
         component={Profile}
         options={{ headerShown: false }}
       ></TabNav.Screen>
       <TabNav.Screen
-        name="LOGOF"
+        name="HOME"
+        component={HomeScreen}
+        options={{ headerShown: false }}
+      ></TabNav.Screen>
+      <TabNav.Screen
+        name="LOG-OUT"
         component={LogOut}
         options={{ headerShown: false }}
       ></TabNav.Screen>
