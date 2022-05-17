@@ -6,8 +6,12 @@ import { useTime } from "react-timer-hook";
 // NAVIGATIONS IMPORT
 export const HomeScreen = () => {
   // ELEMENTOS PARA EL TIEMPO REAL
-  const { seconds, minutes, hours, ampm } = useTime({ format: "12-hour" });
+  const { seconds, minutes, hours, ampm } = useTime({ format: "24-hour" });
   const [timeWork, setTimeWork] = React.useState(7);
+  // PERSONAL DATA
+  const [name, setName] = React.useState("Christopher");
+  const [lastName, setLastName] = React.useState("Vera");
+  //SAVE TIME
   const [activePerson, setActivePerson] = React.useState("NOTWORKING");
   const [finishTime, setFinishTime] = React.useState();
   const [breakTime, setBreakTime] = React.useState();
@@ -57,15 +61,14 @@ export const HomeScreen = () => {
     setBreakTime(DateTimer);
     setStartTime(DateTimer);
     setFinishTime(DateTimer);
-  },[DateTimer = newHours + ":" + newMinutes + ":" + newSeconds]);
+  }, [(DateTimer = newHours + ":" + newMinutes + ":" + newSeconds)]);
   // VALIDACION DEL TEXTO
   // TIEMPO EXTRA //
   let TextFinished = () => {
     return (
       <>
         <Text style={[styles.textTimer, { color: Newcolor }]}>
-          {newHours} : {newMinutes} : {newSeconds} 
-          
+          {newHours} : {newMinutes} : {newSeconds}
         </Text>
         <View style={[styles.containerText]}>
           <Text style={styles.informationText}>You finished your day!</Text>
@@ -177,7 +180,7 @@ export const HomeScreen = () => {
             style={styles.styleButtonWorking}
             labelStyle={styles.textButton}
             onPress={() => {
-            console.log("SAVE BREAK",breakTime)
+              console.log("SAVE BREAK", breakTime);
               setActivePerson("BREAK");
             }}
           >
@@ -190,7 +193,7 @@ export const HomeScreen = () => {
             style={styles.styleButtonWorking}
             labelStyle={styles.textButton}
             onPress={() => {
-                console.log("SAVE FINISH WORK",finishTime)
+              console.log("SAVE FINISH WORK", finishTime);
               setActivePerson("FINISHED");
             }}
           >
@@ -214,16 +217,83 @@ export const HomeScreen = () => {
   // RETURN PARA MOSTRAR LA HORA:MINUTOS:SEGUNDOS
   return (
     <View style={styles.container}>
-      <TextValidator />
+      {/* <TextValidator /> */}
+      <View style={[styles.container2, { shadowColor: Newcolor }]}>
+        <View style={[styles.incontainer2, { shadowColor: Newcolor }]}>
+          <Text style={styles.textinContainer2}>WELCOME BACK!</Text>
+          <Text style={styles.text2inContainer2}>
+            {name} {lastName}
+          </Text>
+        </View>
+      </View>
+      <View style={[styles.container3, { shadowColor: Newcolor }]}>
+        <TextValidator/>
+      </View>
     </View>
   );
 };
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    flexDirection: "column",
+  },
+  container2: {
+    flex: 2,
+    position: "relative",
+    backgroundColor: "#3D3D3D",
+    borderBottomEndRadius: 20,
+    borderBottomStartRadius: 20,
+    shadowOffset: {
+      width: 0,
+      height: 15,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 16.0,
+    elevation: 24,
+  },
+  incontainer2: {
+    flex: 1,
+    backgroundColor: "white",
+    position: "relative",
+    top: 50,
+    left: 20,
+    width: 355,
+    maxHeight: 100,
+    borderRadius: 20,
+    shadowOffset: {
+      width: 0,
+      height: 50,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 16.0,
+    elevation: 24,
+  },
+  textinContainer2: {
+    fontWeight: "bold",
+    fontSize: 12,
+    paddingLeft: 30,
+    paddingTop: 25,
+  },
+  text2inContainer2: {
+    fontSize: 15,
+    paddingLeft: 20,
+  },
+  container3: {
+    flex: 2,
+    position: "relative",
+    bottom: 150,
+    left: 25,
+    width: 337,
+    height: 326,
+    backgroundColor: "white",
+    borderRadius: 20,
+    shadowOffset: {
+      width: 0,
+      height: 15,
+    },
+    shadowOpacity: 1.0,
+    shadowRadius: 16.0,
+    elevation: 24,
   },
   buttonContainer: {
     flexDirection: "row",
@@ -233,6 +303,10 @@ const styles = StyleSheet.create({
   },
   textTimer: {
     fontSize: 60,
+    textAlign: "center",
+    textShadowColor: 'rgba(0,0,0,0.25) 100%',
+    textShadowOffset: { width: 0, height: 3, },
+    textShadowRadius: 1,
   },
   textButton: {
     color: "white",
@@ -243,7 +317,10 @@ const styles = StyleSheet.create({
     color: "#3D3D3D",
     fontSize: 18,
     textAlign: "center",
+    
   },
+ 
+
   styleButton: {
     marginTop: 100,
     width: 220,
