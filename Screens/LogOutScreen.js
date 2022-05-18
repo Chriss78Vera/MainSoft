@@ -4,7 +4,7 @@ import { View,Text } from 'react-native';
 export const LogOut= () =>{
     return(
         <View>
-            <Text> Cerra Session</Text>
+            <Text> AQUI PRODRIA CERRAR SESSION SI LA LIZ UBIESE ECHO EL LOGIN</Text>
         </View>
     )
 }

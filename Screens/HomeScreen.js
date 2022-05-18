@@ -96,7 +96,7 @@ export const HomeScreen = () => {
     return (
       <>
         <Text style={[styles.textTimer, { color: Newcolor }]}>
-          {newHours} : {newMinutes} : {newSeconds}
+          {newHours} : {newMinutes} : {newSeconds} ! {ampm }
         </Text>
         <View style={[styles.containerText]}>
           <Text style={styles.informationText}>Break Time</Text>
