@@ -7,10 +7,10 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 // SCREENS //
-import { LoginScreen } from "../MainSoft_Proyect/Screens/LoginScreen";
-import { HomeScreen } from "../MainSoft_Proyect/Screens/HomeScreen";
-import { Profile } from "./Screens/ProfileScreen";
-import { LogOut } from "./Screens/LogOutScreen";
+import { LoginScreen } from "../MainSoftProyect/Screens/LoginScreen";
+import { HomeScreen } from "../MainSoftProyect/Screens/HomeScreen";
+import { Profile } from "../MainSoftProyect/Screens/ProfileScreen";
+import { LogOut } from "../MainSoftProyect/Screens/LogOutScreen";
 //CONSTANTES USADAS //
 const NativeStackNav = createNativeStackNavigator();
 const TabNav = createBottomTabNavigator();
