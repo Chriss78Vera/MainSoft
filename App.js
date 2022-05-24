@@ -7,10 +7,11 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 // SCREENS //
-import { LoginScreen } from "../MainSoftProyect/Screens/LoginScreen";
-import { HomeScreen } from "../MainSoftProyect/Screens/HomeScreen";
-import { Profile } from "../MainSoftProyect/Screens/ProfileScreen";
-import { LogOut } from "../MainSoftProyect/Screens/LogOutScreen";
+import { LoginScreenMail } from "./Screens/LoginScreenEmail";
+import { LoginScreenPassword } from "./Screens/LoginScreenPassword";
+import { HomeScreen } from "../MainSoft_Proyect/Screens/HomeScreen";
+import { Profile } from "../MainSoft_Proyect/Screens/ProfileScreen";
+import { LogOut } from "../MainSoft_Proyect/Screens/LogOutScreen";
 //CONSTANTES USADAS //
 const NativeStackNav = createNativeStackNavigator();
 const TabNav = createBottomTabNavigator();
@@ -21,7 +22,12 @@ const LoginNav = () => {
     <NativeStackNav.Navigator initialRouteName="LOGINS">
       <NativeStackNav.Screen
         name="LOGINS"
-        component={LoginScreen}
+        component={LoginScreenMail}
+        options={{ headerShown: false }}
+      ></NativeStackNav.Screen>
+      <NativeStackNav.Screen
+        name="LOGINPASSWORD"
+        component={LoginScreenPassword}
         options={{ headerShown: false }}
       ></NativeStackNav.Screen>
       <NativeStackNav.Screen
