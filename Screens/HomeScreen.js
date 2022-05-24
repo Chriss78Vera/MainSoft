@@ -5,6 +5,8 @@ import { Button } from "react-native-paper";
 import { useTime } from "react-timer-hook";
 // NAVIGATIONS IMPORT
 export const HomeScreen = () => {
+  //================================//
+  //ESTILIZACION//
   // ELEMENTOS PARA EL TIEMPO REAL
   const { seconds, minutes, hours } = useTime({ format: "24-hour" });
   const [timeWork, setTimeWork] = React.useState(7);
