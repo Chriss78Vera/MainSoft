@@ -74,11 +74,11 @@ export const HomeScreen = () => {
     return (
       <>
         {newHours <= 12 ? (
-          <Image source={require("../Resources/Images/sun.png")} />
+          <Image source={require("../../Resources/Images/sun.png")} />
         ) : newHours <= 18 ? (
-          <Image source={require("../Resources/Images/afternoon.png")} />
+          <Image source={require("../../Resources/Images/afternoon.png")} />
         ) : (
-          <Image source={require("../Resources/Images/night.png")} />
+          <Image source={require("../../Resources/Images/night.png")} />
         )}
       </>
     );
@@ -274,13 +274,13 @@ export const HomeScreen = () => {
           </Text>
         </View>
         <View style={styles.containerCalendar}>
-          <Text style={[styles.textCalendar, { color: "white" }]}>Mon</Text>
-          <Text style={[styles.textCalendar, { color: "white" }]}>Tue</Text>
-          <Text style={[styles.textCalendar, { color: "white" }]}>Wed</Text>
-          <Text style={[styles.textCalendar, { color: "white" }]}>Thu</Text>
-          <Text style={[styles.textCalendar, { color: "white" }]}>Fri</Text>
-          <Text style={[styles.textCalendar, { color: "white" }]}>Sat</Text>
-          <Text style={[styles.textCalendar, { color: "white" }]}>Sun</Text>
+          <Text style={[styles.textCalendar, { color: "white" }]}>LUN</Text>
+          <Text style={[styles.textCalendar, { color: "white" }]}>MAR</Text>
+          <Text style={[styles.textCalendar, { color: "white" }]}>MIR</Text>
+          <Text style={[styles.textCalendar, { color: "white" }]}>JUE</Text>
+          <Text style={[styles.textCalendar, { color: "white" }]}>VIE</Text>
+          <Text style={[styles.textCalendar, { color: "white" }]}>SAB</Text>
+          <Text style={[styles.textCalendar, { color: "white" }]}>DOM</Text>
         </View>
         <View style={styles.containerTextBlackContainer}>
           <Text style={styles.textBlackContainer}>REGISTRA TU HORA!</Text>

@@ -7,11 +7,12 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 // SCREENS //
-import { LoginScreenMail } from "./Screens/LoginScreenEmail";
-import { LoginScreenPassword } from "./Screens/LoginScreenPassword";
-import { HomeScreen } from "../MainSoft_Proyect/Screens/HomeScreen";
-import { Profile } from "../MainSoft_Proyect/Screens/ProfileScreen";
-import { LogOut } from "../MainSoft_Proyect/Screens/LogOutScreen";
+import { LoginScreenMail } from "./app/Screens/LoginScreenEmail";
+import { LoginScreenPassword } from "./app/Screens/LoginScreenPassword";
+import { HomeScreen } from "./app/Screens/HomeScreen";
+import { Profile } from "./app/Screens/ProfileScreen";
+import { LogOut } from "./app/Screens/LogOutScreen";
+import { loadFirebaseConfiguration } from "./app/Services/FireBaseConfig";
 //CONSTANTES USADAS //
 const NativeStackNav = createNativeStackNavigator();
 const TabNav = createBottomTabNavigator();
@@ -85,6 +86,8 @@ const UserNav = () => {
   );
 };
 export default App = () => {
+  // INICIALIZACION DE LA BASE DE DATOS //
+  loadFirebaseConfiguration();
   return (
     <NavigationContainer>
       <LoginNav />

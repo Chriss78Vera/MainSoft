@@ -1,15 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import React from "react";
-import {
-  Dimensions,
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import { Button, TextInput } from "react-native-paper";
+import { ModalInfoError } from "../Components/Modals";
 export const LoginScreenPassword = ({ route }) => {
+  // AUTH CON FIREBASE
+  const auth = getAuth();
   // REACT NAVIGATION
   let UserEmail = null;
   UserEmail = route.params.UserEmail;
@@ -23,7 +20,7 @@ export const LoginScreenPassword = ({ route }) => {
     <View style={styles.container}>
       <View style={styles.containerTop}>
         <View style={styles.containerLogo}>
-          <Image source={require("../Resources/Images/logo.png")} />
+          <Image source={require("../../Resources/Images/logo.png")} />
           <Text style={styles.textLogo}>BIENVENIDO A MAINSOFT!</Text>
         </View>
       </View>
@@ -34,7 +31,7 @@ export const LoginScreenPassword = ({ route }) => {
           <TextInput
             label="Contraseña"
             mode="outlined"
-            secureTextEntry={change}
+            secureTextEntry={!change}
             activeOutlineColor="white"
             left={<TextInput.Icon name="lock" color="#6DC0D5" />}
             onChangeText={(password) => setPassword(password)}
@@ -51,7 +48,7 @@ export const LoginScreenPassword = ({ route }) => {
               setChange(!change);
             }}
           >
-            MOSTRAR CONTRASEÑA
+            {change == true ? "OCULTAR CONTRASEÑA" : "MOSTRAR CONTRASEÑA"}
           </Button>
         </View>
         <Button
@@ -60,16 +57,20 @@ export const LoginScreenPassword = ({ route }) => {
           style={styles.buttonStyle}
           labelStyle={styles.buttonTextStyle}
           onPress={() => {
-            console.log("USER: ", emailUser);
-            console.log("PASSWORD: ", password);
-            navigation.navigate("TIMER");
+            signInWithEmailAndPassword(auth, emailUser, password)
+              .then((userCredential) => {
+                navigation.navigate("TIMER")
+              })
+              .catch((error) => {
+                setActive(true);
+              });
           }}
         >
           INICIAR SESSION
         </Button>
         <Button
           icon={(20, "arrow-left")}
-          labelStyle={styles.buttonSubtittleStyle}
+          labelStyle={[styles.buttonSubtittleStyle, { color: "white" }]}
           onPress={() => {
             navigation.goBack();
           }}
@@ -77,6 +78,12 @@ export const LoginScreenPassword = ({ route }) => {
           VOLVER
         </Button>
       </View>
+      <ModalInfoError
+        modalVisible={active}
+        setModalVisible={setActive}
+        message={"CREDENCIALES ERRONEAS"}
+        description={"REVISA LAS CREDENCIALES DE ACCESO"}
+      ></ModalInfoError>
     </View>
   );
 };
@@ -121,18 +128,12 @@ const styles = StyleSheet.create({
   },
   textLogo: {
     marginTop: 45,
-    textShadowColor: "rgba(0,0,0,0.25) 100%",
-    textShadowOffset: { width: 0, height: 2.5 },
-    textShadowRadius: 1,
     fontSize: 25,
     fontWeight: "bold",
     color: "#3D3D3D",
   },
   textLogoBottom: {
     marginTop: 45,
-    textShadowColor: "rgba(255,255,255,0.5583275546546744) 25%",
-    textShadowOffset: { width: 0, height: 2.5 },
-    textShadowRadius: 1,
     fontSize: 20,
     textAlign: "center",
     fontWeight: "bold",
@@ -140,9 +141,6 @@ const styles = StyleSheet.create({
   },
   textLogoBottom2: {
     marginBottom: 15,
-    textShadowColor: "rgba(255,255,255,0.5583275546546744) 25%",
-    textShadowOffset: { width: 0, height: 2.5 },
-    textShadowRadius: 1,
     fontSize: 20,
     textAlign: "center",
     fontWeight: "bold",
@@ -160,7 +158,6 @@ const styles = StyleSheet.create({
   },
   buttonSubtittleStyle: {
     fontWeight: "bold",
-    color: "white",
     fontSize: 15,
   },
 });

@@ -2,10 +2,10 @@ import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import { Button, TextInput } from "react-native-paper";
+import { ModalInfoError } from "../Components/Modals";
 export const LoginScreenMail = () => {
   // VARIABLES USADAS
   const [emailUser, setEmailUser] = React.useState("");
-  const [password, setPassword] = React.useState();
   const [active, setActive] = React.useState(false);
   // REACT NAVIGATION
   const navigation = useNavigation();
@@ -19,12 +19,14 @@ export const LoginScreenMail = () => {
     <View style={styles.container}>
       <View style={styles.containerTop}>
         <View style={styles.containerLogo}>
-          <Image source={require("../Resources/Images/logo.png")} />
+          <Image source={require("../../Resources/Images/logo.png")} />
           <Text style={styles.textLogo}>BIENVENIDO A MAINSOFT!</Text>
         </View>
       </View>
       <View style={styles.containerBottom}>
-        <Text style={styles.textLogoBottom}>INGRESA TU CORREO ELECTRONICO!</Text>
+        <Text style={styles.textLogoBottom}>
+          INGRESA TU CORREO ELECTRONICO!
+        </Text>
         <View style={styles.textInput}>
           <TextInput
             label="Email"
@@ -45,20 +47,26 @@ export const LoginScreenMail = () => {
           labelStyle={styles.buttonTextStyle}
           onPress={() => {
             if (emailUser == null) {
-              console.log("INGRESA UN CORREO");
+              setActive(true);
             } else {
               let validation = validateEmail(emailUser);
               if (validation) {
-                console.log("Email", emailUser);
-                navigation.navigate("LOGINPASSWORD",{UserEmail:emailUser})
+                navigation.navigate("LOGINPASSWORD", { UserEmail: emailUser });
               } else {
-                console.log("Email no sirve");
+                setActive(true);
               }
             }
           }}
         >
           CONTINUAR
         </Button>
+      
+        <ModalInfoError
+          modalVisible={active}
+          setModalVisible={setActive}
+          message={"EMAIL ERRONEO"}
+          description={"VUELVE A INGRESAR"}
+        ></ModalInfoError>
       </View>
     </View>
   );
@@ -94,6 +102,7 @@ const styles = StyleSheet.create({
     width: 300,
     height: 50,
     marginBottom: 20,
+    marginTop: 20,
   },
   textButton: {
     color: "white",
@@ -113,9 +122,6 @@ const styles = StyleSheet.create({
   },
   textLogoBottom: {
     marginTop: 45,
-    textShadowColor: "rgba(255,255,255,0.5583275546546744) 25%",
-    textShadowOffset: { width: 0, height: 2.5 },
-    textShadowRadius: 1,
     fontSize: 20,
     textAlign: "center",
     fontWeight: "bold",
