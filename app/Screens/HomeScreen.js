@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Dimensions, Image } from "react-native";
 import { Button } from "react-native-paper";
 // IMPORT LIBRERY REACT NATIVE TIMER HOOK
 import { useTime } from "react-timer-hook";
+import { CalendarDay } from "../Components/Calendar";
 // NAVIGATIONS IMPORT
 export const HomeScreen = () => {
   //================================//
@@ -39,7 +40,7 @@ export const HomeScreen = () => {
   } else if (activePerson == "BREAK") {
     Newcolor = "#ED6A5E";
   } else if (activePerson == "FINISHED") {
-    Newcolor = "#3D3D3D";
+    Newcolor = "#ECD47F";
   }
   // VALIDACION DE LA HORA
   if (hours < 10) {
@@ -59,6 +60,7 @@ export const HomeScreen = () => {
   } else {
     newSeconds = seconds;
   }
+  // ----------------------------------------------------------------------- //
   // ----------------------------------------------------------------------- //
   // TIEMPO GUARDO
   let DateTimer;
@@ -273,14 +275,9 @@ export const HomeScreen = () => {
             {name} {lastName}
           </Text>
         </View>
+       
         <View style={styles.containerCalendar}>
-          <Text style={[styles.textCalendar, { color: "white" }]}>LUN</Text>
-          <Text style={[styles.textCalendar, { color: "white" }]}>MAR</Text>
-          <Text style={[styles.textCalendar, { color: "white" }]}>MIR</Text>
-          <Text style={[styles.textCalendar, { color: "white" }]}>JUE</Text>
-          <Text style={[styles.textCalendar, { color: "white" }]}>VIE</Text>
-          <Text style={[styles.textCalendar, { color: "white" }]}>SAB</Text>
-          <Text style={[styles.textCalendar, { color: "white" }]}>DOM</Text>
+            <CalendarDay colors={Newcolor}/>
         </View>
         <View style={styles.containerTextBlackContainer}>
           <Text style={styles.textBlackContainer}>REGISTRA TU HORA!</Text>

@@ -9,6 +9,5 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
-app/Services/FireBaseConfig.js/
 # macOS
 .DS_Store
