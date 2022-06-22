@@ -11,8 +11,10 @@ import { LoginScreenMail } from "./app/Screens/LoginScreenEmail";
 import { LoginScreenPassword } from "./app/Screens/LoginScreenPassword";
 import { HomeScreen } from "./app/Screens/HomeScreen";
 import { Profile } from "./app/Screens/ProfileScreen";
-import { LogOut } from "./app/Screens/LogOutScreen";
+import { TimerData } from "./app/Screens/TimerData";
 import { loadFirebaseConfiguration } from "./app/Services/FireBaseConfig";
+import { PersonalData } from "./app/Screens/Profile/PersonalData";
+import { DocumentsData } from "./app/Screens/Profile/DocumentsData";
 //CONSTANTES USADAS //
 const NativeStackNav = createNativeStackNavigator();
 const TabNav = createBottomTabNavigator();
@@ -39,7 +41,38 @@ const LoginNav = () => {
     </NativeStackNav.Navigator>
   );
 };
-
+const DataPersonal = () => {
+  return (
+    <NativeStackNav.Navigator initialRouteName="DATAPERSONAL">
+      <NativeStackNav.Screen
+        name="DATAPERSONAL"
+        component={Profile}
+        options={{ headerShown: false }}
+      ></NativeStackNav.Screen>
+      <NativeStackNav.Screen
+        name="SHOWDATA"
+        component={PersonalData}
+        options={{ headerShown: false }}
+      ></NativeStackNav.Screen>
+      <NativeStackNav.Screen
+        name="DOCUMENTS"
+        component={DocumentsData}
+        options={{ headerShown: false }}
+      ></NativeStackNav.Screen>
+    </NativeStackNav.Navigator>
+  );
+};
+const TimeData = () => {
+  return (
+    <NativeStackNav.Navigator initialRouteName="DATATIME">
+      <NativeStackNav.Screen
+        name="DATATIME"
+        component={TimerData}
+        options={{ headerShown: false }}
+      ></NativeStackNav.Screen>
+    </NativeStackNav.Navigator>
+  );
+};
 const UserNav = () => {
   return (
     <TabNav.Navigator
@@ -48,13 +81,13 @@ const UserNav = () => {
         tabBarIcon: ({ focused, color }) => {
           let iconName;
           if (route.name === "HOME") {
-            iconName = focused
-              ? "ios-home-outline":"ios-home"
-              ;
+            iconName = focused ? "ios-home-outline" : "ios-home";
           } else if (route.name === "PROFILE") {
-            iconName = focused ? "ios-person-circle-outline":"ios-person-circle" ;
-          }else if(route.name === "LOG-OUT"){
-            iconName = focused ? "md-log-in-outline":"md-log-in";
+            iconName = focused
+              ? "ios-person-circle-outline"
+              : "ios-person-circle";
+          } else if (route.name === "DATATIMER") {
+            iconName = focused ? "calendar-outline" : "calendar-sharp";
           }
           return <Ionicons name={iconName} size={25} color={color} />;
         },
@@ -63,13 +96,13 @@ const UserNav = () => {
         tabBarActiveBackgroundColor: "#282828",
         tabBarInactiveBackgroundColor: "#3D3D3D",
         tabBarInactiveTintColor: "white",
-        tabBarStyle: {height:50},
+        tabBarStyle: { height: 50 },
         tabBarShowLabel: false,
       })}
     >
       <TabNav.Screen
         name="PROFILE"
-        component={Profile}
+        component={DataPersonal}
         options={{ headerShown: false }}
       ></TabNav.Screen>
       <TabNav.Screen
@@ -78,8 +111,8 @@ const UserNav = () => {
         options={{ headerShown: false }}
       ></TabNav.Screen>
       <TabNav.Screen
-        name="LOG-OUT"
-        component={LogOut}
+        name="DATATIMER"
+        component={TimeData}
         options={{ headerShown: false }}
       ></TabNav.Screen>
     </TabNav.Navigator>

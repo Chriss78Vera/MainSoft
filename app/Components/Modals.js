@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
   },
   textMessage: {
     fontSize: 18,
+    textAlign: "center",
     color: "#979797",
   },
   viewFlex: {

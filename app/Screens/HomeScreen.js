@@ -4,18 +4,23 @@ import { Button } from "react-native-paper";
 // IMPORT LIBRERY REACT NATIVE TIMER HOOK
 import { useTime } from "react-timer-hook";
 import { CalendarDay } from "../Components/Calendar";
+import { ModalReload } from "../Components/Modal";
+import { MenuPicture, ProfilePicture } from "../Components/ProfilePicture";
+import { updateStateWork } from "../Services/TimerRegister/TimerUser";
+import { getPersonalRol } from "../Services/UserInformation/InfoUser";
 // NAVIGATIONS IMPORT
 export const HomeScreen = () => {
   //================================//
+  const [stateModal, setStateModal] = React.useState(false);
   //ESTILIZACION//
   // ELEMENTOS PARA EL TIEMPO REAL
   const { seconds, minutes, hours } = useTime({ format: "24-hour" });
   const [timeWork, setTimeWork] = React.useState(7);
   // PERSONAL DATA
-  const [name, setName] = React.useState("Christopher");
-  const [lastName, setLastName] = React.useState("Vera");
+  const [name, setName] = React.useState(global.name);
+  const [lastName, setLastName] = React.useState(global.lastName);
   //SAVE TIME
-  const [activePerson, setActivePerson] = React.useState("NOTWORKING");
+  const [activePerson, setActivePerson] = React.useState(global.workState);
   const [finishTime, setFinishTime] = React.useState();
   const [breakTime, setBreakTime] = React.useState();
   const [startTime, setStartTime] = React.useState();
@@ -70,6 +75,7 @@ export const HomeScreen = () => {
     setStartTime(DateTimer);
     setFinishTime(DateTimer);
   }, [(DateTimer = newHours + ":" + newMinutes + ":" + newSeconds)]);
+
   // ----------------------------------------------------------------------- //
   // VALIDACION DEL AM/PM ICON
   let IconDays = () => {
@@ -90,6 +96,7 @@ export const HomeScreen = () => {
   let TextNotWorking = () => {
     return (
       <>
+       
         <Text style={[styles.textTimer, { color: Newcolor }]}>
           {newHours} : {newMinutes} : {newSeconds}
         </Text>
@@ -189,9 +196,12 @@ export const HomeScreen = () => {
           color={Newcolor}
           style={styles.buttonStyle}
           labelStyle={styles.buttonTextStyle}
-          onPress={() => {
+          onPress={async() => {
             console.log("INICIO DEL TRABAJO", startTime);
             setActivePerson("WORKING");
+            setStateModal(true)
+            await updateStateWork("WORKING")
+            setStateModal(false)
           }}
         >
           EMPEZAR A TRABAJAR
@@ -205,9 +215,12 @@ export const HomeScreen = () => {
             color={"#ED6A5E"}
             style={styles.buttonStyle}
             labelStyle={styles.buttonTextStyle}
-            onPress={() => {
+            onPress={async() => {
               console.log("RECREO", breakTime);
               setActivePerson("BREAK");
+              setStateModal(true)
+              await updateStateWork("BREAK")
+              setStateModal(false)
             }}
           >
             IR AL RECESO
@@ -217,9 +230,12 @@ export const HomeScreen = () => {
             color={"#6DC0D5"}
             style={styles.buttonStyleWorking}
             labelStyle={styles.buttonTextStyle}
-            onPress={() => {
+            onPress={async() => {
               console.log("TERMINAR LA JORNADA", finishTime);
               setActivePerson("FINISHED");
+              setStateModal(true)
+              await updateStateWork("NOTWORKING")
+              setStateModal(false)
             }}
           >
             FINALIZAR LA JORNADA
@@ -233,9 +249,12 @@ export const HomeScreen = () => {
           color={Newcolor}
           style={styles.buttonStyle}
           labelStyle={styles.buttonTextStyle}
-          onPress={() => {
+          onPress={async() => {
             console.log("DEVUELTA", startTime);
             setActivePerson("WORKING");
+            setStateModal(true)
+            await updateStateWork("WORKING")
+            setStateModal(false)
           }}
         >
           VOLVER A TRABAJAR
@@ -248,9 +267,12 @@ export const HomeScreen = () => {
           color={Newcolor}
           style={styles.buttonStyle}
           labelStyle={styles.buttonTextStyle}
-          onPress={() => {
+          onPress={async() => {
             console.log("HORAS EXTRA", extraTime);
             setActivePerson("WORKING");
+            setStateModal(true)
+            await updateStateWork("WORKING")
+            setStateModal(false)
           }}
         >
           TRABAJAR HORAS EXTRA!
@@ -270,14 +292,21 @@ export const HomeScreen = () => {
             { shadowColor: Newcolor, borderColor: Newcolor },
           ]}
         >
-          <Text style={styles.textinContainer2}>BIENVENIDO!</Text>
+          <View style={{width: Dimensions.get("window").width/2.3}}>
+          <Text style={styles.textinContainer2}>BIENVENIDO</Text>
+          
           <Text style={styles.text2inContainer2}>
             {name} {lastName}
           </Text>
+          </View>
+          <View>
+            <MenuPicture colorBackground={Newcolor}/>
+          </View>
+          <ModalReload modalVisible={stateModal} textModal={"Registrando el tiempo!"} />
         </View>
-       
+
         <View style={styles.containerCalendar}>
-            <CalendarDay colors={Newcolor}/>
+          <CalendarDay colors={Newcolor} />
         </View>
         <View style={styles.containerTextBlackContainer}>
           <Text style={styles.textBlackContainer}>REGISTRA TU HORA!</Text>
@@ -287,9 +316,11 @@ export const HomeScreen = () => {
         <TextValidator />
       </View>
       <View style={styles.containerButton}>
+        
         <ButtonValidator />
       </View>
     </View>
+    
   );
 };
 const styles = StyleSheet.create({
@@ -361,6 +392,7 @@ const styles = StyleSheet.create({
   // CONTAINER DEL NOMBRE //
   incontainer2: {
     flex: 1,
+    flexDirection: "row",
     backgroundColor: "white",
     position: "relative",
     width: Dimensions.get("window").width / 1.09,
@@ -379,13 +411,13 @@ const styles = StyleSheet.create({
   },
   textinContainer2: {
     fontWeight: "bold",
-    fontSize: 15,
-    paddingLeft: 40,
+    fontSize: 18,
+    textAlign: "center",
     paddingTop: 20,
   },
   text2inContainer2: {
     fontSize: 18,
-    paddingLeft: 20,
+    textAlign: "center",
   },
   // CALENDARIO //
   containerCalendar: {

@@ -6,8 +6,8 @@ export const CalendarDay = (colors) => {
   let nuevosColores = "white";
   const calcularDia = () => {
     const dias = [
-      "domingo",
-      "lunes",
+      "domingo", // 0
+      "lunes",  // 1
       "martes",
       "miércoles",
       "jueves",

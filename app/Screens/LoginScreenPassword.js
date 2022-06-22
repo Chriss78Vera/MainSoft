@@ -3,7 +3,9 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import React from "react";
 import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import { Button, TextInput } from "react-native-paper";
+import { ModalReload } from "../Components/Modal";
 import { ModalInfoError } from "../Components/Modals";
+import { getPersonalRol } from "../Services/UserInformation/InfoUser";
 export const LoginScreenPassword = ({ route }) => {
   // AUTH CON FIREBASE
   const auth = getAuth();
@@ -15,9 +17,13 @@ export const LoginScreenPassword = ({ route }) => {
   const [password, setPassword] = React.useState();
   const [active, setActive] = React.useState(false);
   const [change, setChange] = React.useState(false);
+  // PERSONAL INFORMATION
+  const [stateModal, setStateModal] = React.useState(false);
   const navigation = useNavigation();
+ 
   return (
-    <View style={styles.container}>
+    <View style={styles.container}>   
+
       <View style={styles.containerTop}>
         <View style={styles.containerLogo}>
           <Image source={require("../../Resources/Images/logo.png")} />
@@ -50,6 +56,7 @@ export const LoginScreenPassword = ({ route }) => {
           >
             {change == true ? "OCULTAR CONTRASEÑA" : "MOSTRAR CONTRASEÑA"}
           </Button>
+          <ModalReload modalVisible={stateModal} textModal={"Iniciando Sesion"} />
         </View>
         <Button
           mode="contained"
@@ -57,11 +64,17 @@ export const LoginScreenPassword = ({ route }) => {
           style={styles.buttonStyle}
           labelStyle={styles.buttonTextStyle}
           onPress={() => {
+            
             signInWithEmailAndPassword(auth, emailUser, password)
-              .then((userCredential) => {
-                navigation.navigate("TIMER")
+              .then(async (userCredential) => {
+                setStateModal(true)
+                global.email = emailUser;
+               await getPersonalRol();
+               navigation.navigate("TIMER");
+               setStateModal(false)
               })
               .catch((error) => {
+                console.log(error);
                 setActive(true);
               });
           }}
@@ -77,7 +90,7 @@ export const LoginScreenPassword = ({ route }) => {
         >
           VOLVER
         </Button>
-      </View>
+      </View >
       <ModalInfoError
         modalVisible={active}
         setModalVisible={setActive}

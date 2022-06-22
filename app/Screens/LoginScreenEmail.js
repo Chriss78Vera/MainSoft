@@ -52,6 +52,7 @@ export const LoginScreenMail = () => {
               let validation = validateEmail(emailUser);
               if (validation) {
                 navigation.navigate("LOGINPASSWORD", { UserEmail: emailUser });
+                console.log("EMAIL", emailUser);
               } else {
                 setActive(true);
               }
