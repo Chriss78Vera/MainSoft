@@ -1,6 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { View, Text, StyleSheet, Dimensions,TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Input } from "@rneui/themed";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -15,12 +21,11 @@ import {
 } from "expo-image-picker";
 import { ModalReload } from "../../Components/Modal";
 export const PersonalData = ({ route }) => {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   let InfoPersonal = [];
   InfoPersonal = route.params.InfoPersonal;
-
   const [user, setUser] = React.useState(InfoPersonal.mail);
-  const [firstName, setFirstName] = React.useState(InfoPersonal.firsName);
+  const [firstName, setFirstName] = React.useState(InfoPersonal.firstName);
   const [secondName, setSecondName] = React.useState(InfoPersonal.secondName);
   const [lastName, setLastName] = React.useState(InfoPersonal.lastName);
   const [motherLastName, setMotherLastName] = React.useState(
@@ -36,82 +41,82 @@ export const PersonalData = ({ route }) => {
   const [brithday, setBrithday] = React.useState("");
   const [state, setState] = React.useState("");
   const [gender, setGender] = React.useState("");
-// PERMISOS PARA INGRESAR AL ALMACENAMIENTO 
-const [imageUser, setImageUser] = React.useState(global.picture);
-const [data, setData] = React.useState([]);
+  // PERMISOS PARA INGRESAR AL ALMACENAMIENTO
+  const [imageUser, setImageUser] = React.useState(global.picture);
+  const [data, setData] = React.useState([]);
 
-const [status, requestPermission] = useMediaLibraryPermissions();
-const [stateModal, setStateModal] = React.useState(false);
-const chooseFile = async () => {
-  let options = {
-    mediaTypes: MediaTypeOptions.Images,
+  const [status, requestPermission] = useMediaLibraryPermissions();
+  const [stateModal, setStateModal] = React.useState(false);
+  const chooseFile = async () => {
+    let options = {
+      mediaTypes: MediaTypeOptions.Images,
+    };
+    let response = await launchImageLibraryAsync(options);
+    setImageUser(response.uri);
   };
-  let response = await launchImageLibraryAsync(options);
-  setImageUser(response.uri);
-};
-// ENLACE CON FIREBASE
-const uploadFile = async () => {
-  const blob = await new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.onload = function () {
-      resolve(xhr.response);
-    };
-    xhr.onerror = function (e) {
-      reject(new TypeError("Network request failed"));
-    };
-    xhr.responseType = "blob";
-    xhr.open("GET", imageUser, true);
-    xhr.send(null);
-  });
+  // ENLACE CON FIREBASE
+  const uploadFile = async () => {
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", imageUser, true);
+      xhr.send(null);
+    });
 
-  const storage = getStorage();
-  let nameFile = "Profile_" + firstName + lastName + "_" + Id;
+    const storage = getStorage();
+    let nameFile = "Profile_" + firstName + lastName + "_" + Id;
 
-  var d = new Date();
-  let mes = d.getMonth() + 1;
-  const fileStorage = ref(storage, "Profile/"+ nameFile + ".jpg");
-  const uploadResult = await uploadBytes(fileStorage, blob);
+    var d = new Date();
+    let mes = d.getMonth() + 1;
+    const fileStorage = ref(storage, "Profile/" + nameFile + ".jpg");
+    const uploadResult = await uploadBytes(fileStorage, blob);
 
-  blob.close();
+    blob.close();
 
-  const url = await getDownloadURL(fileStorage);
-  global.picture = url;
-  console.log(global.picture);
-};
+    const url = await getDownloadURL(fileStorage);
+    global.picture = url;
+    console.log(global.picture);
+  };
   // SUBIR DATOS A LA BASE //
-  const saveData= async()=>{
-    setStateModal(true)
-    if(imageUser==null || imageUser !=null){
+  const saveData = async () => {
+    setStateModal(true);
+    if (imageUser == null || imageUser != null) {
       await uploadFile();
-     }
-    let data={
-      firsName: firstName,
+    }
+    let data = {
+      firstName: firstName,
       secondName: secondName,
       lastName: lastName,
       secondLastName: motherLastName,
       mail: InfoPersonal.mail,
       phoneNumber: phoneNumber,
       phoneHouse: phoneHouse,
-      rol:InfoPersonal.rol,
+      rol: InfoPersonal.rol,
       imageUser: imageUser != null ? global.picture : null,
-      personalEmail:email,
-      id:Id,
-      address: address
-    }
+      personalEmail: email,
+      id: Id,
+      address: address,
+    };
     await savePersonalInformation(data);
-    setStateModal(false)
+    setStateModal(false);
     navigation.goBack();
-  }
+  };
   return (
     <View style={styles.container}>
       <View style={styles.containerTop}>
         <TouchableOpacity
-        onPress={() => {
-        chooseFile()
-        }}
-      >
-       <EditProfilePicture imageUser={imageUser}/>
-      </TouchableOpacity>
+          onPress={() => {
+            chooseFile();
+          }}
+        >
+          <EditProfilePicture imageUser={imageUser} />
+        </TouchableOpacity>
         <Text
           style={{
             fontSize: 18,
@@ -340,15 +345,12 @@ const uploadFile = async () => {
             </View>
           </ScrollView>
         </SafeAreaProvider>
-        <View style={{flexDirection: "row"}}>
+        <View style={{ flexDirection: "row" }}>
           <Button
             icon="archive"
             style={styles.buttonStyle}
             mode="contained"
-            onPress={() => 
-               
-              saveData()
-              }
+            onPress={() => saveData()}
           >
             Guardar
           </Button>
@@ -361,7 +363,10 @@ const uploadFile = async () => {
             Volver
           </Button>
         </View>
-        <ModalReload modalVisible={stateModal} textModal={"Guardando cambios"} />
+        <ModalReload
+          modalVisible={stateModal}
+          textModal={"Guardando cambios"}
+        />
       </View>
     </View>
   );
@@ -419,7 +424,7 @@ const styles = StyleSheet.create({
   buttonStyle: {
     borderRadius: 15,
     margin: 10,
-    width: Dimensions.get("window").width /2.5,
+    width: Dimensions.get("window").width / 2.5,
     backgroundColor: "#6DC0D5",
   },
 });

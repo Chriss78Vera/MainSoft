@@ -24,7 +24,7 @@ export const DocumentsData = ({ route }) => {
   let InfoPersonal = [];
   InfoPersonal = route.params.InfoPersonal;
 
-  const [firstName, setFirstName] = React.useState(InfoPersonal.firsName);
+  const [firstName, setFirstName] = React.useState(InfoPersonal.firstName);
   const [lastName, setLastName] = React.useState(InfoPersonal.lastName);
   const [Id, setId] = React.useState(InfoPersonal.id);
   // PERMISOS PARA INGRESAR AL ALMACENAMIENTO
@@ -84,7 +84,6 @@ export const DocumentsData = ({ route }) => {
             fontSize: 18,
             fontWeight: "bold",
             color: "white",
-            
           }}
         >
           {firstName} {lastName}

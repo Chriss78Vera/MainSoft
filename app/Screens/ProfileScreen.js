@@ -28,6 +28,8 @@ export const Profile = () => {
     signOut(auth)
       .then(() => {
         navigation.navigate("LOGINS");
+        global.email=null;
+        global.password=null;
       })
       .catch((error) => {
         // An error happened.

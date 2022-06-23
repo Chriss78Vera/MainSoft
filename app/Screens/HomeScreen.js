@@ -6,7 +6,10 @@ import { useTime } from "react-timer-hook";
 import { CalendarDay } from "../Components/Calendar";
 import { ModalReload } from "../Components/Modal";
 import { MenuPicture, ProfilePicture } from "../Components/ProfilePicture";
-import { updateStateWork } from "../Services/TimerRegister/TimerUser";
+import {
+  saveTimeUser,
+  updateStateWork,
+} from "../Services/TimerRegister/TimerUser";
 import { getPersonalRol } from "../Services/UserInformation/InfoUser";
 // NAVIGATIONS IMPORT
 export const HomeScreen = () => {
@@ -25,6 +28,7 @@ export const HomeScreen = () => {
   const [breakTime, setBreakTime] = React.useState();
   const [startTime, setStartTime] = React.useState();
   const [extraTime, setExtraTime] = React.useState();
+  const [activeBotton, setActiveBotton] = React.useState(false);
   // TEXT DEL BOTON //
   let newHours;
   let newSeconds;
@@ -96,7 +100,6 @@ export const HomeScreen = () => {
   let TextNotWorking = () => {
     return (
       <>
-       
         <Text style={[styles.textTimer, { color: Newcolor }]}>
           {newHours} : {newMinutes} : {newSeconds}
         </Text>
@@ -196,12 +199,13 @@ export const HomeScreen = () => {
           color={Newcolor}
           style={styles.buttonStyle}
           labelStyle={styles.buttonTextStyle}
-          onPress={async() => {
+          onPress={async () => {
             console.log("INICIO DEL TRABAJO", startTime);
             setActivePerson("WORKING");
-            setStateModal(true)
-            await updateStateWork("WORKING")
-            setStateModal(false)
+            setStateModal(true);
+            await updateStateWork("WORKING");
+            setStateModal(false);
+            saveTimeUser(startTime, "startWork");
           }}
         >
           EMPEZAR A TRABAJAR
@@ -214,13 +218,16 @@ export const HomeScreen = () => {
             mode="contained"
             color={"#ED6A5E"}
             style={styles.buttonStyle}
+            disabled={activeBotton}
             labelStyle={styles.buttonTextStyle}
-            onPress={async() => {
+            onPress={async () => {
+              setStateModal(true);
+              setActiveBotton(true);
               console.log("RECREO", breakTime);
               setActivePerson("BREAK");
-              setStateModal(true)
-              await updateStateWork("BREAK")
-              setStateModal(false)
+              saveTimeUser(startTime, "startBreak");
+              await updateStateWork("BREAK");
+              setStateModal(false);
             }}
           >
             IR AL RECESO
@@ -230,12 +237,14 @@ export const HomeScreen = () => {
             color={"#6DC0D5"}
             style={styles.buttonStyleWorking}
             labelStyle={styles.buttonTextStyle}
-            onPress={async() => {
+            onPress={async () => {
               console.log("TERMINAR LA JORNADA", finishTime);
               setActivePerson("FINISHED");
-              setStateModal(true)
-              await updateStateWork("NOTWORKING")
-              setStateModal(false)
+              setStateModal(true);
+              global.state = "FINISHED";
+              await updateStateWork("FINISHED");
+              saveTimeUser(startTime, "startFinish");
+              setStateModal(false);
             }}
           >
             FINALIZAR LA JORNADA
@@ -249,12 +258,13 @@ export const HomeScreen = () => {
           color={Newcolor}
           style={styles.buttonStyle}
           labelStyle={styles.buttonTextStyle}
-          onPress={async() => {
+          onPress={async () => {
             console.log("DEVUELTA", startTime);
             setActivePerson("WORKING");
-            setStateModal(true)
-            await updateStateWork("WORKING")
-            setStateModal(false)
+            setStateModal(true);
+            await updateStateWork("WORKING");
+            saveTimeUser(startTime, "startBack");
+            setStateModal(false);
           }}
         >
           VOLVER A TRABAJAR
@@ -267,12 +277,12 @@ export const HomeScreen = () => {
           color={Newcolor}
           style={styles.buttonStyle}
           labelStyle={styles.buttonTextStyle}
-          onPress={async() => {
+          onPress={async () => {
             console.log("HORAS EXTRA", extraTime);
             setActivePerson("WORKING");
-            setStateModal(true)
-            await updateStateWork("WORKING")
-            setStateModal(false)
+            setStateModal(true);
+            await updateStateWork("WORKING");
+            setStateModal(false);
           }}
         >
           TRABAJAR HORAS EXTRA!
@@ -292,17 +302,20 @@ export const HomeScreen = () => {
             { shadowColor: Newcolor, borderColor: Newcolor },
           ]}
         >
-          <View style={{width: Dimensions.get("window").width/2.3}}>
-          <Text style={styles.textinContainer2}>BIENVENIDO</Text>
-          
-          <Text style={styles.text2inContainer2}>
-            {name} {lastName}
-          </Text>
+          <View style={{ width: Dimensions.get("window").width / 2.3 }}>
+            <Text style={styles.textinContainer2}>BIENVENIDO</Text>
+
+            <Text style={styles.text2inContainer2}>
+              {name} {lastName}
+            </Text>
           </View>
           <View>
-            <MenuPicture colorBackground={Newcolor}/>
+            <MenuPicture colorBackground={Newcolor} />
           </View>
-          <ModalReload modalVisible={stateModal} textModal={"Registrando el tiempo!"} />
+          <ModalReload
+            modalVisible={stateModal}
+            textModal={"Registrando el tiempo!"}
+          />
         </View>
 
         <View style={styles.containerCalendar}>
@@ -316,11 +329,9 @@ export const HomeScreen = () => {
         <TextValidator />
       </View>
       <View style={styles.containerButton}>
-        
         <ButtonValidator />
       </View>
     </View>
-    
   );
 };
 const styles = StyleSheet.create({

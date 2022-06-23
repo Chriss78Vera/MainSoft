@@ -57,7 +57,7 @@ export const LoginScreenMail = () => {
                 setActive(true);
               }
             }
-          }}
+           }}
         >
           CONTINUAR
         </Button>

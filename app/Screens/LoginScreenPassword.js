@@ -5,6 +5,7 @@ import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { ModalReload } from "../Components/Modal";
 import { ModalInfoError } from "../Components/Modals";
+import { createTask } from "../Services/TimerRegister/TimerUser";
 import { getPersonalRol } from "../Services/UserInformation/InfoUser";
 export const LoginScreenPassword = ({ route }) => {
   // AUTH CON FIREBASE
@@ -20,10 +21,9 @@ export const LoginScreenPassword = ({ route }) => {
   // PERSONAL INFORMATION
   const [stateModal, setStateModal] = React.useState(false);
   const navigation = useNavigation();
- 
-  return (
-    <View style={styles.container}>   
 
+  return (
+    <View style={styles.container}>
       <View style={styles.containerTop}>
         <View style={styles.containerLogo}>
           <Image source={require("../../Resources/Images/logo.png")} />
@@ -56,7 +56,10 @@ export const LoginScreenPassword = ({ route }) => {
           >
             {change == true ? "OCULTAR CONTRASEÑA" : "MOSTRAR CONTRASEÑA"}
           </Button>
-          <ModalReload modalVisible={stateModal} textModal={"Iniciando Sesion"} />
+          <ModalReload
+            modalVisible={stateModal}
+            textModal={"Iniciando Sesion"}
+          />
         </View>
         <Button
           mode="contained"
@@ -64,14 +67,14 @@ export const LoginScreenPassword = ({ route }) => {
           style={styles.buttonStyle}
           labelStyle={styles.buttonTextStyle}
           onPress={() => {
-            
             signInWithEmailAndPassword(auth, emailUser, password)
               .then(async (userCredential) => {
-                setStateModal(true)
+                setStateModal(true);
                 global.email = emailUser;
-               await getPersonalRol();
-               navigation.navigate("TIMER");
-               setStateModal(false)
+                await getPersonalRol();
+                await createTask();
+                navigation.navigate("TIMER");
+                setStateModal(false);
               })
               .catch((error) => {
                 console.log(error);
@@ -90,7 +93,7 @@ export const LoginScreenPassword = ({ route }) => {
         >
           VOLVER
         </Button>
-      </View >
+      </View>
       <ModalInfoError
         modalVisible={active}
         setModalVisible={setActive}

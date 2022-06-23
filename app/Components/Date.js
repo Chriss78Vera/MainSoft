@@ -95,3 +95,32 @@ export const ShowMonth = (month) => {
   }
   return monthResult;
 };
+export const getMonth = (month) => {
+  let monthResult=""
+  if (month == 1) {
+    monthResult = "ENERO"
+  } else if (month == 2) {
+    monthResult = "FEBRERO";
+  } else if (month == 3) {
+    monthResult = "MARZO";
+  } else if (month == 4) {
+    monthResult = "ARBIL";
+  } else if (month== 5) {
+    monthResult = "MAYO";
+  } else if (month == 6) {
+    monthResult = "JUNIO"
+  } else if (month == 7) {
+    monthResult ="JULIO"
+  } else if (month == 8) {
+    monthResult = "AGOSTO"
+  } else if (month == 9) {
+    monthResult = "SEPTIEMBRE"
+  } else if (month == 10) {
+    monthResult = "OCTUBRE"
+  } else if (month == 11) {
+    monthResult = "NOVIEMBRE"
+  } else if (month == 12) {
+    monthResult = "DICIEMBRE"
+  }
+  return monthResult;
+};
