@@ -6,6 +6,7 @@ import { getAuth, signOut } from "firebase/auth";
 import { MenuPicture } from "../Components/ProfilePicture";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { dateComplete, dateMonth, ShowMonth } from "../Components/Date";
+import { getTimers } from "../Services/TimerRegister/TimerUser";
 // NAVIGATIONS IMPORT
 export const TimerData = () => {
   const navigation = useNavigation();
@@ -19,7 +20,18 @@ export const TimerData = () => {
   const [date1, setDate1] = React.useState(new Date());
   const [showDay, setShowDay] = React.useState(false);
   let textMonth = ShowMonth(dateTmp);
+  // ESTADO
   // DATE PICKER MONTH
+  const [dataTime, setDataTime] = React.useState([]);
+  React.useEffect(() => {
+    getTimers(refreshScreen);
+  }, []);
+  const refreshScreen = (data) => {
+    setDataTime(data);
+  };
+  const setTime = async (date) => {
+    await getTimers(refreshScreen);
+  };
   const showMode = (currentMode) => {
     setShow(true);
     setMode(currentMode);
@@ -41,7 +53,7 @@ export const TimerData = () => {
     setShowDay(true);
     setMode(currentMode);
   };
-  const onChangeDay = (event, selectedDate) => {
+  const onChangeDay = async (event, selectedDate) => {
     const currentDate = selectedDate || date1;
     setShowDay(Platform.OS === "windows");
     setDate1(currentDate);
@@ -79,8 +91,8 @@ export const TimerData = () => {
             icon={"calendar-month"}
             iconColor={"black"}
             size={Dimensions.get("window").width / 10}
-            onPress={() => {
-              showMode(), console.log(ShowMonth(dateTmp));
+            onPress={async() => {
+              showMode(), console.log(ShowMonth(dateTmp))
             }}
           />
         </View>
@@ -105,8 +117,8 @@ export const TimerData = () => {
             icon={"calendar-month"}
             iconColor={"black"}
             size={Dimensions.get("window").width / 10}
-            onPress={() => {
-              showModeDay(), console.log(ShowMonth(dateTmp));
+            onPress={async() => {
+              showModeDay(), console.log(ShowMonth(dateTmp))
             }}
           />
         </View>
@@ -124,8 +136,13 @@ export const TimerData = () => {
             color={"#6DC0D5"}
             style={styles.buttonStyle}
             labelStyle={styles.buttonTextStyle}
-            onPress={() => {
-              console.log("HOLA");
+            onPress={async () => {
+              await setTime();
+                navigation.navigate("TIMERMOREDATA", {
+                  timeMoreData: dataTime,
+                  DayEfe: date1.getDay(),
+                });
+              console.log(dataTime);
             }}
           >
             MAS DETALLES

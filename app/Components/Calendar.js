@@ -7,7 +7,7 @@ export const CalendarDay = (colors) => {
   const calcularDia = () => {
     const dias = [
       "domingo", // 0
-      "lunes",  // 1
+      "lunes", // 1
       "martes",
       "miércoles",
       "jueves",
@@ -277,6 +277,79 @@ export const CalendarDay = (colors) => {
     </>
   );
 };
+export const DateTimer = (dayNumber) => {
+  const [day, setDay] = React.useState();
+  let nuevosColores = "white";
+  const calcularDia = () => {
+    const dias = [
+      "domingo", // 0
+      "lunes", // 1
+      "martes",
+      "miércoles",
+      "jueves",
+      "viernes",
+      "sábado",
+    ];
+    const numeroDia = dayNumber.dayNumber
+    const nombreDia = dias[numeroDia];
+    setDay(numeroDia);
+    console.log("Nombre de día de la semana: ", numeroDia);
+  };
+  // VALIDATION //
+  React.useEffect(() => {
+    calcularDia();
+  }, []);
+  let ValidateDay = () => {
+    if ((day == 0)) {
+      return (
+        <>
+          <Text style={styles.textCalendarDay}> DOMINGO </Text>
+        </>
+      );
+    } else if (day == 1) {
+      return (
+        <>
+          <Text style={styles.textCalendarDay}>LUNES</Text>
+        </>
+      );
+    } else if (day == 2) {
+      return (
+        <>
+          <Text style={styles.textCalendarDay}>MARTES</Text>
+        </>
+      );
+    } else if (day == 3) {
+      return (
+        <>
+          <Text style={styles.textCalendarDay}>MIERCOLES</Text>
+        </>
+      );
+    } else if (day == 4) {
+      return (
+        <>
+          <Text style={styles.textCalendarDay}>JUEVES</Text>
+        </>
+      );
+    } else if (day == 5) {
+      return (
+        <>
+          <Text style={styles.textCalendarDay}>VIERNES</Text>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <Text style={styles.textCalendarDay}>SABADO</Text>
+        </>
+      );
+    }
+  };
+  return (
+    <>
+      <ValidateDay />
+    </>
+  );
+};
 const styles = StyleSheet.create({
   textCalendar: {
     paddingHorizontal: 10,
@@ -284,5 +357,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "bold",
     color: "white",
+  },
+  textCalendarDay: {
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    fontSize: 25,
+    fontWeight: "bold",
+    color: "#6DC0D5",
   },
 });

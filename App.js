@@ -15,6 +15,7 @@ import { TimerData } from "./app/Screens/TimerData";
 import { loadFirebaseConfiguration } from "./app/Services/FireBaseConfig";
 import { PersonalData } from "./app/Screens/Profile/PersonalData";
 import { DocumentsData } from "./app/Screens/Profile/DocumentsData";
+import { TimerScreen } from "./app/Screens/Timer/TimerScreen";
 //CONSTANTES USADAS //
 const NativeStackNav = createNativeStackNavigator();
 const TabNav = createBottomTabNavigator();
@@ -68,6 +69,11 @@ const TimeData = () => {
       <NativeStackNav.Screen
         name="DATATIME"
         component={TimerData}
+        options={{ headerShown: false }}
+      ></NativeStackNav.Screen>
+      <NativeStackNav.Screen
+        name="TIMERMOREDATA"
+        component={TimerScreen}
         options={{ headerShown: false }}
       ></NativeStackNav.Screen>
     </NativeStackNav.Navigator>

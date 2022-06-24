@@ -5,14 +5,9 @@ import {
   Text,
   StyleSheet,
   Dimensions,
-  TouchableOpacity,
 } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
-import { Input } from "@rneui/themed";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 import { DocumentsPicture } from "../../Components/ProfilePicture";
 import { Button } from "react-native-paper";
-import { savePersonalInformation } from "../../Services/UserInformation/InfoUser";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {
   launchImageLibraryAsync,
@@ -23,7 +18,6 @@ export const DocumentsData = ({ route }) => {
   const navigation = useNavigation();
   let InfoPersonal = [];
   InfoPersonal = route.params.InfoPersonal;
-
   const [firstName, setFirstName] = React.useState(InfoPersonal.firstName);
   const [lastName, setLastName] = React.useState(InfoPersonal.lastName);
   const [Id, setId] = React.useState(InfoPersonal.id);

@@ -17,19 +17,21 @@ export const getPersonalRol = async (Show) => {
   for (let i = 0; i < personalInformation.length; i++) {
     global.finishDay = personalInformation[i].finishDay;
     global.workState = personalInformation[i].workingState;
-  }
-  console.log("LEE EL DIA: ", global.finishDay);
-  let date = new Date();
-  if (date.getDate() == global.finishDay) {
-    console.log(date.getDate());
-  } else {
-    await updateStateWork("NOTWORKING");
-  }
-  for (let i = 0; i < personalInformation.length; i++) {
     global.name = personalInformation[i].firstName;
     global.lastName = personalInformation[i].lastName;
     global.id = personalInformation[i].id;
     global.picture = personalInformation[i].imageUser;
+  }
+  if (global.finishDay == null || global.workState == null) {
+    console.log("NADA");
+    await updateStateWork("NOTWORKING");
+  } else {
+    let date = new Date();
+    if (date.getDate() == global.finishDay) {
+      console.log(date.getDate());
+    } else {
+      await updateStateWork("NOTWORKING");
+    }
   }
   console.log("LEE EL ESTADO: ", global.workState);
 };

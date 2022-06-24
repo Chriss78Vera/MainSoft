@@ -101,6 +101,8 @@ export const PersonalData = ({ route }) => {
       imageUser: imageUser != null ? global.picture : null,
       personalEmail: email,
       id: Id,
+      workingState: global.workState,
+      finishDay: global.finishDay,
       address: address,
     };
     await savePersonalInformation(data);

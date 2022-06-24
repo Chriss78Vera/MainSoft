@@ -7,6 +7,7 @@ export const updateStateWork = async (state) => {
   });
   global.workState = state;
 };
+// CREATE TASK
 export const createTask = async () => {
   let date = new Date();
   const dias = [
@@ -49,6 +50,7 @@ export const createTask = async () => {
     );
   }
 };
+// SAVE TIME 
 export const saveTimeUser = async (time, state) => {
   let date = new Date();
   console.log(time);
@@ -115,3 +117,30 @@ export const saveTimeUser = async (time, state) => {
     await updateDoc(doc(global.dbCon, "/Usuarios", global.id), finishDay);
   }
 };
+// TRAER DATOS 
+export const getTimers = async (refreshScreen,dayNumber) =>{
+  let date = new Date();
+  const dias = [
+    "domingo", // 0
+    "lunes", // 1
+    "martes",
+    "miércoles",
+    "jueves",
+    "viernes",
+    "sábado",
+  ];
+  const numeroDia = new Date().getDay();
+  const nombreDia = dias[numeroDia].toUpperCase();
+  let saveMonth = getMonth(date.getMonth() + 1) + "_" + date.getFullYear();
+  let saveDay = nombreDia + "_" + date.getDate();
+  try {
+    const q = doc(global.dbCon, "/Usuarios/" + global.id +"/"+saveMonth+"/"+saveDay);
+    const docSnap = await getDoc(q);
+    let timerInformation = [];
+    timerInformation.push(docSnap.data());
+    refreshScreen(timerInformation)
+  } catch (error) {
+    refreshScreen(null)
+  }
+ 
+}
