@@ -20,6 +20,7 @@ import {
   useMediaLibraryPermissions,
 } from "expo-image-picker";
 import { ModalReload } from "../../Components/Modal";
+import { getAuth, signOut } from "firebase/auth";
 export const PersonalData = ({ route }) => {
   const navigation = useNavigation();
   let InfoPersonal = [];
@@ -53,6 +54,19 @@ export const PersonalData = ({ route }) => {
     };
     let response = await launchImageLibraryAsync(options);
     setImageUser(response.uri);
+  };
+  // CERRAR SESSION
+  const cerrar = () => {
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {
+        navigation.navigate("LOGINS");
+        global.email = null;
+        global.password = null;
+      })
+      .catch((error) => {
+        // An error happened.
+      });
   };
   // ENLACE CON FIREBASE
   const uploadFile = async () => {
@@ -100,13 +114,14 @@ export const PersonalData = ({ route }) => {
       rol: InfoPersonal.rol,
       imageUser: imageUser != null ? global.picture : null,
       personalEmail: email,
-      id: Id,
+      id: InfoPersonal.id,
       workingState: global.workState,
-      finishDay: global.finishDay,
+      finishDay: global.finishDay == null ? null : global.finishDay,
       address: address,
     };
     await savePersonalInformation(data);
     setStateModal(false);
+    cerrar();
     navigation.goBack();
   };
   return (
@@ -140,6 +155,11 @@ export const PersonalData = ({ route }) => {
           <ScrollView style={styles.containerScroll}>
             {/* INFORMACION DEL USUARIO  */}
             <Text style={styles.textTittle}> INFORMACION DEL USUARIO </Text>
+            <View>
+              <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
+                *Estos datos no se pueden editar*
+              </Text>
+            </View>
             <View style={styles.viewTextInput}>
               <View style={{ paddingTop: 10 }}>
                 <Text style={styles.textInfo}> Usuario: </Text>
@@ -147,8 +167,27 @@ export const PersonalData = ({ route }) => {
               <View style={{ width: Dimensions.get("window").width }}>
                 <Input
                   value={user}
+                  disabled={true}
+                  disabledInputStyle={{ color: "black" }}
                   onChangeText={setUser}
                   placeholder={global.email}
+                  containerStyle={styles.inputContainer}
+                  inputStyle={{ fontSize: 15 }}
+                />
+              </View>
+            </View>
+            <View style={styles.viewTextInput}>
+              <View style={{ paddingTop: 10 }}>
+                <Text style={styles.textInfo}> Cedula: </Text>
+              </View>
+              <View style={{ width: Dimensions.get("window").width }}>
+                <Input
+                  value={Id}
+                  disabled={true}
+                  onChangeText={setId}
+                  disabledInputStyle={{ color: "black" }}
+                  maxLength={10}
+                  placeholder={Id == null ? "Ingresa tu cedula." : Id}
                   containerStyle={styles.inputContainer}
                   inputStyle={{ fontSize: 15 }}
                 />
@@ -164,7 +203,7 @@ export const PersonalData = ({ route }) => {
               <View style={{ width: Dimensions.get("window").width }}>
                 <Input
                   value={firstName}
-                  maxLength={10}
+                  maxLength={20}
                   onChangeText={setFirstName}
                   placeholder={
                     firstName == null ? "Ingresa tu primer nombre." : firstName
@@ -248,21 +287,7 @@ export const PersonalData = ({ route }) => {
                 />
               </View>
             </View>
-            <View style={styles.viewTextInput}>
-              <View style={{ paddingTop: 10 }}>
-                <Text style={styles.textInfo}> Cedula: </Text>
-              </View>
-              <View style={{ width: Dimensions.get("window").width }}>
-                <Input
-                  value={Id}
-                  onChangeText={setId}
-                  maxLength={10}
-                  placeholder={Id == null ? "Ingresa tu cedula." : Id}
-                  containerStyle={styles.inputContainer}
-                  inputStyle={{ fontSize: 15 }}
-                />
-              </View>
-            </View>
+
             <View style={styles.viewTextInput}>
               <View style={{ paddingTop: 10 }}>
                 <Text style={styles.textInfo}> Numero </Text>
@@ -347,12 +372,19 @@ export const PersonalData = ({ route }) => {
             </View>
           </ScrollView>
         </SafeAreaProvider>
+        <View>
+          <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
+            *Se va a cerrar sesion al actualizar algun dato*
+          </Text>
+        </View>
         <View style={{ flexDirection: "row" }}>
           <Button
             icon="archive"
             style={styles.buttonStyle}
             mode="contained"
-            onPress={() => saveData()}
+            onPress={() => {
+              saveData();
+            }}
           >
             Guardar
           </Button>

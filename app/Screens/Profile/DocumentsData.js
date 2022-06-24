@@ -1,11 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-} from "react-native";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { DocumentsPicture } from "../../Components/ProfilePicture";
 import { Button } from "react-native-paper";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -18,9 +13,9 @@ export const DocumentsData = ({ route }) => {
   const navigation = useNavigation();
   let InfoPersonal = [];
   InfoPersonal = route.params.InfoPersonal;
-  const [firstName, setFirstName] = React.useState(InfoPersonal.firstName);
-  const [lastName, setLastName] = React.useState(InfoPersonal.lastName);
-  const [Id, setId] = React.useState(InfoPersonal.id);
+  const [firstName, setFirstName] = React.useState(global.name);
+  const [lastName, setLastName] = React.useState(global.lastName);
+  const [Id, setId] = React.useState(global.id);
   // PERMISOS PARA INGRESAR AL ALMACENAMIENTO
   const [imageUser, setImageUser] = React.useState(global.picture);
   const [data, setData] = React.useState([]);

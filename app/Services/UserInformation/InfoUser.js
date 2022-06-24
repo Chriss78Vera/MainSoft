@@ -1,4 +1,4 @@
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
 import { updateStateWork } from "../TimerRegister/TimerUser";
 // EXTRAER DATOS DEl ROL DEL USUARIO
 export const getPersonalRol = async (Show) => {
@@ -43,6 +43,6 @@ export const getPersonalInformation = async (getInformations) => {
   getInformations(personalInformation);
 };
 export const savePersonalInformation = async (data) => {
-  await setDoc(doc(global.dbCon, "/Usuarios", global.id), data);
+  await updateDoc(doc(global.dbCon, "/Usuarios", global.id), data);
   console.log("GUARDO LOS DATOS");
 };
