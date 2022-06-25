@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { StyleSheet, Text, View, Dimensions, Image } from "react-native";
 import { Button } from "react-native-paper";
@@ -13,6 +14,7 @@ import {
 import { getPersonalRol } from "../Services/UserInformation/InfoUser";
 // NAVIGATIONS IMPORT
 export const HomeScreen = () => {
+  const navigation = useNavigation();
   //================================//
   const [stateModal, setStateModal] = React.useState(false);
   //ESTILIZACION//
@@ -200,12 +202,11 @@ export const HomeScreen = () => {
           style={styles.buttonStyle}
           labelStyle={styles.buttonTextStyle}
           onPress={async () => {
-            console.log("INICIO DEL TRABAJO", startTime);
-            setActivePerson("WORKING");
             setStateModal(true);
+            setActivePerson("WORKING");
             await updateStateWork("WORKING");
-            setStateModal(false);
             saveTimeUser(startTime, "startWork");
+            setStateModal(false);
           }}
         >
           EMPEZAR A TRABAJAR
@@ -221,13 +222,14 @@ export const HomeScreen = () => {
             disabled={activeBotton}
             labelStyle={styles.buttonTextStyle}
             onPress={async () => {
-              setStateModal(true);
-              setActiveBotton(true);
-              console.log("RECREO", breakTime);
-              setActivePerson("BREAK");
-              saveTimeUser(startTime, "startBreak");
               await updateStateWork("BREAK");
-              setStateModal(false);
+              setActivePerson("BREAK");
+              setActiveBotton(true)
+              navigation.navigate("DESCRIPTIONTIME", {
+                StartTime: startTime,
+                State: "startBreak",
+                DBstate: "BREAK",
+              });
             }}
           >
             IR AL RECESO
@@ -239,12 +241,14 @@ export const HomeScreen = () => {
             labelStyle={styles.buttonTextStyle}
             onPress={async () => {
               console.log("TERMINAR LA JORNADA", finishTime);
-              setActivePerson("FINISHED");
-              setStateModal(true);
               global.state = "FINISHED";
               await updateStateWork("FINISHED");
-              saveTimeUser(startTime, "startFinish");
-              setStateModal(false);
+              setActivePerson("FINISHED");
+              navigation.navigate("DESCRIPTIONTIME", {
+                StartTime: startTime,
+                State: "startFinish",
+                DBstate: "FINISHED",
+              });
             }}
           >
             FINALIZAR LA JORNADA
@@ -259,9 +263,8 @@ export const HomeScreen = () => {
           style={styles.buttonStyle}
           labelStyle={styles.buttonTextStyle}
           onPress={async () => {
-            console.log("DEVUELTA", startTime);
-            setActivePerson("WORKING");
             setStateModal(true);
+            setActivePerson("WORKING");
             await updateStateWork("WORKING");
             saveTimeUser(startTime, "startBack");
             setStateModal(false);
@@ -272,21 +275,22 @@ export const HomeScreen = () => {
       );
     } else {
       return (
-        <Button
-          mode="contained"
-          color={Newcolor}
-          style={styles.buttonStyle}
-          labelStyle={styles.buttonTextStyle}
-          onPress={async () => {
-            console.log("HORAS EXTRA", extraTime);
-            setActivePerson("WORKING");
-            setStateModal(true);
-            await updateStateWork("WORKING");
-            setStateModal(false);
-          }}
-        >
-          TRABAJAR HORAS EXTRA!
-        </Button>
+        // <Button
+        //   mode="contained"
+        //   color={Newcolor}
+        //   style={styles.buttonStyle}
+        //   labelStyle={styles.buttonTextStyle}
+        //   onPress={async () => {
+        //     console.log("HORAS EXTRA", extraTime);
+        //     setActivePerson("WORKING");
+        //     setStateModal(true);
+        //     await updateStateWork("WORKING");
+        //     setStateModal(false);
+        //   }}
+        // >
+        //   TRABAJAR HORAS EXTRA!
+        // </Button>
+        <></>
       );
     }
   };
@@ -388,8 +392,8 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width / 1.14,
     backgroundColor: "white",
     borderRadius: 20,
-    bottom: 140,
-    maxHeight: 300,
+    bottom: Dimensions.get("window").height / 9,
+    minHeight: Dimensions.get("window").height / 12,
     shadowOffset: {
       width: 0,
       height: 15,

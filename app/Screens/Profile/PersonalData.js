@@ -11,7 +11,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Input } from "@rneui/themed";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { EditProfilePicture } from "../../Components/ProfilePicture";
-import { Button } from "react-native-paper";
+import { Button, IconButton} from "react-native-paper";
 import { savePersonalInformation } from "../../Services/UserInformation/InfoUser";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {
@@ -21,6 +21,8 @@ import {
 } from "expo-image-picker";
 import { ModalReload } from "../../Components/Modal";
 import { getAuth, signOut } from "firebase/auth";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { Picker } from "@react-native-picker/picker";
 export const PersonalData = ({ route }) => {
   const navigation = useNavigation();
   let InfoPersonal = [];
@@ -40,14 +42,38 @@ export const PersonalData = ({ route }) => {
   const [phoneHouse, setPhoneHouse] = React.useState(InfoPersonal.phoneHouse);
   const [address, setAddress] = React.useState(InfoPersonal.address);
   const [brithday, setBrithday] = React.useState("");
-  const [state, setState] = React.useState("");
-  const [gender, setGender] = React.useState("");
+  const [civilState, setCivilState] = React.useState(InfoPersonal.civilStatus);
+  const [gender, setGender] = React.useState(InfoPersonal.gender);
   // PERMISOS PARA INGRESAR AL ALMACENAMIENTO
   const [imageUser, setImageUser] = React.useState(global.picture);
   const [data, setData] = React.useState([]);
-
   const [status, requestPermission] = useMediaLibraryPermissions();
   const [stateModal, setStateModal] = React.useState(false);
+  // EL PICKER DE LA FECHA DE NACIMIENTO
+  const [dateBirthDay, setDateBirthDay] = React.useState(InfoPersonal.birthday==null? "Selecciona la fecha :": InfoPersonal.birthday);
+  const [date, setDate] = React.useState(new Date());
+  const [show, setShow] = React.useState(false);
+  const [mode, setMode] = React.useState("date");
+  
+  const showMode = (currentMode) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShow(Platform.OS === "windows");
+    setDate(currentDate);
+    let tempDate = new Date(currentDate);
+    let fDate =
+      (tempDate.getDate() < 10 ? "0" : "") +
+      tempDate.getDate() +
+      "-" +
+      (tempDate.getMonth() < 9 ? "0" : "") +
+      (tempDate.getMonth() + 1) +
+      "-" +
+      tempDate.getFullYear();
+    setDateBirthDay(fDate);
+  };
   const chooseFile = async () => {
     let options = {
       mediaTypes: MediaTypeOptions.Images,
@@ -111,10 +137,13 @@ export const PersonalData = ({ route }) => {
       mail: InfoPersonal.mail,
       phoneNumber: phoneNumber,
       phoneHouse: phoneHouse,
+      birthday:dateBirthDay,
       rol: InfoPersonal.rol,
       imageUser: imageUser != null ? global.picture : null,
       personalEmail: email,
       id: InfoPersonal.id,
+      gender: gender,
+      civilStatus: civilState,
       workingState: global.workState,
       finishDay: global.finishDay == null ? null : global.finishDay,
       address: address,
@@ -156,7 +185,7 @@ export const PersonalData = ({ route }) => {
             {/* INFORMACION DEL USUARIO  */}
             <Text style={styles.textTittle}> INFORMACION DEL USUARIO </Text>
             <View>
-              <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
+              <Text style={{ fontSize: 15, fontWeight: "bold", color: "red", textAlign: "center" }}>
                 *Estos datos no se pueden editar*
               </Text>
             </View>
@@ -272,24 +301,7 @@ export const PersonalData = ({ route }) => {
               </View>
             </View>
             <View style={styles.viewTextInput}>
-              <View style={{ paddingTop: 20, paddingLeft: 20 }}>
-                <Text style={styles.textInfo2}> Email: </Text>
-              </View>
-              <View style={{ width: Dimensions.get("window").width }}>
-                <Input
-                  value={email}
-                  onChangeText={setEmail}
-                  placeholder={
-                    email == null ? "Ingresa tu correo electronico." : email
-                  }
-                  containerStyle={styles.inputContainer}
-                  inputStyle={{ fontSize: 15 }}
-                />
-              </View>
-            </View>
-
-            <View style={styles.viewTextInput}>
-              <View style={{ paddingTop: 10 }}>
+              <View style={{ paddingTop: 10, paddingLeft: 10 }}>
                 <Text style={styles.textInfo}> Numero </Text>
                 <Text style={styles.textInfo}> Celular: </Text>
               </View>
@@ -350,24 +362,79 @@ export const PersonalData = ({ route }) => {
                 <Text style={styles.textInfo}> Fecha</Text>
                 <Text style={styles.textInfo}> Nacimiento: </Text>
               </View>
-              <View style={{ width: Dimensions.get("window").width }}>
-                <Input
-                  placeholder="BASIC INPUT"
-                  containerStyle={styles.inputContainer}
-                  inputStyle={{ fontSize: 15 }}
+              <View
+                style={{
+                  width: Dimensions.get("window").width,
+                  flexDirection: "row",
+                }}
+              >
+                <Text style={styles.textCalendar}>{dateBirthDay}</Text>
+                <IconButton
+                  icon={"calendar-month"}
+                  iconColor={"black"}
+                  style={{paddingTop: Dimensions.get("window").height/70, paddingHorizontal: Dimensions.get("window").width/70}}
+                  size={Dimensions.get("window").width / 20}
+                  onPress={async () => {
+                    showMode()
+                  }}
                 />
               </View>
             </View>
             <View style={styles.viewTextInput}>
-              <View style={{ paddingTop: 10 }}>
+              <View
+                style={{
+                  paddingTop: Dimensions.get("window").height / 50,
+                  paddingLeft: 30,
+                }}
+              >
                 <Text style={styles.textInfo}> Genero: </Text>
               </View>
-              <View style={{ width: Dimensions.get("window").width }}>
-                <Input
-                  placeholder="BASIC INPUT"
-                  containerStyle={styles.inputContainer}
-                  inputStyle={{ fontSize: 15 }}
-                />
+              <View
+                style={{
+                  width: Dimensions.get("window").width / 1.5,
+                  maxHeight: Dimensions.get("window").height / 15,
+                }}
+              >
+                <Picker
+                  style={{
+                    height: Dimensions.get("window").height / 15,
+                    
+                  }}
+                  selectedValue={gender}
+                  onValueChange={(itemValue, itemIndex) => setGender(itemValue)}
+                >
+                  <Picker.Item label="Selecciona la opcion:" value="null" />
+                  <Picker.Item label="Hombre" value="Hombre" />
+                  <Picker.Item label="Mujer" value="Mujer" />
+                  <Picker.Item label="No especifico " value="NoEspecifico" />
+                </Picker>
+              </View>
+            </View>
+            <View style={styles.viewTextInput}>
+              <View
+                style={{ paddingTop: Dimensions.get("window").height / 50 }}
+              >
+                <Text style={styles.textInfo}> Estado Civil: </Text>
+              </View>
+              <View
+                style={{
+                  width: Dimensions.get("window").width / 1.5,
+                  maxHeight: Dimensions.get("window").height / 15,
+                }}
+              >
+                <Picker
+                  style={{ height: Dimensions.get("window").height / 15 }}
+                  selectedValue={civilState}
+                  ColorValue={"red"}
+                  onValueChange={(itemValue, itemIndex) =>
+                    setCivilState(itemValue)
+                  }
+                >
+                  <Picker.Item label="Selecciona la opcion:" value="null" />
+                  <Picker.Item label="Casado" value="Casado" />
+                  <Picker.Item label="Divorciado" value="Divorciado" />
+                  <Picker.Item label="Soltero" value="Soltero" />
+                </Picker>
               </View>
             </View>
           </ScrollView>
@@ -402,6 +469,17 @@ export const PersonalData = ({ route }) => {
           textModal={"Guardando cambios"}
         />
       </View>
+      {show && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={date}
+            mode={mode}
+            is24Hour={true}
+            display="default"
+            onChange={onChange}
+            maximumDate={new Date()}
+          />
+        )}
     </View>
   );
 };
@@ -435,9 +513,11 @@ const styles = StyleSheet.create({
   viewTextInput: {
     flexDirection: "row",
     width: Dimensions.get("window").width / 1.5,
+    height: Dimensions.get("window").height / 10,
   },
   inputContainer: {
     padding: 7,
+    marginLeft: Dimensions.get("window").width / 30,
   },
   textInfo: {
     fontSize: 15,
@@ -460,5 +540,9 @@ const styles = StyleSheet.create({
     margin: 10,
     width: Dimensions.get("window").width / 2.5,
     backgroundColor: "#6DC0D5",
-  },
+  },textCalendar:{
+    fontSize:15,
+    paddingTop: Dimensions.get("window").height / 50,
+    paddingLeft: Dimensions.get("window").width /10
+  }
 });

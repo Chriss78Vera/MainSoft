@@ -51,7 +51,7 @@ export const createTask = async () => {
   }
 };
 // SAVE TIME 
-export const saveTimeUser = async (time, state) => {
+export const saveTimeUser = async (time, state,Description,Image) => {
   let date = new Date();
   console.log(time);
   const dias = [
@@ -81,6 +81,8 @@ export const saveTimeUser = async (time, state) => {
   } else if (state == "startBreak") {
     const timers = {
       startBreak: time,
+      DescriptionBeforeBreak:Description,
+      ImageBreak:Image
     };
     await updateDoc(
       doc(
@@ -103,6 +105,8 @@ export const saveTimeUser = async (time, state) => {
   } else {
     const timers = {
       finishTime: time,
+      DescriptionFinishDay:Description,
+      ImageFinish:Image
     };
     await updateDoc(
       doc(

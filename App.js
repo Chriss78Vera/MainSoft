@@ -16,6 +16,7 @@ import { loadFirebaseConfiguration } from "./app/Services/FireBaseConfig";
 import { PersonalData } from "./app/Screens/Profile/PersonalData";
 import { DocumentsData } from "./app/Screens/Profile/DocumentsData";
 import { TimerScreen } from "./app/Screens/Timer/TimerScreen";
+import { DescriptionTime } from "./app/Screens/Timer/DescriptionTime";
 //CONSTANTES USADAS //
 const NativeStackNav = createNativeStackNavigator();
 const TabNav = createBottomTabNavigator();
@@ -79,6 +80,22 @@ const TimeData = () => {
     </NativeStackNav.Navigator>
   );
 };
+const HomeRegisterTime = () => {
+  return (
+    <NativeStackNav.Navigator initialRouteName="HOMETIME">
+      <NativeStackNav.Screen
+        name="HOMETIME"
+        component={HomeScreen}
+        options={{ headerShown: false }}
+      ></NativeStackNav.Screen>
+      <NativeStackNav.Screen
+        name="DESCRIPTIONTIME"
+        component={DescriptionTime}
+        options={{ headerShown: false }}
+      ></NativeStackNav.Screen>
+    </NativeStackNav.Navigator>
+  );
+};
 const UserNav = () => {
   return (
     <TabNav.Navigator
@@ -113,7 +130,7 @@ const UserNav = () => {
       ></TabNav.Screen>
       <TabNav.Screen
         name="HOME"
-        component={HomeScreen}
+        component={HomeRegisterTime}
         options={{ headerShown: false }}
       ></TabNav.Screen>
       <TabNav.Screen

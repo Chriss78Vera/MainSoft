@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { View, Text, StyleSheet, Dimensions, Image } from "react-native";
 import { Button, IconButton } from "react-native-paper";
 import { CalendarDay, DateTimer } from "../../Components/Calendar";
 import { ScrollView } from "react-native-gesture-handler";
@@ -28,6 +28,18 @@ export const TimerScreen = ({ route }) => {
   );
   const [finishWork, setFinishWorkTime] = React.useState(
     timeMoreData[0].finishTime
+  );
+  const [descriptionBreak, setDescriptionBreakTime] = React.useState(
+    timeMoreData[0].DescriptionBeforeBreak
+  );
+  const [descriptionFinish, setDescriptionFinish] = React.useState(
+    timeMoreData[0].DescriptionFinishDay
+  );
+  const [imageBreak, setImageBreakTime] = React.useState(
+    timeMoreData[0].ImageBreak
+  );
+  const [imageFinish, setImageFinish] = React.useState(
+    timeMoreData[0].ImageFinish
   );
   let ComponentView = () => {
     if (timeMoreData == null) {
@@ -62,6 +74,27 @@ export const TimerScreen = ({ route }) => {
                   <Text style={styles.textBreakTime}>{finishBreak}</Text>
                 </View>
               </View>
+              <View style={styles.viewDescanso}>
+                <Text style={styles.textTitleBreak}> DESCRIPCION </Text>
+                <View style={styles.viewTimeBreak}>
+                  <Text style={styles.descrptionTextBreak}>
+                    {descriptionBreak}
+                  </Text>
+                  <View
+                    style={{ alignItems: "center", justifyContent: "center" }}
+                  >
+                    <Image
+                      style={{
+                        minWidth: Dimensions.get("window").width / 1.5,
+                        height: 300,
+                      }}
+                      source={{
+                        uri: imageBreak,
+                      }}
+                    />
+                  </View>
+                </View>
+              </View>
               <View style={styles.viewFin}>
                 <Text style={styles.textTitleFinsih}> FIN DE LA JORNADA </Text>
                 <View style={styles.viewTime}>
@@ -70,6 +103,27 @@ export const TimerScreen = ({ route }) => {
                     - - - - - - - - - - - - - - - - - - - - -
                   </Text>
                   <Text style={styles.textFinishTime}>{finishWork}</Text>
+                </View>
+              </View>
+              <View style={styles.viewFin}>
+                <Text style={styles.textTitleFinsih}> DESCRIPCION FINAL </Text>
+                <View style={styles.viewTimeFinish}>
+                  <Text style={styles.descrptionTextFinish}>
+                    {descriptionFinish}
+                  </Text>
+                  <View
+                    style={{ alignItems: "center", justifyContent: "center"}}
+                  >
+                    <Image
+                      style={{
+                        minWidth: Dimensions.get("window").width / 1.5,
+                        height: 300,
+                      }}
+                      source={{
+                        uri: imageFinish,
+                      }}
+                    />
+                  </View>
                 </View>
               </View>
             </ScrollView>
@@ -165,17 +219,32 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height / 9,
+    maxHeight: Dimensions.get("window").height / 2,
+    paddingTop:10,
   },
   viewFin: {
     alignItems: "center",
     justifyContent: "center",
     width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height / 9,
+    maxHeight: Dimensions.get("window").height / 2,
+    paddingTop:10,
+  },
+  viewFinDescription: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height / 10,
   },
   viewTime: {
     paddingTop: Dimensions.get("window").height / 30,
     flexDirection: "row",
+  },
+  viewTimeFinish: {
+    flexDirection: "column",
+
+  },
+  viewTimeBreak: {
+    flexDirection: "column",
   },
   textTitleWork: {
     fontSize: 20,
@@ -209,5 +278,17 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#6DC0D5",
     paddingHorizontal: Dimensions.get("window").width / 25,
+  },
+  descrptionTextBreak: {
+    fontSize: 15,
+    fontWeight: "bold",
+    color: "#ED6A5E",
+    textAlign: "center",
+  },
+  descrptionTextFinish: {
+    fontSize: 15,
+    fontWeight: "bold",
+    textAlign: "center",
+    color: "#6DC0D5",
   },
 });
