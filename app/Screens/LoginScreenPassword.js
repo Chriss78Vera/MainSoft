@@ -72,17 +72,20 @@ export const LoginScreenPassword = ({ route }) => {
                 setStateModal(true);
                 global.email = emailUser;
                 await getPersonalRol();
-                await createTask();
-                navigation.navigate("TIMER");
-                setStateModal(false);
+                if ( global.rol == "Empleado") {
+                  await createTask();
+                  navigation.navigate("TIMER");
+                  setStateModal(false);
+                }else{
+                  navigation.navigate("LOGINS");
+                }
               })
               .catch((error) => {
-                console.log(error);
                 setActive(true);
               });
           }}
         >
-          INICIAR SESSION
+          INICIAR SESION
         </Button>
         <Button
           icon={(20, "arrow-left")}

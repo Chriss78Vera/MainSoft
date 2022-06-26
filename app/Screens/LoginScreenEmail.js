@@ -40,6 +40,7 @@ export const LoginScreenMail = () => {
             theme={{ colors: { text: "white", placeholder: "white" } }}
           />
         </View>
+        <Text style={{fontSize:15, fontWeight: "bold", color:"red"}}> {global.rol == "Empleado" ? "" : "NO PUEDES INGRESAR CON ESE USUARIO"}</Text>
         <Button
           mode="contained"
           color={"#6DC0D5"}
@@ -52,16 +53,15 @@ export const LoginScreenMail = () => {
               let validation = validateEmail(emailUser);
               if (validation) {
                 navigation.navigate("LOGINPASSWORD", { UserEmail: emailUser });
-                console.log("EMAIL", emailUser);
               } else {
                 setActive(true);
               }
             }
-           }}
+          }}
         >
           CONTINUAR
         </Button>
-      
+
         <ModalInfoError
           modalVisible={active}
           setModalVisible={setActive}
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   },
   buttonStyle: {
     borderRadius: 15,
-    marginTop: 50,
+    marginTop: 30,
     width: Dimensions.get("window").width / 1.5,
   },
   buttonTextStyle: {

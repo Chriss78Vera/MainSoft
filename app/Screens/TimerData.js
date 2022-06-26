@@ -176,7 +176,7 @@ export const TimerData = () => {
             <Text style={styles.textinContainer2}>
               {global.name} {global.lastName}
             </Text>
-            <Text style={styles.text2inContainer2}>DESAROLLADOR</Text>
+            <Text style={styles.text2inContainer2}>{global.workStation}</Text>
           </View>
           <View>
             <MenuPicture colorBackground={"#6DC0D5"} />

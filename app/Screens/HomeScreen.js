@@ -31,7 +31,7 @@ export const HomeScreen = () => {
   const [breakTime, setBreakTime] = React.useState();
   const [startTime, setStartTime] = React.useState();
   const [extraTime, setExtraTime] = React.useState();
-  const [activeBotton, setActiveBotton] = React.useState(false);
+  const [activeBotton, setActiveBotton] = React.useState(global.stateBreak);
   // TEXT DEL BOTON //
   let newHours;
   let newSeconds;

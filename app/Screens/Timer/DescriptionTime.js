@@ -4,7 +4,7 @@ import { Button, IconButton } from "react-native-paper";
 import { MenuPicture } from "../../Components/ProfilePicture";
 import { Input } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
-import { saveTimeUser } from "../../Services/TimerRegister/TimerUser";
+import { saveTimeUser, sumarHoras, updateStateWork } from "../../Services/TimerRegister/TimerUser";
 import {
   launchImageLibraryAsync,
   MediaTypeOptions,
@@ -97,7 +97,7 @@ export const DescriptionTime = ({ route }) => {
         </View>
         <View style={styles.containerTextBlackContainer}>
           <Text style={styles.textBlackContainer}>
-            INGRESA UNA DESCRIPCION {StartTime}
+            INGRESA UNA DESCRIPCION
           </Text>
         </View>
         <ModalReload
@@ -145,7 +145,6 @@ export const DescriptionTime = ({ route }) => {
             style={styles.buttonStyle}
             mode="contained"
             onPress={async () => {
-              console.log("HOLA", Description);
               setModalVisible(true);
               if (imageUserBreak != null || imageUserFinish != null) {
                 await uploadFile();
@@ -170,7 +169,7 @@ export const DescriptionTime = ({ route }) => {
                   global.pictureDescription
                 );
                 if (DBstate == "FINISHED") {
-                  sumarHoras();
+                  await sumarHoras();
                 } else {
                   console.log("NADA");
                 }
@@ -181,14 +180,6 @@ export const DescriptionTime = ({ route }) => {
             }}
           >
             GUARDAR
-          </Button>
-          <Button
-            icon="close-outline"
-            style={styles.buttonStyle}
-            mode="contained"
-            onPress={() => navigation.goBack()}
-          >
-            Volver
           </Button>
         </View>
       </View>
@@ -297,6 +288,11 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width / 1.5,
     backgroundColor: "#F0F0F0",
     borderRadius: 20,
+  },buttonStyle: {
+    borderRadius: 15,
+    marginTop: 50,
+    backgroundColor:"#6DC0D5",
+    width: Dimensions.get("window").width / 1.5,
   },
   // MODAL
 });

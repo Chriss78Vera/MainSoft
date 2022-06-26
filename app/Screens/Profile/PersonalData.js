@@ -185,7 +185,7 @@ export const PersonalData = ({ route }) => {
   });
   const saveData = async () => {
     setStateModal(true);
-    if (imageUser == null || imageUser != null) {
+    if (imageUser != null) {
       await uploadFile();
     }
     let data = {
@@ -199,7 +199,6 @@ export const PersonalData = ({ route }) => {
       birthday: dateBirthDay,
       rol: InfoPersonal.rol,
       imageUser: imageUser != null ? global.picture : null,
-      personalEmail: email,
       id: InfoPersonal.id,
       gender: gender,
       civilStatus: civilState,
@@ -233,7 +232,7 @@ export const PersonalData = ({ route }) => {
           {firstName} {lastName}
         </Text>
         <Text style={{ fontSize: 20, fontWeight: "bold", color: "white" }}>
-          DESAROLLADOR
+          {global.workStation}
         </Text>
       </View>
       <View style={styles.containerBottom}>

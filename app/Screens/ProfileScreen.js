@@ -50,7 +50,7 @@ export const Profile = () => {
           <Text style={styles.textPerfil2}>
             {global.name} {global.lastName}
           </Text>
-          <Text style={styles.textPerfil}>DESAROLLADOR</Text>
+          <Text style={styles.textPerfil}>{global.workStation}</Text>
         </View>
         <View style={styles.viewPerfil}>
           <View>

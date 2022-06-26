@@ -6,18 +6,20 @@ import { Button, IconButton } from "react-native-paper";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import * as DocumentPicker from "expo-document-picker";
 import { saveDocumentPersonal } from "../../Services/UserInformation/DocumentsUser";
+import { ModalReload } from "../../Components/Modal";
 export const DocumentsData = ({ route }) => {
   const navigation = useNavigation();
-  let InfoDocument = [];
+  let InfoDocument = null;
   InfoDocument = route.params.InfoDocument;
   const [firstName, setFirstName] = React.useState(global.name);
   const [lastName, setLastName] = React.useState(global.lastName);
   // PERMISOS PARA INGRESAR AL ALMACENAMIENTO
   const [documentHojaVida, setDocumentHojaVida] = React.useState();
-  const [nameHoja, setNameHoja] = React.useState(InfoDocument.nameDocumentHojaVida);
+  const [nameHoja, setNameHoja] = React.useState();
   const [documentCedula, setDocumentCedula] = React.useState();
-  const [nameCedula, setNameCedula] = React.useState(InfoDocument.nameDocumentCedula);
+  const [nameCedula, setNameCedula] = React.useState();
   const [active, setActive] = React.useState();
+  const [modalVisible, setModalVisible] = React.useState(false);
   const pickDocumentHojaVida = async () => {
     let result = await DocumentPicker.getDocumentAsync({});
     if (result != null) {
@@ -95,6 +97,8 @@ export const DocumentsData = ({ route }) => {
   })
   // SUBIR DATOS A LA BASE //
   const saveData = async () => {
+    setModalVisible(true)
+    setActive(true)
       await uploadFileHojaVida();
       await uploadFileCedula();
       const data={
@@ -104,7 +108,73 @@ export const DocumentsData = ({ route }) => {
         urlDocumentHojaVida:global.hoja,
       }
       saveDocumentPersonal(data);
+      setModalVisible(false)
   };
+  let Documents =()=>{
+    if(InfoDocument==null){
+      return(
+        <>
+        <Text style={{ fontSize: 20, fontWeight: "bold", }}> HOJA DE VIDA </Text>
+        <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+        <Text style={{fontSize: 12, fontWeight: "bold"}}>{nameHoja=="" || nameHoja==null ? "Escoje el archivo que necesites: " : nameHoja}</Text>
+        <IconButton
+              icon={"calendar-month"}
+              iconColor={"black"}
+              size={Dimensions.get("window").width / 12}
+              onPress={async () => {
+                pickDocumentHojaVida();
+              }}
+            />
+        </View>
+        <View style={{ alignItems: "center"}}>
+        <Text style={{ fontSize: 20, fontWeight: "bold"}}> CEDULA </Text>
+        </View>
+        <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+        <Text style={{fontSize: 15, fontWeight: "bold"}}>{nameCedula=="" || nameCedula==null ? "Escoje el archivo que necesites: " : nameCedula}</Text>
+        <IconButton
+              icon={"calendar-month"}
+              iconColor={"black"}
+              size={Dimensions.get("window").width / 12}
+              onPress={async () => {
+                pickDocumentCedula()
+              }}
+            />
+        </View>
+        </>
+      )
+    }else{
+      return(
+        <>
+        <Text style={{ fontSize: 20, fontWeight: "bold", }}> HOJA DE VIDA </Text>
+        <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+        <Text style={{fontSize: 12, fontWeight: "bold"}}>{InfoDocument.nameDocumentHojaVida}</Text>
+        <IconButton
+              icon={"calendar-month"}
+              iconColor={"black"}
+              size={Dimensions.get("window").width / 12}
+              onPress={async () => {
+                pickDocumentHojaVida();
+              }}
+            />
+        </View>
+        <View style={{ alignItems: "center"}}>
+        <Text style={{ fontSize: 20, fontWeight: "bold"}}> CEDULA </Text>
+        </View>
+        <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+        <Text style={{fontSize: 15, fontWeight: "bold"}}>{InfoDocument.nameDocumentCedula}</Text>
+        <IconButton
+              icon={"calendar-month"}
+              iconColor={"black"}
+              size={Dimensions.get("window").width / 12}
+              onPress={async () => {
+                pickDocumentCedula()
+              }}
+            />
+        </View>
+        </>
+      )
+    }
+  }
   return (
     <View style={styles.container}>
       <View style={styles.containerTop}>
@@ -119,36 +189,11 @@ export const DocumentsData = ({ route }) => {
           {firstName} {lastName}
         </Text>
         <Text style={{ fontSize: 20, fontWeight: "bold", color: "white" }}>
-          DESAROLLADOR
+          {global.workStation}
         </Text>
       </View>
       <View style={{ alignItems: "center",flex:3, minHeight: Dimensions.get("window").height/100}}>
-      <Text style={{ fontSize: 20, fontWeight: "bold", }}> HOJA DE VIDA </Text>
-      <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
-      <Text style={{fontSize: 12, fontWeight: "bold"}}>{nameHoja=="" || nameHoja==null ? "Escoje el archivo que necesites: " : nameHoja}</Text>
-      <IconButton
-            icon={"calendar-month"}
-            iconColor={"black"}
-            size={Dimensions.get("window").width / 12}
-            onPress={async () => {
-              pickDocumentHojaVida();
-            }}
-          />
-      </View>
-      <View style={{ alignItems: "center"}}>
-      <Text style={{ fontSize: 20, fontWeight: "bold"}}> CEDULA </Text>
-      </View>
-      <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
-      <Text style={{fontSize: 15, fontWeight: "bold"}}>{nameCedula=="" || nameCedula==null ? "Escoje el archivo que necesites: " : nameCedula}</Text>
-      <IconButton
-            icon={"calendar-month"}
-            iconColor={"black"}
-            size={Dimensions.get("window").width / 12}
-            onPress={async () => {
-              pickDocumentCedula()
-            }}
-          />
-      </View>
+          <Documents/>
       {/* <View style={{ alignItems: "center"}}>
       <Text style={{ fontSize: 20, fontWeight: "bold"}}> HOJA DE VIDA </Text>
       </View>
@@ -185,7 +230,8 @@ export const DocumentsData = ({ route }) => {
             mode="contained"
             disabled={active}
             onPress={async() => 
-              await saveData()}
+              await saveData()
+            }
           >
             Guardar
           </Button>
@@ -199,7 +245,9 @@ export const DocumentsData = ({ route }) => {
           </Button>
         </View>
         </View>
+        <ModalReload modalVisible={modalVisible} textModal={"SUBIENDO LOS DOCUMENTOS"}/>
       </View>
+      
     </View>
   );
 };
