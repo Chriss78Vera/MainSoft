@@ -17,6 +17,7 @@ import { PersonalData } from "./app/Screens/Profile/PersonalData";
 import { DocumentsData } from "./app/Screens/Profile/DocumentsData";
 import { TimerScreen } from "./app/Screens/Timer/TimerScreen";
 import { DescriptionTime } from "./app/Screens/Timer/DescriptionTime";
+import { getTimers } from "./app/Services/TimerRegister/TimerUser";
 //CONSTANTES USADAS //
 const NativeStackNav = createNativeStackNavigator();
 const TabNav = createBottomTabNavigator();
@@ -97,6 +98,7 @@ const HomeRegisterTime = () => {
   );
 };
 const UserNav = () => {
+  
   return (
     <TabNav.Navigator
       initialRouteName="HOME"
@@ -111,6 +113,7 @@ const UserNav = () => {
               : "ios-person-circle";
           } else if (route.name === "DATATIMER") {
             iconName = focused ? "calendar-outline" : "calendar-sharp";
+            
           }
           return <Ionicons name={iconName} size={25} color={color} />;
         },
@@ -137,6 +140,7 @@ const UserNav = () => {
         name="DATATIMER"
         component={TimeData}
         options={{ headerShown: false }}
+        
       ></TabNav.Screen>
     </TabNav.Navigator>
   );

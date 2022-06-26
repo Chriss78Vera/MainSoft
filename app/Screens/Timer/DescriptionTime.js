@@ -114,7 +114,7 @@ export const DescriptionTime = ({ route }) => {
               paddingRight: Dimensions.get("window").width / 5,
             }}
           >
-            {imageUserBreak == null || imageUserFinish==null
+            {imageUserBreak == null || imageUserFinish == null
               ? "Selecciona una foto: "
               : "Description.jpg"}
           </Text>
@@ -139,36 +139,58 @@ export const DescriptionTime = ({ route }) => {
             maxLength={255}
           />
         </View>
-        <Button
-          icon="archive"
-          style={styles.buttonStyle}
-          mode="contained"
-          onPress={async () => {
-            console.log("HOLA", Description);
-            setModalVisible(true);
-            await uploadFile();
-            if (global.pictureDescription != null) {
-              saveTimeUser(
-                StartTime,
-                State,
-                Description,
-                global.pictureDescription
-              );
-            } else {
-              global.pictureDescription = null;
-              saveTimeUser(
-                StartTime,
-                State,
-                Description,
-                global.pictureDescription
-              );
-            }
-            setModalVisible(false);
-            navigation.goBack();
-          }}
-        >
-          GUARDAR
-        </Button>
+        <View style={{ flexDirection: "row" }}>
+          <Button
+            icon="archive"
+            style={styles.buttonStyle}
+            mode="contained"
+            onPress={async () => {
+              console.log("HOLA", Description);
+              setModalVisible(true);
+              if (imageUserBreak != null || imageUserFinish != null) {
+                await uploadFile();
+                saveTimeUser(
+                  StartTime,
+                  State,
+                  Description,
+                  global.pictureDescription
+                );
+                await updateStateWork(DBstate);
+                if (DBstate == "FINISHED") {
+                  await sumarHoras();
+                } else {
+                  console.log("NADA");
+                }
+              } else {
+                global.pictureDescription = null;
+                saveTimeUser(
+                  StartTime,
+                  State,
+                  Description,
+                  global.pictureDescription
+                );
+                if (DBstate == "FINISHED") {
+                  sumarHoras();
+                } else {
+                  console.log("NADA");
+                }
+                await updateStateWork(DBstate);
+              }
+              setModalVisible(false);
+              navigation.goBack();
+            }}
+          >
+            GUARDAR
+          </Button>
+          <Button
+            icon="close-outline"
+            style={styles.buttonStyle}
+            mode="contained"
+            onPress={() => navigation.goBack()}
+          >
+            Volver
+          </Button>
+        </View>
       </View>
     </View>
   );

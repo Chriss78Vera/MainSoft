@@ -11,7 +11,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { Input } from "@rneui/themed";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { EditProfilePicture } from "../../Components/ProfilePicture";
-import { Button, IconButton} from "react-native-paper";
+import { Button, IconButton } from "react-native-paper";
 import { savePersonalInformation } from "../../Services/UserInformation/InfoUser";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {
@@ -26,35 +26,46 @@ import { Picker } from "@react-native-picker/picker";
 export const PersonalData = ({ route }) => {
   const navigation = useNavigation();
   let InfoPersonal = [];
+
   InfoPersonal = route.params.InfoPersonal;
   const [user, setUser] = React.useState(InfoPersonal.mail);
   const [firstName, setFirstName] = React.useState(InfoPersonal.firstName);
+  const [validationName, setValidationName] = React.useState();
   const [secondName, setSecondName] = React.useState(InfoPersonal.secondName);
+  const [validationSecond, setValidationSecond] = React.useState();
   const [lastName, setLastName] = React.useState(InfoPersonal.lastName);
+  const [validationLast, setValidationLast] = React.useState();
   const [motherLastName, setMotherLastName] = React.useState(
     InfoPersonal.secondLastName
   );
+  const [validationMother, setValidationMother] = React.useState();
   const [email, setEmail] = React.useState(InfoPersonal.personalEmail);
   const [Id, setId] = React.useState(InfoPersonal.id);
   const [phoneNumber, setPhoneNumber] = React.useState(
     InfoPersonal.phoneNumber
   );
+  const [validationPhone, setValidationPhone] = React.useState();
   const [phoneHouse, setPhoneHouse] = React.useState(InfoPersonal.phoneHouse);
+  const [validationHouse, setValidationHouse] = React.useState();
   const [address, setAddress] = React.useState(InfoPersonal.address);
-  const [brithday, setBrithday] = React.useState("");
   const [civilState, setCivilState] = React.useState(InfoPersonal.civilStatus);
   const [gender, setGender] = React.useState(InfoPersonal.gender);
   // PERMISOS PARA INGRESAR AL ALMACENAMIENTO
   const [imageUser, setImageUser] = React.useState(global.picture);
-  const [data, setData] = React.useState([]);
   const [status, requestPermission] = useMediaLibraryPermissions();
   const [stateModal, setStateModal] = React.useState(false);
+  const [active, setActive] = React.useState();
+  var regexNumber = /^[0-9]+$/;
+  var regex = /^[a-zA-Z]+$/;
   // EL PICKER DE LA FECHA DE NACIMIENTO
-  const [dateBirthDay, setDateBirthDay] = React.useState(InfoPersonal.birthday==null? "Selecciona la fecha :": InfoPersonal.birthday);
+  const [dateBirthDay, setDateBirthDay] = React.useState(
+    InfoPersonal.birthday == null
+      ? "Selecciona la fecha :"
+      : InfoPersonal.birthday
+  );
   const [date, setDate] = React.useState(new Date());
   const [show, setShow] = React.useState(false);
   const [mode, setMode] = React.useState("date");
-  
   const showMode = (currentMode) => {
     setShow(true);
     setMode(currentMode);
@@ -65,13 +76,13 @@ export const PersonalData = ({ route }) => {
     setDate(currentDate);
     let tempDate = new Date(currentDate);
     let fDate =
-      (tempDate.getDate() < 10 ? "0" : "") +
-      tempDate.getDate() +
+      tempDate.getFullYear() +
       "-" +
       (tempDate.getMonth() < 9 ? "0" : "") +
       (tempDate.getMonth() + 1) +
       "-" +
-      tempDate.getFullYear();
+      (tempDate.getDate() < 10 ? "0" : "") +
+      tempDate.getDate();
     setDateBirthDay(fDate);
   };
   const chooseFile = async () => {
@@ -108,22 +119,70 @@ export const PersonalData = ({ route }) => {
       xhr.open("GET", imageUser, true);
       xhr.send(null);
     });
-
     const storage = getStorage();
     let nameFile = "Profile_" + firstName + lastName + "_" + Id;
-
     var d = new Date();
     let mes = d.getMonth() + 1;
     const fileStorage = ref(storage, "Profile/" + nameFile + ".jpg");
     const uploadResult = await uploadBytes(fileStorage, blob);
-
     blob.close();
-
     const url = await getDownloadURL(fileStorage);
     global.picture = url;
     console.log(global.picture);
   };
-  // SUBIR DATOS A LA BASE //
+  React.useEffect(() => {
+    if (regexNumber.test(phoneNumber)) {
+      setValidationPhone(true);
+    } else {
+      setValidationPhone(false);
+    }
+    if (regexNumber.test(phoneHouse)) {
+      setValidationHouse(true);
+    } else {
+      setValidationHouse(false);
+    }
+    if (regex.test(firstName)) {
+      setValidationName(true);
+    } else {
+      setValidationName(false);
+    }
+    if (regex.test(secondName)) {
+      setValidationSecond(true);
+    } else {
+      setValidationSecond(false);
+    }
+    if (regex.test(lastName)) {
+      setValidationLast(true);
+    } else {
+      setValidationLast(false);
+    }
+    if (regex.test(motherLastName)) {
+      setValidationMother(true);
+    } else {
+      setValidationMother(false);
+    }
+    if (
+      gender != "1" &&
+      civilState != "1" &&
+      motherLastName != "" &&
+      address != "" &&
+      validationHouse == true &&
+      phoneHouse != "" &&
+      phoneNumber != "" &&
+      firstName != "" &&
+      lastName != "" &&
+      secondName != "" &&
+      validationLast == true &&
+      validationMother == true &&
+      validationName == true &&
+      validationPhone == true &&
+      validationSecond == true
+    ) {
+      setActive(false);
+    } else {
+      setActive(true);
+    }
+  });
   const saveData = async () => {
     setStateModal(true);
     if (imageUser == null || imageUser != null) {
@@ -137,7 +196,7 @@ export const PersonalData = ({ route }) => {
       mail: InfoPersonal.mail,
       phoneNumber: phoneNumber,
       phoneHouse: phoneHouse,
-      birthday:dateBirthDay,
+      birthday: dateBirthDay,
       rol: InfoPersonal.rol,
       imageUser: imageUser != null ? global.picture : null,
       personalEmail: email,
@@ -185,7 +244,14 @@ export const PersonalData = ({ route }) => {
             {/* INFORMACION DEL USUARIO  */}
             <Text style={styles.textTittle}> INFORMACION DEL USUARIO </Text>
             <View>
-              <Text style={{ fontSize: 15, fontWeight: "bold", color: "red", textAlign: "center" }}>
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "bold",
+                  color: "red",
+                  textAlign: "center",
+                }}
+              >
                 *Estos datos no se pueden editar*
               </Text>
             </View>
@@ -216,7 +282,7 @@ export const PersonalData = ({ route }) => {
                   onChangeText={setId}
                   disabledInputStyle={{ color: "black" }}
                   maxLength={10}
-                  placeholder={Id == null ? "Ingresa tu cedula." : Id}
+                  placeholder={Id}
                   containerStyle={styles.inputContainer}
                   inputStyle={{ fontSize: 15 }}
                 />
@@ -235,7 +301,9 @@ export const PersonalData = ({ route }) => {
                   maxLength={20}
                   onChangeText={setFirstName}
                   placeholder={
-                    firstName == null ? "Ingresa tu primer nombre." : firstName
+                    firstName == "" || firstName == null
+                      ? "Ingresa tu primer nombre."
+                      : firstName
                   }
                   inputStyle={{ fontSize: 15 }}
                   containerStyle={styles.inputContainer}
@@ -253,7 +321,7 @@ export const PersonalData = ({ route }) => {
                   onChangeText={setSecondName}
                   maxLength={10}
                   placeholder={
-                    secondName == null
+                    secondName == "" || secondName == null
                       ? "Ingresa tu segundo nombre."
                       : secondName
                   }
@@ -273,7 +341,9 @@ export const PersonalData = ({ route }) => {
                   onChangeText={setLastName}
                   maxLength={15}
                   placeholder={
-                    lastName == null ? "Ingresa tu primer apellido." : lastName
+                    lastName == "" || lastName == null
+                      ? "Ingresa tu primer apellido."
+                      : lastName
                   }
                   containerStyle={styles.inputContainer}
                   inputStyle={{ fontSize: 15 }}
@@ -291,7 +361,7 @@ export const PersonalData = ({ route }) => {
                   maxLength={15}
                   onChangeText={setMotherLastName}
                   placeholder={
-                    motherLastName == null
+                    motherLastName == "" || motherLastName == null
                       ? "Ingresa tu segundo apellido."
                       : motherLastName
                   }
@@ -311,7 +381,7 @@ export const PersonalData = ({ route }) => {
                   maxLength={10}
                   onChangeText={setPhoneNumber}
                   placeholder={
-                    phoneNumber == null
+                    phoneNumber == "" || phoneNumber == null
                       ? "Ingresa tu numero celular."
                       : phoneNumber
                   }
@@ -330,7 +400,7 @@ export const PersonalData = ({ route }) => {
                   maxLength={10}
                   onChangeText={setPhoneHouse}
                   placeholder={
-                    phoneHouse == null
+                    phoneHouse == "" || phoneHouse == null
                       ? "Ingresa tu numero convencional."
                       : phoneHouse
                   }
@@ -348,7 +418,7 @@ export const PersonalData = ({ route }) => {
                   value={address}
                   onChangeText={setAddress}
                   placeholder={
-                    address == null
+                    address == "" || address == null
                       ? "Ingresa tu dirrecion domiciliaria."
                       : address
                   }
@@ -372,10 +442,13 @@ export const PersonalData = ({ route }) => {
                 <IconButton
                   icon={"calendar-month"}
                   iconColor={"black"}
-                  style={{paddingTop: Dimensions.get("window").height/70, paddingHorizontal: Dimensions.get("window").width/70}}
+                  style={{
+                    paddingTop: Dimensions.get("window").height / 70,
+                    paddingHorizontal: Dimensions.get("window").width / 70,
+                  }}
                   size={Dimensions.get("window").width / 20}
                   onPress={async () => {
-                    showMode()
+                    showMode();
                   }}
                 />
               </View>
@@ -398,15 +471,13 @@ export const PersonalData = ({ route }) => {
                 <Picker
                   style={{
                     height: Dimensions.get("window").height / 15,
-                    
                   }}
                   selectedValue={gender}
                   onValueChange={(itemValue, itemIndex) => setGender(itemValue)}
                 >
-                  <Picker.Item label="Selecciona la opcion:" value="null" />
-                  <Picker.Item label="Hombre" value="Hombre" />
-                  <Picker.Item label="Mujer" value="Mujer" />
-                  <Picker.Item label="No especifico " value="NoEspecifico" />
+                  <Picker.Item label="Selecciona la opcion:" value="1" />
+                  <Picker.Item label="Hombre" value="Male" />
+                  <Picker.Item label="Mujer" value="Female" />
                 </Picker>
               </View>
             </View>
@@ -430,27 +501,35 @@ export const PersonalData = ({ route }) => {
                     setCivilState(itemValue)
                   }
                 >
-                  <Picker.Item label="Selecciona la opcion:" value="null" />
-                  <Picker.Item label="Casado" value="Casado" />
-                  <Picker.Item label="Divorciado" value="Divorciado" />
-                  <Picker.Item label="Soltero" value="Soltero" />
+                  <Picker.Item label="Selecciona la opcion:" value="1" />
+                  <Picker.Item label="Casado" value="Married" />
+                  <Picker.Item label="Divorciado" value="Divorced" />
+                  <Picker.Item label="Soltero" value="Single" />
+                  <Picker.Item label="Viudo/a" value="Widower" />
                 </Picker>
               </View>
             </View>
           </ScrollView>
         </SafeAreaProvider>
         <View>
-          <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
-            *Se va a cerrar sesion al actualizar algun dato*
-          </Text>
+          {active == false ? (
+            <Text style={{ fontSize: 15, fontWeight: "bold", color: "green" }}>
+              Todos los datos son validos
+            </Text>
+          ) : (
+            <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
+              Datos erroneos
+            </Text>
+          )}
         </View>
         <View style={{ flexDirection: "row" }}>
           <Button
             icon="archive"
             style={styles.buttonStyle}
             mode="contained"
-            onPress={() => {
-              saveData();
+            disabled={active}
+            onPress={async () => {
+              await saveData();
             }}
           >
             Guardar
@@ -459,7 +538,7 @@ export const PersonalData = ({ route }) => {
             icon="close-outline"
             style={styles.buttonStyle}
             mode="contained"
-            onPress={() => navigation.goBack()}
+            onPress={() => {navigation.goBack()}}
           >
             Volver
           </Button>
@@ -470,16 +549,16 @@ export const PersonalData = ({ route }) => {
         />
       </View>
       {show && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={date}
-            mode={mode}
-            is24Hour={true}
-            display="default"
-            onChange={onChange}
-            maximumDate={new Date()}
-          />
-        )}
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={date}
+          mode={mode}
+          is24Hour={true}
+          display="default"
+          onChange={onChange}
+          maximumDate={new Date()}
+        />
+      )}
     </View>
   );
 };
@@ -540,9 +619,10 @@ const styles = StyleSheet.create({
     margin: 10,
     width: Dimensions.get("window").width / 2.5,
     backgroundColor: "#6DC0D5",
-  },textCalendar:{
-    fontSize:15,
+  },
+  textCalendar: {
+    fontSize: 15,
     paddingTop: Dimensions.get("window").height / 50,
-    paddingLeft: Dimensions.get("window").width /10
-  }
+    paddingLeft: Dimensions.get("window").width / 10,
+  },
 });

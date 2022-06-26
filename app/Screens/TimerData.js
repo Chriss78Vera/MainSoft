@@ -1,12 +1,20 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  ActivityIndicator,
+} from "react-native";
 import { Button, IconButton } from "react-native-paper";
 import { getAuth, signOut } from "firebase/auth";
 import { MenuPicture } from "../Components/ProfilePicture";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { dateComplete, dateMonth, ShowMonth } from "../Components/Date";
 import { getTimers } from "../Services/TimerRegister/TimerUser";
+import { ModalReload } from "../Components/Modal";
+import { DateTimer, DateTimerData } from "../Components/Calendar";
 // NAVIGATIONS IMPORT
 export const TimerData = () => {
   const navigation = useNavigation();
@@ -17,20 +25,103 @@ export const TimerData = () => {
   const [mode, setMode] = React.useState("date");
   // DATE PICKER DATE
   const [dateDay, setDateDay] = React.useState(dateComplete());
+  const [dateNotChange, setDateNotChange] = React.useState(dateComplete());
   const [date1, setDate1] = React.useState(new Date());
   const [showDay, setShowDay] = React.useState(false);
+  const [change, setChange] = React.useState(false);
   let textMonth = ShowMonth(dateTmp);
+  let totalDay = 0;
+  let totalExtra = 0;
   // ESTADO
   // DATE PICKER MONTH
-  const [dataTime, setDataTime] = React.useState([]);
+  const [dataTime, setDataTime] = React.useState();
+  if (dataTime != null || dataTime != undefined) {
+    totalDay = dataTime.totalDay;
+    totalExtra = dataTime.totalExtraDay;
+  }
   React.useEffect(() => {
-    getTimers(refreshScreen);
+    getTimers(setDataTime, date1);
   }, []);
-  const refreshScreen = (data) => {
-    setDataTime(data);
+  let ActualizacionTime = () => {
+    if (change == true) {
+      return <></>;
+    } else {
+      return <ComponenteCarga />;
+    }
   };
-  const setTime = async (date) => {
-    await getTimers(refreshScreen);
+  let ComponenteBottom = () => {
+    if (dataTime == null) {
+      return (
+        <Button
+          mode="contained"
+          color={"#6DC0D5"}
+          style={styles.buttonStyle}
+          disabled={true}
+          labelStyle={styles.buttonTextStyle}
+          onPress={async () => {
+            console.log(dataTime);
+          }}
+        >
+          MAS DETALLES
+        </Button>
+      );
+    } else {
+      return (
+        <Button
+          mode="contained"
+          color={"#6DC0D5"}
+          style={styles.buttonStyle}
+          disabled={false}
+          labelStyle={styles.buttonTextStyle}
+          onPress={async () => {
+            navigation.navigate("TIMERMOREDATA", {
+              timeMoreData: dataTime,
+              DayEfe: date1.getDay(),
+            });
+          }}
+        >
+          MAS DETALLES
+        </Button>
+      );
+    }
+  };
+  let ComponenteCarga = () => {
+    if (dataTime == null) {
+      return (
+        <>
+          <DateTimerData dayNumber={date1.getDay()} />
+          <View style={{ flexDirection: "row" }}>
+            <Text style={styles.textTitle}> JORNADA DIARIA: </Text>
+            <Text style={styles.textSubtitle}>0 HORAS</Text>
+          </View>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={styles.textTitle}> HORAS EXTRA: </Text>
+            <Text style={styles.textSubtitle}>0 HORAS</Text>
+          </View>
+          <Text style={{ fontSize: 15, color: "red", fontWeight: "bold" }}>
+            NO HAY DATOS REGISTRADOS EL DIA {date1.getDate()}
+          </Text>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <DateTimerData dayNumber={date1.getDay()} />
+          <View style={{ flexDirection: "row" }}>
+            <Text style={styles.textTitle}> JORNADA DIARIA: </Text>
+            <Text style={styles.textSubtitle}>
+              {dataTime == null ? "0" : totalDay} HORAS
+            </Text>
+          </View>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={styles.textTitle}> HORAS EXTRA: </Text>
+            <Text style={styles.textSubtitle}>
+              {dataTime == null ? "0" : totalExtra} HORAS
+            </Text>
+          </View>
+        </>
+      );
+    }
   };
   const showMode = (currentMode) => {
     setShow(true);
@@ -67,6 +158,15 @@ export const TimerData = () => {
       "-" +
       tempDate.getFullYear();
     setDateDay(fDate);
+    if (dateNotChange != date1) {
+      setChange(true);
+      getTimers(setDataTime, date1);
+      setChange(false);
+    } else {
+      setChange(true);
+      getTimers(setDataTime, date1);
+      setChange(false);
+    }
   };
   return (
     <View style={styles.container}>
@@ -90,9 +190,9 @@ export const TimerData = () => {
           <IconButton
             icon={"calendar-month"}
             iconColor={"black"}
-            size={Dimensions.get("window").width / 10}
-            onPress={async() => {
-              showMode(), console.log(ShowMonth(dateTmp))
+            size={Dimensions.get("window").width / 12}
+            onPress={async () => {
+              showMode(), console.log(ShowMonth(dateTmp));
             }}
           />
         </View>
@@ -101,11 +201,11 @@ export const TimerData = () => {
         </View>
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.textTitle}> HORAS MENSUALES: </Text>
-          <Text style={styles.textSubtitle}>160 HORAS</Text>
+          <Text style={styles.textSubtitle}>{global.totalMonth} HORAS</Text>
         </View>
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.textTitle}> HORAS EXTRAS: </Text>
-          <Text style={styles.textSubtitle}>80 HORAS</Text>
+          <Text style={styles.textSubtitle}>{global.extraMonth} HORAS</Text>
         </View>
         <View>
           <Text style={styles.textMonthDetails}>DETALLES</Text>
@@ -116,37 +216,15 @@ export const TimerData = () => {
           <IconButton
             icon={"calendar-month"}
             iconColor={"black"}
-            size={Dimensions.get("window").width / 10}
-            onPress={async() => {
-              showModeDay(), console.log(ShowMonth(dateTmp))
+            size={Dimensions.get("window").width / 12}
+            onPress={async () => {
+              showModeDay(), console.log(ShowMonth(dateTmp));
             }}
           />
         </View>
-        <View style={{ flexDirection: "row" }}>
-          <Text style={styles.textTitle}> JORNADA DIARIA: </Text>
-          <Text style={styles.textSubtitle}>8 HORAS</Text>
-        </View>
-        <View style={{ flexDirection: "row" }}>
-          <Text style={styles.textTitle}> HORAS EXTRA: </Text>
-          <Text style={styles.textSubtitle}>4 HORAS</Text>
-        </View>
+        <ActualizacionTime />
         <View>
-          <Button
-            mode="contained"
-            color={"#6DC0D5"}
-            style={styles.buttonStyle}
-            labelStyle={styles.buttonTextStyle}
-            onPress={async () => {
-              await setTime();
-                navigation.navigate("TIMERMOREDATA", {
-                  timeMoreData: dataTime,
-                  DayEfe: date1.getDay(),
-                });
-              console.log(dataTime);
-            }}
-          >
-            MAS DETALLES
-          </Button>
+          <ComponenteBottom />
         </View>
         {show && (
           <DateTimePicker

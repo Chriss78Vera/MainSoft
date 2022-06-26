@@ -2,35 +2,41 @@ import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { DocumentsPicture } from "../../Components/ProfilePicture";
-import { Button } from "react-native-paper";
+import { Button, IconButton } from "react-native-paper";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import {
-  launchImageLibraryAsync,
-  MediaTypeOptions,
-  useMediaLibraryPermissions,
-} from "expo-image-picker";
+import * as DocumentPicker from "expo-document-picker";
+import { saveDocumentPersonal } from "../../Services/UserInformation/DocumentsUser";
 export const DocumentsData = ({ route }) => {
   const navigation = useNavigation();
-  let InfoPersonal = [];
-  InfoPersonal = route.params.InfoPersonal;
+  let InfoDocument = [];
+  InfoDocument = route.params.InfoDocument;
   const [firstName, setFirstName] = React.useState(global.name);
   const [lastName, setLastName] = React.useState(global.lastName);
-  const [Id, setId] = React.useState(global.id);
   // PERMISOS PARA INGRESAR AL ALMACENAMIENTO
-  const [imageUser, setImageUser] = React.useState(global.picture);
-  const [data, setData] = React.useState([]);
-
-  const [status, requestPermission] = useMediaLibraryPermissions();
-
-  const chooseFile = async () => {
-    let options = {
-      mediaTypes: MediaTypeOptions.Images,
-    };
-    let response = await launchImageLibraryAsync(options);
-    setImageUser(response.uri);
+  const [documentHojaVida, setDocumentHojaVida] = React.useState();
+  const [nameHoja, setNameHoja] = React.useState(InfoDocument.nameDocumentHojaVida);
+  const [documentCedula, setDocumentCedula] = React.useState();
+  const [nameCedula, setNameCedula] = React.useState(InfoDocument.nameDocumentCedula);
+  const [active, setActive] = React.useState();
+  const pickDocumentHojaVida = async () => {
+    let result = await DocumentPicker.getDocumentAsync({});
+    if (result != null) {
+      console.log(result.name);
+    }
+    setNameHoja(result.name);
+    setDocumentHojaVida(result.uri);
+  };
+  const pickDocumentCedula = async () => {
+    let result = await DocumentPicker.getDocumentAsync({});
+    if (result != null) {
+      const r = await fetch(result.uri);
+      console.log(result.name);
+    }
+    setNameCedula(result.name);
+    setDocumentCedula(result.uri);
   };
   // ENLACE CON FIREBASE
-  const uploadFile = async () => {
+  const uploadFileHojaVida = async () => {
     const blob = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.onload = function () {
@@ -40,29 +46,64 @@ export const DocumentsData = ({ route }) => {
         reject(new TypeError("Network request failed"));
       };
       xhr.responseType = "blob";
-      xhr.open("GET", imageUser, true);
+      xhr.open("GET", documentHojaVida, true);
       xhr.send(null);
     });
 
     const storage = getStorage();
-    let nameFile = "Profile_" + firstName + lastName + "_" + Id;
+    let nameFile =  firstName +"-"+ lastName
 
     var d = new Date();
-    let mes = d.getMonth() + 1;
-    const fileStorage = ref(storage, "Profile/" + nameFile + ".jpg");
+    const fileStorage = ref(storage, "Documents/" + nameFile +"/"+ nameHoja);
     const uploadResult = await uploadBytes(fileStorage, blob);
-
     blob.close();
-
     const url = await getDownloadURL(fileStorage);
-    global.picture = url;
-    console.log(global.picture);
+    console.log(url);
+    global.hoja=url
   };
+  const uploadFileCedula = async () => {
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", documentCedula, true);
+      xhr.send(null);
+    });
+
+    const storage = getStorage();
+    let nameFile =  firstName +"-"+ lastName
+
+    var d = new Date();
+    const fileStorage = ref(storage, "Documents/" + nameFile +"/"+ nameCedula);
+    const uploadResult = await uploadBytes(fileStorage, blob);
+    blob.close();
+    const url = await getDownloadURL(fileStorage);
+    console.log(url);
+    global.cedula=url
+  };
+  React.useEffect(()=>{
+    if(documentCedula != null && documentHojaVida !=null){
+      setActive(false)
+    }else{
+      setActive(true)
+    }
+  })
   // SUBIR DATOS A LA BASE //
   const saveData = async () => {
-    if (imageUser == null || imageUser != null) {
-      await uploadFile();
-    }
+      await uploadFileHojaVida();
+      await uploadFileCedula();
+      const data={
+        nameDocumentCedula:nameCedula,
+        urlDocumentCedula:global.cedula,
+        nameDocumentHojaVida:nameHoja,
+        urlDocumentHojaVida:global.hoja,
+      }
+      saveDocumentPersonal(data);
   };
   return (
     <View style={styles.container}>
@@ -81,13 +122,70 @@ export const DocumentsData = ({ route }) => {
           DESAROLLADOR
         </Text>
       </View>
+      <View style={{ alignItems: "center",flex:3, minHeight: Dimensions.get("window").height/100}}>
+      <Text style={{ fontSize: 20, fontWeight: "bold", }}> HOJA DE VIDA </Text>
+      <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+      <Text style={{fontSize: 12, fontWeight: "bold"}}>{nameHoja=="" || nameHoja==null ? "Escoje el archivo que necesites: " : nameHoja}</Text>
+      <IconButton
+            icon={"calendar-month"}
+            iconColor={"black"}
+            size={Dimensions.get("window").width / 12}
+            onPress={async () => {
+              pickDocumentHojaVida();
+            }}
+          />
+      </View>
+      <View style={{ alignItems: "center"}}>
+      <Text style={{ fontSize: 20, fontWeight: "bold"}}> CEDULA </Text>
+      </View>
+      <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+      <Text style={{fontSize: 15, fontWeight: "bold"}}>{nameCedula=="" || nameCedula==null ? "Escoje el archivo que necesites: " : nameCedula}</Text>
+      <IconButton
+            icon={"calendar-month"}
+            iconColor={"black"}
+            size={Dimensions.get("window").width / 12}
+            onPress={async () => {
+              pickDocumentCedula()
+            }}
+          />
+      </View>
+      {/* <View style={{ alignItems: "center"}}>
+      <Text style={{ fontSize: 20, fontWeight: "bold"}}> HOJA DE VIDA </Text>
+      </View>
+      <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+      <Text style={{fontSize: 15, fontWeight: "bold"}}>{name=="" || name==null ? "Escoje el archivo que necesites: " : name}</Text>
+      <IconButton
+            icon={"calendar-month"}
+            iconColor={"black"}
+            size={Dimensions.get("window").width / 12}
+            onPress={async () => {
+              showMode(), console.log("Hola");
+            }}
+          />
+      </View>
+      <View style={{ alignItems: "center"}}>
+      <Text style={{ fontSize: 20, fontWeight: "bold"}}> HOJA DE VIDA </Text>
+      </View>
+      <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
+      <Text style={{fontSize: 15, fontWeight: "bold"}}>{name=="" || name==null ? "Escoje el archivo que necesites: " : name}</Text>
+      <IconButton
+            icon={"calendar-month"}
+            iconColor={"black"}
+            size={Dimensions.get("window").width / 12}
+            onPress={async () => {
+              showMode(), console.log("Hola");
+            }}
+          />
+      </View> */}
       <View style={styles.containerBottom}>
         <View style={{ flexDirection: "row" }}>
           <Button
             icon="archive"
             style={styles.buttonStyle}
             mode="contained"
-            onPress={() => console.log("Subir Documentos")}
+            disabled={active}
+            onPress={async() => 
+              await saveData()}
           >
             Guardar
           </Button>
@@ -99,6 +197,7 @@ export const DocumentsData = ({ route }) => {
           >
             Volver
           </Button>
+        </View>
         </View>
       </View>
     </View>
@@ -117,7 +216,6 @@ const styles = StyleSheet.create({
     justifyContext: "center",
     alignItems: "center",
     paddingBottom: 100,
-    paddingTop: 50,
     marginBottom: 30,
   },
   containerTop: {

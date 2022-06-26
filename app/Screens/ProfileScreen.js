@@ -11,16 +11,21 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { useNavigation } from "@react-navigation/native";
 import { getAuth, signOut } from "firebase/auth";
 import { getPersonalInformation } from "../Services/UserInformation/InfoUser";
+import { getDocumentsData } from "../Services/UserInformation/DocumentsUser";
 // NAVIGATIONS IMPORT
 export const Profile = () => {
   const navigation = useNavigation();
   const [personalInformation, setPersonalInformation] = React.useState([]);
-
+  const [documentsInformation, setDocumentsInformation] = React.useState([]);
   const getInformations = (information) => {
     setPersonalInformation(information);
   };
+  const getDocuments = (documentation) => {
+    setDocumentsInformation(documentation);
+  }
   React.useEffect(() => {
     getPersonalInformation(getInformations);
+    getDocumentsData(getDocuments)
   }, []);
 
   const cerrar = () => {
@@ -82,7 +87,7 @@ export const Profile = () => {
             <TouchableOpacity
               onPress={() => {
                 navigation.navigate("DOCUMENTS", {
-                  InfoPersonal: personalInformation[0],
+                  InfoDocument: documentsInformation[0],
                 });
               }}
             >

@@ -9,6 +9,7 @@ import { ModalReload } from "../Components/Modal";
 import { MenuPicture, ProfilePicture } from "../Components/ProfilePicture";
 import {
   saveTimeUser,
+  sumarHoras,
   updateStateWork,
 } from "../Services/TimerRegister/TimerUser";
 import { getPersonalRol } from "../Services/UserInformation/InfoUser";
@@ -222,14 +223,13 @@ export const HomeScreen = () => {
             disabled={activeBotton}
             labelStyle={styles.buttonTextStyle}
             onPress={async () => {
-              await updateStateWork("BREAK");
-              setActivePerson("BREAK");
-              setActiveBotton(true)
               navigation.navigate("DESCRIPTIONTIME", {
                 StartTime: startTime,
                 State: "startBreak",
                 DBstate: "BREAK",
               });
+              setActivePerson("BREAK");
+              setActiveBotton(true);
             }}
           >
             IR AL RECESO
@@ -240,9 +240,6 @@ export const HomeScreen = () => {
             style={styles.buttonStyleWorking}
             labelStyle={styles.buttonTextStyle}
             onPress={async () => {
-              console.log("TERMINAR LA JORNADA", finishTime);
-              global.state = "FINISHED";
-              await updateStateWork("FINISHED");
               setActivePerson("FINISHED");
               navigation.navigate("DESCRIPTIONTIME", {
                 StartTime: startTime,
@@ -281,17 +278,13 @@ export const HomeScreen = () => {
         //   style={styles.buttonStyle}
         //   labelStyle={styles.buttonTextStyle}
         //   onPress={async () => {
-        //     console.log("HORAS EXTRA", extraTime);
-        //     setActivePerson("WORKING");
-        //     setStateModal(true);
-        //     await updateStateWork("WORKING");
-        //     setStateModal(false);
+        //     sumarHoras();
         //   }}
         // >
         //   TRABAJAR HORAS EXTRA!
         // </Button>
-        <></>
-      );
+      <></>
+        );
     }
   };
   // ----------------------------------------------------------------------- //

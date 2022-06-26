@@ -350,6 +350,79 @@ export const DateTimer = (dayNumber) => {
     </>
   );
 };
+export const DateTimerData = (dayNumber) => {
+  const [day, setDay] = React.useState();
+  let nuevosColores = "white";
+  const calcularDia = () => {
+    const dias = [
+      "domingo", // 0
+      "lunes", // 1
+      "martes",
+      "miércoles",
+      "jueves",
+      "viernes",
+      "sábado",
+    ];
+    const numeroDia = dayNumber.dayNumber
+    const nombreDia = dias[numeroDia];
+    setDay(numeroDia);
+    console.log("Nombre de día de la semana: ", numeroDia);
+  };
+  // VALIDATION //
+  React.useEffect(() => {
+    calcularDia();
+  }, []);
+  let ValidateDay = () => {
+    if ((day == 0)) {
+      return (
+        <>
+          <Text style={styles.textCalendarDayData}> DOMINGO </Text>
+        </>
+      );
+    } else if (day == 1) {
+      return (
+        <>
+          <Text style={styles.textCalendarDayData}>LUNES</Text>
+        </>
+      );
+    } else if (day == 2) {
+      return (
+        <>
+          <Text style={styles.textCalendarDayData}>MARTES</Text>
+        </>
+      );
+    } else if (day == 3) {
+      return (
+        <>
+          <Text style={styles.textCalendarDayData}>MIERCOLES</Text>
+        </>
+      );
+    } else if (day == 4) {
+      return (
+        <>
+          <Text style={styles.textCalendarDayData}>JUEVES</Text>
+        </>
+      );
+    } else if (day == 5) {
+      return (
+        <>
+          <Text style={styles.textCalendarDayData}>VIERNES</Text>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <Text style={styles.textCalendarDayData}>SABADO</Text>
+        </>
+      );
+    }
+  };
+  return (
+    <>
+      <ValidateDay />
+    </>
+  );
+};
 const styles = StyleSheet.create({
   textCalendar: {
     paddingHorizontal: 10,
@@ -364,5 +437,11 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: "bold",
     color: "#6DC0D5",
+  },
+  textCalendarDayData: {
+    fontSize: 15,
+    textAlign: "center",
+    fontWeight: "bold",
+    color: "black",
   },
 });

@@ -15,32 +15,104 @@ export const TimerScreen = ({ route }) => {
   const [dataTime, setDataTime] = React.useState([]);
 
   // VARIABLES UTILIZADAS
-  const [startTime, setStartTime] = React.useState(timeMoreData[0].startWork);
-  const [finishTime, setFinishTime] = React.useState(
-    timeMoreData[0].startBreak
+  const [dayTime, setDayTime] = React.useState(
+    timeMoreData.totalDay == null ? "0" : timeMoreData.totalDay
   );
-  const [startBreak, setBreakTime] = React.useState(timeMoreData[0].startBreak);
+  const [extraTime, setExtraTime] = React.useState(
+    timeMoreData.totalExtraDay == null ? "0" : timeMoreData.totalExtraDay
+  );
+  const [startTime, setStartTime] = React.useState(
+    timeMoreData.startWork == null ? "00:00:00" : timeMoreData.startWork
+  );
+  const [finishTime, setFinishTime] = React.useState(
+    timeMoreData.startBreak == null ? "00:00:00" : timeMoreData.startBreak
+  );
+  const [startBreak, setBreakTime] = React.useState(
+    timeMoreData.startBreak == null ? "00:00:00" : timeMoreData.startBreak
+  );
   const [finishBreak, setFinishBreakTime] = React.useState(
-    timeMoreData[0].startBack
+    timeMoreData.startBack == null ? "00:00:00" : timeMoreData.startBack
   );
   const [startReturn, setStartReturnTime] = React.useState(
-    timeMoreData[0].startBack
+    timeMoreData.startBack == null ? "00:00:00" : timeMoreData.startBack
   );
   const [finishWork, setFinishWorkTime] = React.useState(
-    timeMoreData[0].finishTime
+    timeMoreData.finishTime == null ? "00:00:00" : timeMoreData.finishTime
   );
   const [descriptionBreak, setDescriptionBreakTime] = React.useState(
-    timeMoreData[0].DescriptionBeforeBreak
+    timeMoreData.DescriptionBeforeBreak == null
+      ? null
+      : timeMoreData.DescriptionBeforeBreak
   );
   const [descriptionFinish, setDescriptionFinish] = React.useState(
-    timeMoreData[0].DescriptionFinishDay
+    timeMoreData.DescriptionFinishDay == null
+      ? null
+      : timeMoreData.DescriptionFinishDay
   );
   const [imageBreak, setImageBreakTime] = React.useState(
-    timeMoreData[0].ImageBreak
+    timeMoreData.ImageBreak
   );
   const [imageFinish, setImageFinish] = React.useState(
-    timeMoreData[0].ImageFinish
+    timeMoreData.ImageFinish
   );
+  let ComponenteDescriptionBreak = () => {
+    if (descriptionBreak == null) {
+      return <></>;
+    } else {
+      return (
+        <View style={styles.viewDescanso}>
+          <Text style={styles.textTitleBreak}> DESCRIPCION </Text>
+          <View style={styles.viewTimeBreak}>
+            <Text style={styles.descrptionTextBreak}>{descriptionBreak}</Text>
+            <View style={{ alignItems: "center", justifyContent: "center" }}>
+              {imageBreak == null ? (
+                <></>
+              ) : (
+                <Image
+                  style={{
+                    minWidth: Dimensions.get("window").width / 1.5,
+                    height: 300,
+                  }}
+                  source={{
+                    uri: imageBreak,
+                  }}
+                />
+              )}
+            </View>
+          </View>
+        </View>
+      );
+    }
+  };
+  let ComponenteDescriptionFinish = () => {
+    if (descriptionFinish == null) {
+      return <></>;
+    } else {
+      return (
+        <View style={styles.viewFin}>
+          <Text style={styles.textTitleFinsih}> DESCRIPCION FINAL </Text>
+          <View style={styles.viewTimeFinish}>
+            <Text style={styles.descrptionTextFinish}>{descriptionFinish}</Text>
+            <View style={{ alignItems: "center", justifyContent: "center" }}>
+              {imageFinish == null ? (
+                <></>
+              ) : (
+                <Image
+                  style={{
+                    minWidth: Dimensions.get("window").width / 1.5,
+                    height: 300,
+                  }}
+                  source={{
+                    uri: imageFinish,
+                  }}
+                />
+              )}
+            </View>
+          </View>
+        </View>
+      );
+    }
+  };
   let ComponentView = () => {
     if (timeMoreData == null) {
       return (
@@ -74,27 +146,7 @@ export const TimerScreen = ({ route }) => {
                   <Text style={styles.textBreakTime}>{finishBreak}</Text>
                 </View>
               </View>
-              <View style={styles.viewDescanso}>
-                <Text style={styles.textTitleBreak}> DESCRIPCION </Text>
-                <View style={styles.viewTimeBreak}>
-                  <Text style={styles.descrptionTextBreak}>
-                    {descriptionBreak}
-                  </Text>
-                  <View
-                    style={{ alignItems: "center", justifyContent: "center" }}
-                  >
-                    <Image
-                      style={{
-                        minWidth: Dimensions.get("window").width / 1.5,
-                        height: 300,
-                      }}
-                      source={{
-                        uri: imageBreak,
-                      }}
-                    />
-                  </View>
-                </View>
-              </View>
+              <ComponenteDescriptionBreak />
               <View style={styles.viewFin}>
                 <Text style={styles.textTitleFinsih}> FIN DE LA JORNADA </Text>
                 <View style={styles.viewTime}>
@@ -105,27 +157,7 @@ export const TimerScreen = ({ route }) => {
                   <Text style={styles.textFinishTime}>{finishWork}</Text>
                 </View>
               </View>
-              <View style={styles.viewFin}>
-                <Text style={styles.textTitleFinsih}> DESCRIPCION FINAL </Text>
-                <View style={styles.viewTimeFinish}>
-                  <Text style={styles.descrptionTextFinish}>
-                    {descriptionFinish}
-                  </Text>
-                  <View
-                    style={{ alignItems: "center", justifyContent: "center"}}
-                  >
-                    <Image
-                      style={{
-                        minWidth: Dimensions.get("window").width / 1.5,
-                        height: 300,
-                      }}
-                      source={{
-                        uri: imageFinish,
-                      }}
-                    />
-                  </View>
-                </View>
-              </View>
+              <ComponenteDescriptionFinish />
             </ScrollView>
           </SafeAreaProvider>
         </>
@@ -151,11 +183,11 @@ export const TimerScreen = ({ route }) => {
         </View>
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.textTitle}> JORNADA DIARIA: </Text>
-          <Text style={styles.textSubtitle}>8 HORAS</Text>
+          <Text style={styles.textSubtitle}>{dayTime} HORAS</Text>
         </View>
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.textTitle}> HORAS EXTRA: </Text>
-          <Text style={styles.textSubtitle}>4 HORAS</Text>
+          <Text style={styles.textSubtitle}>{extraTime} HORAS</Text>
         </View>
       </View>
       <View style={styles.container2}>
@@ -220,14 +252,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: Dimensions.get("window").width,
     maxHeight: Dimensions.get("window").height / 2,
-    paddingTop:10,
+    paddingTop: 10,
   },
   viewFin: {
     alignItems: "center",
     justifyContent: "center",
     width: Dimensions.get("window").width,
     maxHeight: Dimensions.get("window").height / 2,
-    paddingTop:10,
+    paddingTop: 10,
   },
   viewFinDescription: {
     alignItems: "center",
@@ -241,7 +273,6 @@ const styles = StyleSheet.create({
   },
   viewTimeFinish: {
     flexDirection: "column",
-
   },
   viewTimeBreak: {
     flexDirection: "column",

@@ -21,6 +21,8 @@ export const getPersonalRol = async (Show) => {
     global.lastName = personalInformation[i].lastName;
     global.id = personalInformation[i].id;
     global.picture = personalInformation[i].imageUser;
+    global.totalMonth = personalInformation[i].totalMonth;
+    global.extraMonth = personalInformation[i].totalExtraMonth;
   }
   if (global.finishDay == null || global.workState == null) {
     console.log("NADA");
