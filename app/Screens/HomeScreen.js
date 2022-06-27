@@ -283,8 +283,8 @@ export const HomeScreen = () => {
         // >
         //   TRABAJAR HORAS EXTRA!
         // </Button>
-      <></>
-        );
+        <></>
+      );
     }
   };
   // ----------------------------------------------------------------------- //
@@ -305,14 +305,14 @@ export const HomeScreen = () => {
             <Text style={styles.text2inContainer2}>
               {name} {lastName}
             </Text>
+            <ModalReload
+              modalVisible={stateModal}
+              textModal={"Registrando el tiempo!"}
+            />
           </View>
           <View>
             <MenuPicture colorBackground={Newcolor} />
           </View>
-          <ModalReload
-            modalVisible={stateModal}
-            textModal={"Registrando el tiempo!"}
-          />
         </View>
 
         <View style={styles.containerCalendar}>
@@ -322,6 +322,7 @@ export const HomeScreen = () => {
           <Text style={styles.textBlackContainer}>REGISTRA TU HORA!</Text>
         </View>
       </View>
+
       <View style={[styles.container3, { shadowColor: Newcolor }]}>
         <TextValidator />
       </View>
@@ -441,7 +442,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   containerTextBlackContainer: {
-    paddingTop: 15,
+    paddingTop: Dimensions.get("window").height/120,
   },
   textBlackContainer: {
     fontSize: 17,

@@ -40,10 +40,9 @@ export const LoginScreenMail = () => {
             theme={{ colors: { text: "white", placeholder: "white" } }}
           />
         </View>
-        <Text style={{fontSize:15, fontWeight: "bold", color:"red"}}> {global.rol == "Empleado" ? "" : "NO PUEDES INGRESAR CON ESE USUARIO"}</Text>
         <Button
           mode="contained"
-          color={"#6DC0D5"}
+          color={"#6DC0D5"} 
           style={styles.buttonStyle}
           labelStyle={styles.buttonTextStyle}
           onPress={() => {

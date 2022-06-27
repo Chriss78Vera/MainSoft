@@ -67,6 +67,7 @@ export const LoginScreenPassword = ({ route }) => {
           style={styles.buttonStyle}
           labelStyle={styles.buttonTextStyle}
           onPress={() => {
+            console.log(emailUser)
             signInWithEmailAndPassword(auth, emailUser, password)
               .then(async (userCredential) => {
                 setStateModal(true);
@@ -81,7 +82,9 @@ export const LoginScreenPassword = ({ route }) => {
                 }
               })
               .catch((error) => {
+                console.log(error)
                 setActive(true);
+                setStateModal(false);
               });
           }}
         >

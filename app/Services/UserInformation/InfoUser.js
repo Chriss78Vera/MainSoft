@@ -12,6 +12,7 @@ export const getPersonalRol = async (Show) => {
     const q = doc(global.dbCon, "/Usuarios/" + Rol);
     const docSnap = await getDoc(q);
     let personalInformation = [];
+    console.log(personalInformation)
     personalInformation.push(docSnap.data());
     for (let i = 0; i < personalInformation.length; i++) {
       global.finishDay = personalInformation[i].finishDay;
@@ -25,14 +26,15 @@ export const getPersonalRol = async (Show) => {
       global.stateBreak = personalInformation[i].stateBreak;
       global.workStation = personalInformation[i].workstation;
     }
+    let date = new Date();
     if (global.finishDay == null || global.workState == null) {
       await updateStateWork("NOTWORKING");
       const finishDay = {
         finishDay: date.getDate(),
+        totalMonth:0,
       };
       await updateDoc(doc(global.dbCon, "/Usuarios", global.id), finishDay);
     } else {
-      let date = new Date();
       if (date.getDate() == global.finishDay) {
       } else {
         await updateStateWork("NOTWORKING");
@@ -45,6 +47,12 @@ export const getPersonalRol = async (Show) => {
     }
   } else {
     console.log("NO LEE EL ESTADO");
+  }
+  if(global.totalMonth==null){
+    global.totalMonth =0
+    console.log(global.totalMonth)
+  }else{
+    "NO HAY NADA"
   }
 };
 export const getPersonalInformation = async (getInformations) => {
