@@ -15,14 +15,12 @@ import { dateComplete, dateMonth, ShowMonth } from "../Components/Date";
 import { getTimers } from "../Services/TimerRegister/TimerUser";
 import { ModalReload } from "../Components/Modal";
 import { DateTimer, DateTimerData } from "../Components/Calendar";
-import MonthPicker from 'react-native-month-year-picker';
+import MonthPicker from "react-native-month-year-picker";
 // NAVIGATIONS IMPORT
 export const TimerData = () => {
   const navigation = useNavigation();
   // DATE PICKER MONTH
   const [dateTmp, setDateTmp] = React.useState(dateMonth());
-  const [date, setDate] = React.useState(new Date());
-  const [show, setShow] = React.useState(false);
   const [mode, setMode] = React.useState("date");
   // DATE PICKER DATE
   const [dateDay, setDateDay] = React.useState(dateComplete());
@@ -31,7 +29,7 @@ export const TimerData = () => {
   const [showDay, setShowDay] = React.useState(false);
   const [change, setChange] = React.useState(false);
   const [search, setSearch] = React.useState(false);
-  let textMonth = ShowMonth(dateTmp);
+  let textMonth = ShowMonth(dateDay);
   let totalDay = 0;
   let totalExtra = 0;
   // ESTADO
@@ -78,12 +76,6 @@ export const TimerData = () => {
             style={styles.buttonStyle}
             disabled={true}
             labelStyle={styles.buttonTextStyle}
-            onPress={async () => {
-              navigation.navigate("TIMERMOREDATA", {
-                timeMoreData: dataTime,
-                DayEfe: date1.getDay(),
-              });
-            }}
           >
             MAS DETALLES
           </Button>
@@ -114,6 +106,20 @@ export const TimerData = () => {
       if (dataTime == null) {
         return (
           <>
+            <View>
+              <Text style={styles.textMonth}>{textMonth}</Text>
+            </View>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.textTitle}> HORAS MENSUALES: </Text>
+              <Text style={styles.textSubtitle}>{global.totalMonth} HORAS</Text>
+            </View>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.textTitle}> HORAS EXTRAS: </Text>
+              <Text style={styles.textSubtitle}>{global.extraMonth} HORAS</Text>
+            </View>
+            <View>
+              <Text style={styles.textMonthDetails}>DETALLES</Text>
+            </View>
             <DateTimerData dayNumber={date1.getDay()} />
             <View style={{ flexDirection: "row" }}>
               <Text style={styles.textTitle}> JORNADA DIARIA: </Text>
@@ -131,6 +137,20 @@ export const TimerData = () => {
       } else {
         return (
           <>
+            <View>
+              <Text style={styles.textMonth}>{textMonth}</Text>
+            </View>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.textTitle}> HORAS MENSUALES: </Text>
+              <Text style={styles.textSubtitle}>{global.totalMonth} HORAS</Text>
+            </View>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.textTitle}> HORAS EXTRAS: </Text>
+              <Text style={styles.textSubtitle}>{global.extraMonth} HORAS</Text>
+            </View>
+            <View>
+              <Text style={styles.textMonthDetails}>DETALLES</Text>
+            </View>
             <DateTimerData dayNumber={date1.getDay()} />
             <View style={{ flexDirection: "row" }}>
               <Text style={styles.textTitle}> JORNADA DIARIA: </Text>
@@ -152,14 +172,6 @@ export const TimerData = () => {
     }
   };
 
-
-  const showPicker = (value) => setShow(value);
-
-  const onValueChange = (event, newDate) => {
-    const selectedDate = newDate || date;
-    showPicker(false);
-    setDate(selectedDate);
-  };
   // DATE PCIKER DIA
   const showModeDay = (currentMode) => {
     setShowDay(true);
@@ -198,40 +210,14 @@ export const TimerData = () => {
       </View>
       <View style={styles.container2}>
         <View style={{ flexDirection: "row" }}>
-          <Text style={styles.textCalendar}> SELECCIONA EL MES: </Text>
-          <Text>{(date, "MM-YYYY")}</Text>
-          <IconButton
-            icon={"calendar-month"}
-            iconColor={"black"}
-            size={Dimensions.get("window").width / 12}
-            onPress={async () => {
-              showPicker(true);
-            }}
-          />
-        </View>
-        <View>
-          <Text style={styles.textMonth}>{textMonth}</Text>
-        </View>
-        <View style={{ flexDirection: "row" }}>
-          <Text style={styles.textTitle}> HORAS MENSUALES: </Text>
-          <Text style={styles.textSubtitle}>{global.totalMonth} HORAS</Text>
-        </View>
-        <View style={{ flexDirection: "row" }}>
-          <Text style={styles.textTitle}> HORAS EXTRAS: </Text>
-          <Text style={styles.textSubtitle}>{global.extraMonth} HORAS</Text>
-        </View>
-        <View>
-          <Text style={styles.textMonthDetails}>DETALLES</Text>
-        </View>
-        <View style={{ flexDirection: "row" }}>
-          <Text style={styles.textCalendar}> SELECCIONA EL DIA: </Text>
+          <Text style={styles.textCalendar}> SELECCIONA LA FECHA: </Text>
           <Text style={styles.textCalendar}>{dateDay}</Text>
           <IconButton
             icon={"calendar-month"}
             iconColor={"black"}
             size={Dimensions.get("window").width / 12}
             onPress={async () => {
-              showModeDay(), console.log(ShowMonth(dateTmp));
+              showModeDay()
             }}
           />
         </View>
@@ -239,14 +225,6 @@ export const TimerData = () => {
         <View>
           <ComponenteBottom />
         </View>
-        {show && (
-         <MonthPicker
-         onChange={onValueChange}
-         value={date}
-         minimumDate={new Date()}
-         maximumDate={new Date(2025, 5)}
-       />
-        )}
         {showDay && (
           <DateTimePicker
             testID="dateTimePicker"
@@ -343,7 +321,7 @@ const styles = StyleSheet.create({
   textMonthDetails: {
     fontSize: 18,
     fontWeight: "bold",
-    paddingTop: Dimensions.get("window").width / 25,
+    paddingVertical: Dimensions.get("window").width / 25,
   },
   textTitle: {
     fontSize: 15,

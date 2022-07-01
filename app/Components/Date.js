@@ -6,29 +6,29 @@ export const dateComplete = () => {
   let monthResult = "";
 
   if (actualMonth == 1) {
-    monthResult = today + "-01-" + yearA;
+    monthResult = today + "-"+"01"+"-" + yearA;
   } else if (actualMonth == 2) {
-    monthResult = today + "-02-" + yearA;
+    monthResult = today + "-"+"01"+"-" + yearA;
   } else if (actualMonth == 3) {
-    monthResult = today + "-03-" + yearA;
+    monthResult = today + "-"+"01"+"-" + yearA;
   } else if (actualMonth == 4) {
-    monthResult = today + "-04-" + yearA;
+    monthResult = today + "-"+"01"+"-" + yearA;
   } else if (actualMonth == 5) {
-    monthResult = today + "-05-" + yearA;
+    monthResult = today + "-"+"01"+"-" + yearA;
   } else if (actualMonth == 6) {
-    monthResult = today + "-06-" + yearA;
+    monthResult = today + "-"+"01"+"-" + yearA;
   } else if (actualMonth == 7) {
-    monthResult = today + " -07- " + yearA;
+    monthResult = today + "-"+"01"+"-" + yearA;
   } else if (actualMonth == 8) {
-    monthResult = today + " -08-" + yearA;
+    monthResult = today + "-"+"01"+"-" + yearA;
   } else if (actualMonth == 9) {
-    monthResult = today + " -09-" + yearA;
+    monthResult = today + "-"+"01"+"-" + yearA;
   } else if (actualMonth == 10) {
-    monthResult = today + " -10-" + yearA;
+    monthResult = today + "-"+"01"+"-" + yearA;
   } else if (actualMonth == 11) {
-    monthResult = today + " -11-" + yearA;
+    monthResult = today + "-"+"01"+"-" + yearA;
   } else if (actualMonth == 12) {
-    monthResult = today + " -12-" + yearA;
+    monthResult = today + "-"+"01"+"-" + yearA;
   }
   return monthResult;
 };
@@ -66,7 +66,7 @@ export const dateMonth = () => {
 };
 export const ShowMonth = (month) => {
   let monthResultExtra = month.split("-");
-  let actualMonth =monthResultExtra[0].split(0)
+  let actualMonth =monthResultExtra[1].split(0)
   let monthResult=""
   if (actualMonth[1] == 1) {
     monthResult = "ENERO"
