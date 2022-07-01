@@ -15,12 +15,13 @@ import { dateComplete, dateMonth, ShowMonth } from "../Components/Date";
 import { getTimers } from "../Services/TimerRegister/TimerUser";
 import { ModalReload } from "../Components/Modal";
 import { DateTimer, DateTimerData } from "../Components/Calendar";
+import MonthPicker from 'react-native-month-year-picker';
 // NAVIGATIONS IMPORT
 export const TimerData = () => {
   const navigation = useNavigation();
   // DATE PICKER MONTH
   const [dateTmp, setDateTmp] = React.useState(dateMonth());
-  const [date2, setDate2] = React.useState(new Date());
+  const [date, setDate] = React.useState(new Date());
   const [show, setShow] = React.useState(false);
   const [mode, setMode] = React.useState("date");
   // DATE PICKER DATE
@@ -29,6 +30,7 @@ export const TimerData = () => {
   const [date1, setDate1] = React.useState(new Date());
   const [showDay, setShowDay] = React.useState(false);
   const [change, setChange] = React.useState(false);
+  const [search, setSearch] = React.useState(false);
   let textMonth = ShowMonth(dateTmp);
   let totalDay = 0;
   let totalExtra = 0;
@@ -50,94 +52,113 @@ export const TimerData = () => {
     }
   };
   let ComponenteBottom = () => {
-    if (dataTime == null) {
+    if (search == false) {
       return (
         <Button
           mode="contained"
           color={"#6DC0D5"}
           style={styles.buttonStyle}
-          disabled={true}
           labelStyle={styles.buttonTextStyle}
           onPress={async () => {
-            console.log(dataTime);
+            setChange(true);
+            getTimers(setDataTime, date1);
+            setChange(false);
+            setSearch(true);
           }}
         >
-          MAS DETALLES
+          Buscar
         </Button>
       );
     } else {
-      return (
-        <Button
-          mode="contained"
-          color={"#6DC0D5"}
-          style={styles.buttonStyle}
-          disabled={false}
-          labelStyle={styles.buttonTextStyle}
-          onPress={async () => {
-            navigation.navigate("TIMERMOREDATA", {
-              timeMoreData: dataTime,
-              DayEfe: date1.getDay(),
-            });
-          }}
-        >
-          MAS DETALLES
-        </Button>
-      );
+      if (dataTime == null) {
+        return (
+          <Button
+            mode="contained"
+            color={"#6DC0D5"}
+            style={styles.buttonStyle}
+            disabled={true}
+            labelStyle={styles.buttonTextStyle}
+            onPress={async () => {
+              navigation.navigate("TIMERMOREDATA", {
+                timeMoreData: dataTime,
+                DayEfe: date1.getDay(),
+              });
+            }}
+          >
+            MAS DETALLES
+          </Button>
+        );
+      } else {
+        return (
+          <Button
+            mode="contained"
+            color={"#6DC0D5"}
+            style={styles.buttonStyle}
+            disabled={false}
+            labelStyle={styles.buttonTextStyle}
+            onPress={async () => {
+              navigation.navigate("TIMERMOREDATA", {
+                timeMoreData: dataTime,
+                DayEfe: date1.getDay(),
+              });
+            }}
+          >
+            MAS DETALLES
+          </Button>
+        );
+      }
     }
   };
   let ComponenteCarga = () => {
-    if (dataTime == null) {
-      return (
-        <>
-          <DateTimerData dayNumber={date1.getDay()} />
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.textTitle}> JORNADA DIARIA: </Text>
-            <Text style={styles.textSubtitle}>0 HORAS</Text>
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.textTitle}> HORAS EXTRA: </Text>
-            <Text style={styles.textSubtitle}>0 HORAS</Text>
-          </View>
-          <Text style={{ fontSize: 15, color: "red", fontWeight: "bold" }}>
-            NO HAY DATOS REGISTRADOS EL DIA {date1.getDate()}
-          </Text>
-        </>
-      );
+    if (search == true) {
+      if (dataTime == null) {
+        return (
+          <>
+            <DateTimerData dayNumber={date1.getDay()} />
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.textTitle}> JORNADA DIARIA: </Text>
+              <Text style={styles.textSubtitle}>0 HORAS</Text>
+            </View>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.textTitle}> HORAS EXTRA: </Text>
+              <Text style={styles.textSubtitle}>0 HORAS</Text>
+            </View>
+            <Text style={{ fontSize: 15, color: "red", fontWeight: "bold" }}>
+              NO HAY DATOS REGISTRADOS EL DIA {date1.getDate()}
+            </Text>
+          </>
+        );
+      } else {
+        return (
+          <>
+            <DateTimerData dayNumber={date1.getDay()} />
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.textTitle}> JORNADA DIARIA: </Text>
+              <Text style={styles.textSubtitle}>
+                {dataTime == null ? "0" : totalDay} HORAS
+              </Text>
+            </View>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.textTitle}> HORAS EXTRA: </Text>
+              <Text style={styles.textSubtitle}>
+                {dataTime == null ? "0" : totalExtra} HORAS
+              </Text>
+            </View>
+          </>
+        );
+      }
     } else {
-      return (
-        <>
-          <DateTimerData dayNumber={date1.getDay()} />
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.textTitle}> JORNADA DIARIA: </Text>
-            <Text style={styles.textSubtitle}>
-              {dataTime == null ? "0" : totalDay} HORAS
-            </Text>
-          </View>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.textTitle}> HORAS EXTRA: </Text>
-            <Text style={styles.textSubtitle}>
-              {dataTime == null ? "0" : totalExtra} HORAS
-            </Text>
-          </View>
-        </>
-      );
+      return <></>;
     }
   };
-  const showMode = (currentMode) => {
-    setShow(true);
-    setMode(currentMode);
-  };
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date2;
-    setShow(Platform.OS === "windows");
-    setDate2(currentDate);
-    let tempDate = new Date(currentDate);
-    let fDate =
-      (tempDate.getMonth() < 9 ? "0" : "") +
-      (tempDate.getMonth() + 1) +
-      "-" +
-      tempDate.getFullYear();
-    setDateTmp(fDate);
+
+
+  const showPicker = (value) => setShow(value);
+
+  const onValueChange = (event, newDate) => {
+    const selectedDate = newDate || date;
+    showPicker(false);
+    setDate(selectedDate);
   };
   // DATE PCIKER DIA
   const showModeDay = (currentMode) => {
@@ -158,15 +179,7 @@ export const TimerData = () => {
       "-" +
       tempDate.getFullYear();
     setDateDay(fDate);
-    if (dateNotChange != date1) {
-      setChange(true);
-      getTimers(setDataTime, date1);
-      setChange(false);
-    } else {
-      setChange(true);
-      getTimers(setDataTime, date1);
-      setChange(false);
-    }
+    setSearch(false);
   };
   return (
     <View style={styles.container}>
@@ -186,13 +199,13 @@ export const TimerData = () => {
       <View style={styles.container2}>
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.textCalendar}> SELECCIONA EL MES: </Text>
-          <Text style={styles.textCalendar}>{dateTmp}</Text>
+          <Text>{(date, "MM-YYYY")}</Text>
           <IconButton
             icon={"calendar-month"}
             iconColor={"black"}
             size={Dimensions.get("window").width / 12}
             onPress={async () => {
-              showMode(), console.log(ShowMonth(dateTmp));
+              showPicker(true);
             }}
           />
         </View>
@@ -227,15 +240,12 @@ export const TimerData = () => {
           <ComponenteBottom />
         </View>
         {show && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={date2}
-            mode={mode}
-            is24Hour={true}
-            display="default"
-            onChange={onChange}
-            maximumDate={new Date()}
-          />
+         <MonthPicker
+         onChange={onValueChange}
+         value={date}
+         minimumDate={new Date()}
+         maximumDate={new Date(2025, 5)}
+       />
         )}
         {showDay && (
           <DateTimePicker
@@ -246,7 +256,6 @@ export const TimerData = () => {
             display="default"
             onChange={onChangeDay}
             maximumDate={new Date()}
-            minimumDate={date2}
           />
         )}
       </View>

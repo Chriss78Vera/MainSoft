@@ -213,57 +213,79 @@ export const sumarHoras = async () => {
     startBack = timerInformation[i].startBack;
     finishDay = timerInformation[i].finishTime;
   }
-  // PRIMERA PARTE DEL TRABAJO
-  // TRANSFORMACION DE LA PRIMERA PARTE DEL TRABAJO
-  let firstTimeHours = startWork.split(":");
-  let firstFinishTimeHours = startBreak.split(":");
-  // HORAS QUE TRABAJO EN LA PRIMERA PARTE
-  let totalFisrtTime =
-    parseInt(firstFinishTimeHours[0]) - parseInt(firstTimeHours[0]);
-  // TRANSFORMACION DE LOS MINUTOS A SEGUNDOS
-  let firstMinutes = firstTimeHours[1] * 60;
-  let firstFinishMinutes = firstFinishTimeHours[1] * 60;
-  let firstHoursWithMinutes = (
-    (firstMinutes - firstFinishMinutes) /
-    3600
-  ).toFixed(0);
-  let sumaFirstFinishMinutes;
-  if (firstHoursWithMinutes < 0) {
-    sumaFirstFinishMinutes = firstHoursWithMinutes * -1;
+  let horaInicioArray = startWork.split(":")
+  let horaBreakArray = startBreak.split(":")
+  let horaBackArray = startBack.split(":")
+  let horaFinishArray = finishDay.split(":")
+
+  let hour1 = Number(horaInicioArray[0])*3600;
+  let min1 = Number(horaInicioArray[1])*60;
+  let sec1 = Number(horaInicioArray[2]);
+
+  let horaIncioaSegundos = Number (hour1+ min1+ sec1);
+  console.log("HoraInicioSegundos: " + horaIncioaSegundos)
+
+  let hour2 = Number(horaBreakArray[0])*3600;
+  let min2 =  Number(horaBreakArray[1])*60;
+  let sec2 =  Number(horaBreakArray[2]);
+
+  let horaBreakaSegundos = Number (hour2 + min2+ sec2)
+  console.log("horaBreakaSegundos", horaBreakaSegundos)
+
+ 
+
+  let hour3 = Number(horaBackArray[0])*3600;
+  let min3 =  Number(horaBackArray[1])*60;
+  let sec3 =  Number(horaBackArray[2]);
+
+  let horaBackaSegundos = Number(hour3 + min3 + sec3)
+  console.log("horaBackaSegundos", horaBackaSegundos)
+
+
+  let hour4 = Number(horaFinishArray[0])*3600;
+  let min4 =  Number(horaFinishArray[1])*60;
+  let sec4 =  Number(horaFinishArray[2]);
+
+  let horaFinishaSegundos= Number(hour4 + min4 + sec4)
+
+  console.log("horaFinishaSegundos", horaFinishaSegundos)
+
+
+  let restaHoraBreakInicio = horaBreakaSegundos - horaIncioaSegundos;
+  let restaHorsFinishBack = horaFinishaSegundos - horaBackaSegundos;
+
+  let hoursTotalDay =restaHoraBreakInicio + restaHorsFinishBack;
+
+  let horaFinal = Math.round( hoursTotalDay / 3600);
+  let horaFinalView;
+  if(horaFinal<10){
+      horaFinalView = "0"+horaFinal
   } else {
-    sumaFirstFinishMinutes = firstHoursWithMinutes;
+      horaFinalView = horaFinal
   }
-  // HORA REALIZADA EN LA PRIMERA PARTE
-  let totalFirst = parseInt(totalFisrtTime) + parseInt(sumaFirstFinishMinutes);
 
-  // SEGUNDA PARTE DEL TRABAJO
-  // TRANSFORMACION DE LA SEGUNDA PARTE DEL TRABAJO
-  let secondTimeHours = startBack.split(":");
-  let secondFinishTimeHours = finishDay.split(":");
-  let totalSecondTime =
-    parseInt(secondFinishTimeHours) - parseInt(secondTimeHours);
-  // TRANSFORMACION DE LOS MINUTOS
-  let secondMinutes = secondTimeHours[1] * 60;
-  let secondFinishMinutes = secondFinishTimeHours[1] * 60;
-  let totalSecondFinishMinutes = (
-    (secondMinutes - secondFinishMinutes) /
-    3600
-  ).toFixed(0);
-  let sumaSecondsFinishMinutes;
-  if (totalSecondFinishMinutes < 0) {
-    sumaSecondsFinishMinutes = totalSecondFinishMinutes * -1;
+  let restoHoraFinal = hoursTotalDay % 3600;
+  let minFinal = Math.round(restoHoraFinal/60);
+  let minFinalView;
+  if(minFinal<10){
+      minFinalView = "0"+ minFinal
   } else {
-    sumaSecondsFinishMinutes = totalSecondFinishMinutes;
+      minFinalView = minFinal
+
   }
-  let totalSecond =
-    parseInt(totalSecondTime) + parseInt(sumaSecondsFinishMinutes);
+  let secFinal = restoHoraFinal % 60;
+  let secFinalView;
+  if (secFinal<10){
+      secFinalView= "0"+ secFinal
+  }else {
+      secFinalView = secFinal
+  }
 
-  let totalHoursDay = totalSecond + totalFirst;
+  let horaFinalRegistro = horaFinalView +":" + minFinalView + ":" + secFinalView
 
-  console.log(totalHoursDay);
-
+  console.log("Tiempo trabajado", horaFinalRegistro)
   const timer = {
-    totalDay: totalHoursDay,
+    totalDay: horaFinalRegistro,
     totalExtraDay: 0,
   };
   await updateDoc(
@@ -273,13 +295,13 @@ export const sumarHoras = async () => {
     ),
     timer
   );
-  let suma = parseInt(global.totalMonth) + parseInt(totalHoursDay);
-  const data = {
-    totalMonth: suma,
-    totalExtraMonth: 0,
-  };
-  await updateDoc(doc(global.dbCon, "/Usuarios", global.id), data);
-  console.log("GUARDO LOS DATOS");
+  // let suma = parseInt(global.totalMonth) + parseInt(totalHoursDay);
+  // const data = {
+  //   totalMonth: suma,
+  //   totalExtraMonth: 0,
+  // };
+  // await updateDoc(doc(global.dbCon, "/Usuarios", global.id), data);
+  // console.log("GUARDO LOS DATOS");
 };
 export const saveDay = async () => {
   const finishDay = {

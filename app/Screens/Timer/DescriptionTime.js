@@ -329,38 +329,38 @@ export const DescriptionTime = ({ route }) => {
           mode="contained"
           disabled={DescriptionValidation}
           onPress={async () => {
-            setModalVisible(true);
-            if (imageUserBreak != null || imageUserFinish != null) {
-              await uploadFile();
+             setModalVisible(true);
+             if (imageUserBreak != null || imageUserFinish != null) {
+               await uploadFile();
 
-              saveTimeUser(
-                StartTime,
-                State,
-                Description,
-                global.pictureDescription
-              );
-              await updateStateWork(DBstate);
-              if (DBstate == "FINISHED") {
-                await sumarHoras();
-              } else {
-                console.log("NADA");
-              }
-            } else {
-              saveTimeUser(
-                StartTime,
-                State,
-                Description,
-                global.pictureDescription
-              );
-              if (DBstate == "FINISHED") {
-                await sumarHoras();
-              } else {
-                console.log("NADA");
-              }
-              await updateStateWork(DBstate);
-            }
-            setModalVisible(false);
-            navigation.goBack();
+               saveTimeUser(
+                 StartTime,
+                 State,
+                 Description,
+                 global.pictureDescription
+               );
+               await updateStateWork(DBstate);
+               if (DBstate == "FINISHED") {
+                 await sumarHoras();
+               } else {
+                 console.log("NADA");
+               }
+             } else {
+               saveTimeUser(
+                 StartTime,
+                 State,
+                 Description,
+                 global.pictureDescription
+               );
+               if (DBstate == "FINISHED") {
+                 await sumarHoras();
+               } else {
+                 console.log("NADA");
+               }
+               await updateStateWork(DBstate);
+             }
+             setModalVisible(false);
+             navigation.goBack();
           }}
         >
           GUARDAR

@@ -42,6 +42,7 @@ export const getPersonalRol = async (Show) => {
           finishDay: date.getDate(),
           stateBreak: false,
         };
+        global.stateBreak=false,
         await updateDoc(doc(global.dbCon, "/Usuarios", global.id), finishDay);
       }
     }

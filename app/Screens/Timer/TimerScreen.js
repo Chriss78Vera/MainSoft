@@ -1,8 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { View, Text, StyleSheet, Dimensions, Image } from "react-native";
+import { View, Text, StyleSheet, Dimensions, Image, Modal } from "react-native";
 import { Button, IconButton } from "react-native-paper";
 import { CalendarDay, DateTimer } from "../../Components/Calendar";
+import { Input } from "@rneui/themed";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 // NAVIGATIONS IMPORT
@@ -13,7 +14,6 @@ export const TimerScreen = ({ route }) => {
   timeMoreData = route.params.timeMoreData;
   DayEfe = route.params.DayEfe;
   const [dataTime, setDataTime] = React.useState([]);
-
   // VARIABLES UTILIZADAS
   const [dayTime, setDayTime] = React.useState(
     timeMoreData.totalDay == null ? "0" : timeMoreData.totalDay
@@ -55,6 +55,8 @@ export const TimerScreen = ({ route }) => {
   const [imageFinish, setImageFinish] = React.useState(
     timeMoreData.ImageFinish
   );
+  
+
   let ComponenteDescriptionBreak = () => {
     if (descriptionBreak == null) {
       return <></>;
@@ -64,7 +66,13 @@ export const TimerScreen = ({ route }) => {
           <Text style={styles.textTitleBreak}> DESCRIPCION </Text>
           <View style={styles.viewTimeBreak}>
             <Text style={styles.descrptionTextBreak}>{descriptionBreak}</Text>
-            <View style={{ alignItems: "center", justifyContent: "center" }}>
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                paddingTop: 10,
+              }}
+            >
               {imageBreak == null ? (
                 <></>
               ) : (
@@ -93,7 +101,13 @@ export const TimerScreen = ({ route }) => {
           <Text style={styles.textTitleFinsih}> DESCRIPCION FINAL </Text>
           <View style={styles.viewTimeFinish}>
             <Text style={styles.descrptionTextFinish}>{descriptionFinish}</Text>
-            <View style={{ alignItems: "center", justifyContent: "center" }}>
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                paddingTop: 10,
+              }}
+            >
               {imageFinish == null ? (
                 <></>
               ) : (
@@ -178,6 +192,7 @@ export const TimerScreen = ({ route }) => {
             VOLVER
           </Button>
         </View>
+
         <View style={{ flexDirection: "row" }}>
           <DateTimer dayNumber={DayEfe} />
         </View>
@@ -229,13 +244,13 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "bold",
     color: "white",
-    paddingVertical: Dimensions.get("window").width / 30,
+    paddingVertical: Dimensions.get("window").width / 35,
   },
   textSubtitle: {
     fontSize: 15,
     fontWeight: "bold",
     color: "#2FDAA7",
-    paddingVertical: Dimensions.get("window").width / 30,
+    paddingVertical: Dimensions.get("window").width / 35,
   },
   buttonSubtittleStyle: {
     fontWeight: "bold",
@@ -296,19 +311,19 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "bold",
     color: "#2FDAA7",
-    paddingHorizontal: Dimensions.get("window").width / 25,
+    paddingHorizontal: Dimensions.get("window").width / 40,
   },
   textBreakTime: {
     fontSize: 15,
     fontWeight: "bold",
     color: "#ED6A5E",
-    paddingHorizontal: Dimensions.get("window").width / 25,
+    paddingHorizontal: Dimensions.get("window").width / 40,
   },
   textFinishTime: {
     fontSize: 15,
     fontWeight: "bold",
     color: "#6DC0D5",
-    paddingHorizontal: Dimensions.get("window").width / 25,
+    paddingHorizontal: Dimensions.get("window").width / 40,
   },
   descrptionTextBreak: {
     fontSize: 15,
@@ -321,5 +336,60 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
     color: "#6DC0D5",
+  },
+  buttonStyle: {
+    borderRadius: 15,
+    marginTop: Dimensions.get("window").height / 50,
+  },
+  // MODAL PL
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor:
+      "linear-gradient(0deg, rgba(236,236,236,1) 25%, rgba(47,218,167,0) 100%)",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    minHeight: Dimensions.get("window").height / 3,
+    width: Dimensions.get("window").width / 1.3,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: "#F194FF",
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  modalText: {
+    marginBottom: 15,
+    fontSize: 20,
+    textAlign: "center",
+  },
+  viewDescription: {
+    width: Dimensions.get("window").width / 1.5,
+    backgroundColor: "#F0F0F0",
+    borderRadius: 20,
   },
 });
