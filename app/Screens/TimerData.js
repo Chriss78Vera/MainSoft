@@ -32,6 +32,7 @@ export const TimerData = () => {
   let textMonth = ShowMonth(dateDay);
   let totalDay = 0;
   let totalExtra = 0;
+  let date =  new Date().getFullYear()-1
   // ESTADO
   // DATE PICKER MONTH
   const [dataTime, setDataTime] = React.useState();
@@ -76,6 +77,10 @@ export const TimerData = () => {
             style={styles.buttonStyle}
             disabled={true}
             labelStyle={styles.buttonTextStyle}
+            onPress={async () => {
+           
+             console.log(date)
+            }}
           >
             MAS DETALLES
           </Button>
@@ -89,10 +94,13 @@ export const TimerData = () => {
             disabled={false}
             labelStyle={styles.buttonTextStyle}
             onPress={async () => {
-              navigation.navigate("TIMERMOREDATA", {
-                timeMoreData: dataTime,
-                DayEfe: date1.getDay(),
-              });
+              // navigation.navigate("TIMERMOREDATA", {
+              //   timeMoreData: dataTime,
+              //   DayEfe: date1.getDay(),
+              // });
+          
+              let date =  new Date().getFullYear()-1
+              console.log(date)
             }}
           >
             MAS DETALLES

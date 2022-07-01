@@ -66,31 +66,31 @@ export const dateMonth = () => {
 };
 export const ShowMonth = (month) => {
   let monthResultExtra = month.split("-");
-  let actualMonth =monthResultExtra[1].split(0)
+  let actualMonth =monthResultExtra[1]
   let monthResult=""
-  if (actualMonth[1] == 1) {
+  if (actualMonth == "01") {
     monthResult = "ENERO"
-  } else if (actualMonth[1] == 2) {
+  } else if (actualMonth == "02") {
     monthResult = "FEBRERO";
-  } else if (actualMonth[1] == 3) {
+  } else if (actualMonth == "03") {
     monthResult = "MARZO";
-  } else if (actualMonth[1] == 4) {
+  } else if (actualMonth == "04") {
     monthResult = "ARBIL";
-  } else if (actualMonth[1]== 5) {
+  } else if (actualMonth== "05") {
     monthResult = "MAYO";
-  } else if (actualMonth[1] == 6) {
+  } else if (actualMonth == "06") {
     monthResult = "JUNIO"
-  } else if (actualMonth[1] == 7) {
+  } else if (actualMonth == "07") {
     monthResult ="JULIO"
-  } else if (actualMonth[1] == 8) {
+  } else if (actualMonth == "08") {
     monthResult = "AGOSTO"
-  } else if (actualMonth[1] == 9) {
+  } else if (actualMonth == "09") {
     monthResult = "SEPTIEMBRE"
-  } else if (actualMonth[1] == 10) {
+  } else if (actualMonth == "10") {
     monthResult = "OCTUBRE"
-  } else if (actualMonth[1] == 11) {
+  } else if (actualMonth == "11") {
     monthResult = "NOVIEMBRE"
-  } else if (actualMonth[1] == 12) {
+  } else if (actualMonth == "12") {
     monthResult = "DICIEMBRE"
   }
   return monthResult;
