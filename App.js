@@ -89,6 +89,7 @@ const HomeRegisterTime = () => {
         component={HomeScreen}
         options={{ headerShown: false }}
       ></NativeStackNav.Screen>
+
       <NativeStackNav.Screen
         name="DESCRIPTIONTIME"
         component={DescriptionTime}

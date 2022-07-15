@@ -94,13 +94,12 @@ export const TimerData = () => {
             disabled={false}
             labelStyle={styles.buttonTextStyle}
             onPress={async () => {
-              // navigation.navigate("TIMERMOREDATA", {
-              //   timeMoreData: dataTime,
-              //   DayEfe: date1.getDay(),
-              // });
+             navigation.navigate("TIMERMOREDATA", {
+               timeMoreData: dataTime,
+               DayEfe: date1.getDay(),
+             });
           
-              let date =  new Date().getFullYear()-1
-              console.log(date)
+           
             }}
           >
             MAS DETALLES

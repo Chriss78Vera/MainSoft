@@ -332,7 +332,6 @@ export const DescriptionTime = ({ route }) => {
              setModalVisible(true);
              if (imageUserBreak != null || imageUserFinish != null) {
                await uploadFile();
-
                saveTimeUser(
                  StartTime,
                  State,

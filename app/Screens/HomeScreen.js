@@ -228,7 +228,7 @@ export const HomeScreen = () => {
                 State: "startBreak",
                 DBstate: "BREAK",
               });
-              setActivePerson("BREAK");
+            setActivePerson("BREAK");
               setActiveBotton(true);
             }}
           >
@@ -239,6 +239,7 @@ export const HomeScreen = () => {
             color={"#6DC0D5"}
             style={styles.buttonStyleWorking}
             labelStyle={styles.buttonTextStyle}
+            disabled={!activeBotton}
             onPress={async () => {
               setActivePerson("FINISHED");
               navigation.navigate("DESCRIPTIONTIME", {
@@ -322,7 +323,7 @@ export const HomeScreen = () => {
           <Text style={styles.textBlackContainer}>REGISTRA TU HORA!</Text>
         </View>
       </View>
-
+     
       <View style={[styles.container3, { shadowColor: Newcolor }]}>
         <TextValidator />
       </View>
@@ -442,7 +443,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   containerTextBlackContainer: {
-    paddingTop: Dimensions.get("window").height/120,
+    paddingTop: Dimensions.get("window").height / 120,
   },
   textBlackContainer: {
     fontSize: 17,

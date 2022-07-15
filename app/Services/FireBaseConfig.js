@@ -9,10 +9,10 @@ export const loadFirebaseConfiguration = () => {
 };
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDcEK-knhcROt1cd51KUhAxoy74ZhTnxnU",
-    authDomain: "mainsoft-11a18.firebaseapp.com",
-    projectId: "mainsoft-11a18",
-    storageBucket: "mainsoft-11a18.appspot.com",
-    messagingSenderId: "60993422426",
-    appId: "1:60993422426:web:fe049fa41cd3b20755c463"
-  };
+  apiKey: "AIzaSyBzjefHHmkLhC-qvd-ikSodWWRx2QHQLKg",
+  authDomain: "miproyecto-d157b.firebaseapp.com",
+  projectId: "miproyecto-d157b",
+  storageBucket: "miproyecto-d157b.appspot.com",
+  messagingSenderId: "510856880730",
+  appId: "1:510856880730:web:3b84cf279f835573196e63"
+};

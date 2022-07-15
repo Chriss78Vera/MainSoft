@@ -156,7 +156,7 @@ export const getTimers = async (refreshScreen, dayNumber) => {
   ];
   const numeroDia = dayNumber.getDay();
   const nombreDia = dias[numeroDia].toUpperCase();
-  let saveMonth = getMonth(date.getMonth() + 1) + "_" + date.getFullYear();
+  let saveMonth = getMonth(dayNumber.getMonth() + 1) + "_" + dayNumber.getFullYear();
   let saveDay = nombreDia + "_" + dayNumber.getDate();
   console.log(saveDay);
   const q = doc(
@@ -210,7 +210,13 @@ export const sumarHoras = async () => {
   for (let i = 0; i < timerInformation.length; i++) {
     startWork = timerInformation[i].startWork;
     startBreak = timerInformation[i].startBreak;
+    if(startBreak==null || startBreak==undefined) {
+      startBreak = "00:00:00"
+    }
     startBack = timerInformation[i].startBack;
+    if(startBack==null || startBack==undefined) {
+      startBack = "00:00:00"
+    }
     finishDay = timerInformation[i].finishTime;
   }
   let horaInicioArray = startWork.split(":")
