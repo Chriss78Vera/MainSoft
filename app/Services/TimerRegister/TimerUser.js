@@ -36,7 +36,7 @@ export const createTask = async () => {
     totalExtraMonth: 0,
     totalMonth: 0,
   };
-  
+
   try {
     await updateDoc(
       doc(
@@ -78,12 +78,23 @@ export const saveTimeUser = async (time, state, Description, Image) => {
     const timer = {
       startWork: time,
     };
+    const timerSet = {
+      completeName: global.name + global.lastName,
+      id: saveDay,
+    };
     await updateDoc(
       doc(
         global.dbCon,
         "/Usuarios/" + global.id + "/" + saveMonth + "/" + saveDay
       ),
       timer
+    );
+    await updateDoc(
+      doc(
+        global.dbCon,
+        "/Usuarios/" + global.id + "/" + saveMonth + "/" + saveDay
+      ),
+      timerSet
     );
     await updateDoc(doc(global.dbCon, "/Usuarios", global.id), timer);
   } else if (state == "startBreak") {
@@ -156,7 +167,8 @@ export const getTimers = async (refreshScreen, dayNumber) => {
   ];
   const numeroDia = dayNumber.getDay();
   const nombreDia = dias[numeroDia].toUpperCase();
-  let saveMonth = getMonth(dayNumber.getMonth() + 1) + "_" + dayNumber.getFullYear();
+  let saveMonth =
+    getMonth(dayNumber.getMonth() + 1) + "_" + dayNumber.getFullYear();
   let saveDay = nombreDia + "_" + dayNumber.getDate();
   console.log(saveDay);
   const q = doc(
@@ -210,86 +222,82 @@ export const sumarHoras = async () => {
   for (let i = 0; i < timerInformation.length; i++) {
     startWork = timerInformation[i].startWork;
     startBreak = timerInformation[i].startBreak;
-    if(startBreak==null || startBreak==undefined) {
-      startBreak = "00:00:00"
+    if (startBreak == null || startBreak == undefined) {
+      startBreak = "00:00:00";
     }
     startBack = timerInformation[i].startBack;
-    if(startBack==null || startBack==undefined) {
-      startBack = "00:00:00"
+    if (startBack == null || startBack == undefined) {
+      startBack = "00:00:00";
     }
     finishDay = timerInformation[i].finishTime;
   }
-  let horaInicioArray = startWork.split(":")
-  let horaBreakArray = startBreak.split(":")
-  let horaBackArray = startBack.split(":")
-  let horaFinishArray = finishDay.split(":")
+  let horaInicioArray = startWork.split(":");
+  let horaBreakArray = startBreak.split(":");
+  let horaBackArray = startBack.split(":");
+  let horaFinishArray = finishDay.split(":");
 
-  let hour1 = Number(horaInicioArray[0])*3600;
-  let min1 = Number(horaInicioArray[1])*60;
+  let hour1 = Number(horaInicioArray[0]) * 3600;
+  let min1 = Number(horaInicioArray[1]) * 60;
   let sec1 = Number(horaInicioArray[2]);
 
-  let horaIncioaSegundos = Number (hour1+ min1+ sec1);
-  console.log("HoraInicioSegundos: " + horaIncioaSegundos)
+  let horaIncioaSegundos = Number(hour1 + min1 + sec1);
+  console.log("HoraInicioSegundos: " + horaIncioaSegundos);
 
-  let hour2 = Number(horaBreakArray[0])*3600;
-  let min2 =  Number(horaBreakArray[1])*60;
-  let sec2 =  Number(horaBreakArray[2]);
+  let hour2 = Number(horaBreakArray[0]) * 3600;
+  let min2 = Number(horaBreakArray[1]) * 60;
+  let sec2 = Number(horaBreakArray[2]);
 
-  let horaBreakaSegundos = Number (hour2 + min2+ sec2)
-  console.log("horaBreakaSegundos", horaBreakaSegundos)
+  let horaBreakaSegundos = Number(hour2 + min2 + sec2);
+  console.log("horaBreakaSegundos", horaBreakaSegundos);
 
- 
+  let hour3 = Number(horaBackArray[0]) * 3600;
+  let min3 = Number(horaBackArray[1]) * 60;
+  let sec3 = Number(horaBackArray[2]);
 
-  let hour3 = Number(horaBackArray[0])*3600;
-  let min3 =  Number(horaBackArray[1])*60;
-  let sec3 =  Number(horaBackArray[2]);
+  let horaBackaSegundos = Number(hour3 + min3 + sec3);
+  console.log("horaBackaSegundos", horaBackaSegundos);
 
-  let horaBackaSegundos = Number(hour3 + min3 + sec3)
-  console.log("horaBackaSegundos", horaBackaSegundos)
+  let hour4 = Number(horaFinishArray[0]) * 3600;
+  let min4 = Number(horaFinishArray[1]) * 60;
+  let sec4 = Number(horaFinishArray[2]);
 
+  let horaFinishaSegundos = Number(hour4 + min4 + sec4);
 
-  let hour4 = Number(horaFinishArray[0])*3600;
-  let min4 =  Number(horaFinishArray[1])*60;
-  let sec4 =  Number(horaFinishArray[2]);
-
-  let horaFinishaSegundos= Number(hour4 + min4 + sec4)
-
-  console.log("horaFinishaSegundos", horaFinishaSegundos)
-
+  console.log("horaFinishaSegundos", horaFinishaSegundos);
 
   let restaHoraBreakInicio = horaBreakaSegundos - horaIncioaSegundos;
   let restaHorsFinishBack = horaFinishaSegundos - horaBackaSegundos;
 
-  let hoursTotalDay =restaHoraBreakInicio + restaHorsFinishBack;
+  let hoursTotalDay = restaHoraBreakInicio + restaHorsFinishBack;
 
-  let horaFinal = Math.round( hoursTotalDay / 3600);
+  let horaFinal = Math.round(hoursTotalDay / 3600);
   let horaFinalView;
-  if(horaFinal<10){
-      horaFinalView = "0"+horaFinal
+  if (horaFinal < 10) {
+    horaFinalView = "0" + horaFinal;
   } else {
-      horaFinalView = horaFinal
+    horaFinalView = horaFinal;
   }
 
   let restoHoraFinal = hoursTotalDay % 3600;
-  let minFinal = Math.round(restoHoraFinal/60);
+  let minFinal = Math.round(restoHoraFinal / 60);
   let minFinalView;
-  if(minFinal<10){
-      minFinalView = "0"+ minFinal
+  if (minFinal < 10) {
+    minFinalView = "0" + minFinal;
   } else {
-      minFinalView = minFinal
-
+    minFinalView = minFinal;
   }
   let secFinal = restoHoraFinal % 60;
   let secFinalView;
-  if (secFinal<10){
-      secFinalView= "0"+ secFinal
-  }else {
-      secFinalView = secFinal
+  if (secFinal < 10) {
+    secFinalView = "0" + secFinal;
+  } else {
+    secFinalView = secFinal;
   }
 
-  let horaFinalRegistro = horaFinalView +":" + minFinalView + ":" + secFinalView
+  let horaFinalRegistro =
+    horaFinalView + ":" + minFinalView + ":" + secFinalView;
 
-  console.log("Tiempo trabajado", horaFinalRegistro)
+  console.log("Tiempo trabajado", horaFinalRegistro);
   const timer = {
     totalDay: horaFinalRegistro,
     totalExtraDay: 0,

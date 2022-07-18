@@ -323,47 +323,49 @@ export const DescriptionTime = ({ route }) => {
             maxLength={255}
           />
         </View>
-        <Button
-          icon="archive"
-          style={styles.buttonStyle}
-          mode="contained"
-          disabled={DescriptionValidation}
-          onPress={async () => {
-             setModalVisible(true);
-             if (imageUserBreak != null || imageUserFinish != null) {
-               await uploadFile();
-               saveTimeUser(
-                 StartTime,
-                 State,
-                 Description,
-                 global.pictureDescription
-               );
-               await updateStateWork(DBstate);
-               if (DBstate == "FINISHED") {
-                 await sumarHoras();
-               } else {
-                 console.log("NADA");
-               }
-             } else {
-               saveTimeUser(
-                 StartTime,
-                 State,
-                 Description,
-                 global.pictureDescription
-               );
-               if (DBstate == "FINISHED") {
-                 await sumarHoras();
-               } else {
-                 console.log("NADA");
-               }
-               await updateStateWork(DBstate);
-             }
-             setModalVisible(false);
-             navigation.goBack();
-          }}
-        >
-          GUARDAR
-        </Button>
+        <View style={{ flexDirection: "row" }}>
+          <View>
+            <Button
+              icon="archive"
+              style={styles.buttonStyle}
+              mode="contained"
+              disabled={DescriptionValidation}
+              onPress={async () => {
+                setModalVisible(true);
+                await uploadFile();
+                saveTimeUser(
+                  StartTime,
+                  State,
+                  Description,
+                  global.pictureDescription
+                );
+                await updateStateWork(DBstate);
+                if (DBstate == "FINISHED") {
+                  await sumarHoras();
+                  navigation.navigate("FINISHWORK");
+                } else {
+                  console.log("NADA")
+                  navigation.navigate("BREAKTIME");
+                }
+                setModalVisible(false);
+              }}
+            >
+              GUARDAR
+            </Button>
+          </View>
+          <View>
+            <Button
+              icon="archive"
+              style={styles.buttonStyleBack}
+              mode="contained"
+              onPress={async () => {
+                navigation.goBack();
+              }}
+            >
+              REGRESAR
+            </Button>
+          </View>
+        </View>
       </View>
     </View>
   );
@@ -474,8 +476,14 @@ const styles = StyleSheet.create({
   buttonStyle: {
     borderRadius: 15,
     marginTop: Dimensions.get("window").height / 50,
+    marginHorizontal: 10,
     backgroundColor: "#6DC0D5",
-    width: Dimensions.get("window").width / 1.5,
+  },
+  buttonStyleBack: {
+    borderRadius: 15,
+    marginTop: Dimensions.get("window").height / 50,
+    marginHorizontal: 10,
+    backgroundColor: "#E85D75",
   },
   // MODAL
   centeredView: {

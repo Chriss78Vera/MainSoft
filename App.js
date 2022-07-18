@@ -9,7 +9,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 // SCREENS //
 import { LoginScreenMail } from "./app/Screens/LoginScreenEmail";
 import { LoginScreenPassword } from "./app/Screens/LoginScreenPassword";
-import { HomeScreen } from "./app/Screens/HomeScreen";
 import { Profile } from "./app/Screens/ProfileScreen";
 import { TimerData } from "./app/Screens/TimerData";
 import { loadFirebaseConfiguration } from "./app/Services/FireBaseConfig";
@@ -17,7 +16,11 @@ import { PersonalData } from "./app/Screens/Profile/PersonalData";
 import { DocumentsData } from "./app/Screens/Profile/DocumentsData";
 import { TimerScreen } from "./app/Screens/Timer/TimerScreen";
 import { DescriptionTime } from "./app/Screens/Timer/DescriptionTime";
-import { getTimers } from "./app/Services/TimerRegister/TimerUser";
+import { ScreenWork } from "./app/Screens/HomeScreens/ScreenWork";
+import { ScreenWorking } from "./app/Screens/HomeScreens/ScreenWorking";
+import { ScreenBreak } from "./app/Screens/HomeScreens/ScreenBreak";
+import { ScreenBack } from "./app/Screens/HomeScreens/ScreenBack";
+import { ScreenFinish } from "./app/Screens/HomeScreens/ScreenFinish";
 //CONSTANTES USADAS //
 const NativeStackNav = createNativeStackNavigator();
 const TabNav = createBottomTabNavigator();
@@ -82,14 +85,46 @@ const TimeData = () => {
   );
 };
 const HomeRegisterTime = () => {
+  if (global.workState == "NOTWORKING") {
+    global.navigation = "HOMETIME";
+  } else if (global.workState == "WORKING") {
+    if (global.stateBreak == false) {
+      global.navigation = "WORKINGTIME";
+    } else {
+      global.navigation = "RETURNBREAK";
+    }
+  } else if (global.workState == "BREAK") {
+    global.navigation = "BREAKTIME";
+  }else{
+    global.navigation = "FINISHWORK"
+  }
   return (
-    <NativeStackNav.Navigator initialRouteName="HOMETIME">
+    <NativeStackNav.Navigator initialRouteName={global.navigation}>
       <NativeStackNav.Screen
         name="HOMETIME"
-        component={HomeScreen}
+        component={ScreenWork}
         options={{ headerShown: false }}
       ></NativeStackNav.Screen>
-
+      <NativeStackNav.Screen
+        name="WORKINGTIME"
+        component={ScreenWorking}
+        options={{ headerShown: false }}
+      ></NativeStackNav.Screen>
+      <NativeStackNav.Screen
+        name="BREAKTIME"
+        component={ScreenBreak}
+        options={{ headerShown: false }}
+      ></NativeStackNav.Screen>
+      <NativeStackNav.Screen
+        name="RETURNBREAK"
+        component={ScreenBack}
+        options={{ headerShown: false }}
+      ></NativeStackNav.Screen>
+      <NativeStackNav.Screen
+        name="FINISHWORK"
+        component={ScreenFinish}
+        options={{ headerShown: false }}
+      ></NativeStackNav.Screen>
       <NativeStackNav.Screen
         name="DESCRIPTIONTIME"
         component={DescriptionTime}
@@ -99,7 +134,6 @@ const HomeRegisterTime = () => {
   );
 };
 const UserNav = () => {
-  
   return (
     <TabNav.Navigator
       initialRouteName="HOME"
@@ -114,7 +148,6 @@ const UserNav = () => {
               : "ios-person-circle";
           } else if (route.name === "DATATIMER") {
             iconName = focused ? "calendar-outline" : "calendar-sharp";
-            
           }
           return <Ionicons name={iconName} size={25} color={color} />;
         },
@@ -141,7 +174,6 @@ const UserNav = () => {
         name="DATATIMER"
         component={TimeData}
         options={{ headerShown: false }}
-        
       ></TabNav.Screen>
     </TabNav.Navigator>
   );

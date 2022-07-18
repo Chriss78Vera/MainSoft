@@ -15,18 +15,20 @@ export const getPersonalRol = async (Show) => {
     console.log(personalInformation)
     personalInformation.push(docSnap.data());
     for (let i = 0; i < personalInformation.length; i++) {
+      global.id = personalInformation[i].id;
       global.finishDay = personalInformation[i].finishDay;
       global.workState = personalInformation[i].workingState;
       global.name = personalInformation[i].firstName;
       global.lastName = personalInformation[i].lastName;
-      global.id = personalInformation[i].id;
       global.picture = personalInformation[i].imageUser;
       global.totalMonth = personalInformation[i].totalMonth;
       global.extraMonth = personalInformation[i].totalExtraMonth;
       global.stateBreak = personalInformation[i].stateBreak;
       global.workStation = personalInformation[i].workstation;
     }
+    
     let date = new Date();
+    // IGUALA SI EL DIA ACTUAL ES IGUAL AL DIA ALMACENADO EN LA BASE
     if (global.finishDay == null || global.workState == null) {
       await updateStateWork("NOTWORKING");
       const finishDay = {
@@ -38,7 +40,12 @@ export const getPersonalRol = async (Show) => {
       if (date.getDate() == global.finishDay) {
       } else {
         await updateStateWork("NOTWORKING");
+        global.workState = "NOTWORKING";
         const finishDay = {
+          startWork: 0,
+          startBreak: 0,
+          startBack: 0, 
+          finishTime:0,
           finishDay: date.getDate(),
           stateBreak: false,
         };
@@ -55,6 +62,7 @@ export const getPersonalRol = async (Show) => {
   }else{
     "NO HAY NADA"
   }
+  
 };
 export const getPersonalInformation = async (getInformations) => {
   const q = doc(global.dbCon, "/Usuarios/" + global.id);
