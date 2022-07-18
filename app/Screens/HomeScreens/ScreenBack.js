@@ -155,7 +155,7 @@ export const ScreenBack = () => {
   const ButtonValidator = () => {
     return (
       <View style={{ flexDirection: "row" }}>
-        <View style={{ paddingHorizontal: 20 }}>
+        <View style={{ paddingHorizontal: Dimensions.get("window").width/25}}>
           <Button
             mode="contained"
             color={"#ED6A5E"}
@@ -166,7 +166,7 @@ export const ScreenBack = () => {
             IR AL RECESO
           </Button>
         </View>
-        <View style={{ paddingHorizontal: 20 }}>
+        <View>
           <Button
             mode="contained"
             color={"#6DC0D5"}
@@ -176,7 +176,7 @@ export const ScreenBack = () => {
               showModal();
             }}
           >
-            FINALIZAR LA JORNADA
+            FINALIZAR DÍA
           </Button>
         </View>
       </View>

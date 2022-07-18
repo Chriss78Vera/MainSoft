@@ -82,7 +82,7 @@ export const ScreenBreak= () => {
               size={100}
               color="#E85D75"
             />
-            <Text style={styles.textModal}>Vas a retonar al trabajo?</Text>
+            <Text style={styles.textModal}>Vas a volver al trabajo?</Text>
             <View style={{ flexDirection: "row", padding: 50 }}>
               <View style={{ paddingHorizontal: 20 }}>
                 <Button
