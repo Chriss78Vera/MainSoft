@@ -6,7 +6,7 @@ import { Button, TextInput } from "react-native-paper";
 import { ModalReload } from "../Components/Modal";
 import { ModalInfoError } from "../Components/Modals";
 import { createTask } from "../Services/TimerRegister/TimerUser";
-import { getPersonalRol } from "../Services/UserInformation/InfoUser";
+import { getDocumentsData, getPersonalRol } from "../Services/UserInformation/InfoUser";
 export const LoginScreenPassword = ({ route }) => {
   // AUTH CON FIREBASE
   const auth = getAuth();
@@ -70,21 +70,24 @@ export const LoginScreenPassword = ({ route }) => {
             console.log(emailUser)
             signInWithEmailAndPassword(auth, emailUser, password)
               .then(async (userCredential) => {
-                setStateModal(true);
+                // setStateModal(true);
                 global.email = emailUser;
                 await getPersonalRol();
                 if ( global.rol == "Empleado") {
-                  await createTask();
-                  navigation.navigate("TIMER");
-                  setStateModal(false);
+                  await getDocumentsData()
+                   await createTask();
+                   navigation.navigate("TIMER");
+                   console.log(global.documents)
+                   setStateModal(false);
+                  
                 }else{
-                  navigation.navigate("LOGINS");
+                  // navigation.navigate("LOGINS");
                 }
               })
               .catch((error) => {
                 console.log(error)
                 setActive(true);
-                setStateModal(false);
+                // setStateModal(false);
               });
           }}
         >

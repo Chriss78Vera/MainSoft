@@ -74,3 +74,14 @@ export const getPersonalInformation = async (getInformations) => {
 export const savePersonalInformation = async (data) => {
   await updateDoc(doc(global.dbCon, "/Usuarios", global.id), data);
 };
+export const getDocumentsData = async () => {
+  try {
+    const q = doc(global.dbCon, "/Usuarios/" + global.id +"/DOCUMENTS/"+"DATA");
+    const docSnap = await getDoc(q);
+    global.documents = docSnap.data().account;
+    console.log(global.documents)
+  } catch (error) {
+    global.documents=0;
+  }
+ 
+};

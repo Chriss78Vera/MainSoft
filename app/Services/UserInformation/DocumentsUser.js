@@ -4,11 +4,14 @@ export const saveDocumentPersonal = async (data) => {
     try {
         console.log("HACE EL UPDATE")
         await updateDoc(doc(global.dbCon, "/Usuarios/"+global.id+"/DOCUMENTS","DATA"), data);
+        global.documents=2;
     } catch (error) {
         console.log("NO HACE EL UPDATE")
         await setDoc(doc(global.dbCon, "/Usuarios/"+global.id+"/DOCUMENTS","DATA"), data);
+        global.documents=2;
     }
-    console.log("GUARDO LOS DATOS");
+  
+    console.log(global.documents);
   };
   export const getDocumentsData = async (getDocuments) => {
     const q = doc(global.dbCon, "/Usuarios/" + global.id +"/DOCUMENTS/"+"DATA");

@@ -130,6 +130,11 @@ const HomeRegisterTime = () => {
         component={DescriptionTime}
         options={{ headerShown: false }}
       ></NativeStackNav.Screen>
+      <NativeStackNav.Screen
+        name="DOCUMENTSVALIDATE"
+        component={DataPersonal}
+        options={{ headerShown: false }}
+      ></NativeStackNav.Screen>
     </NativeStackNav.Navigator>
   );
 };

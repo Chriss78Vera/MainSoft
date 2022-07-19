@@ -24,6 +24,7 @@ export const ScreenWork = () => {
   const [lastName, setLastName] = React.useState(global.lastName);
   const [startTime, setStartTime] = React.useState();
   const [visible, setVisible] = React.useState(false);
+  const [documentsValidate, setDocumentsValidate] = React.useState(false)
 
   // TEXT DEL BOTON //
   let newHours;
@@ -61,6 +62,11 @@ export const ScreenWork = () => {
   let DateTimer;
   React.useEffect(() => {
     setStartTime(DateTimer);
+    if(global.documents != 0){
+      setDocumentsValidate(false)
+    }else{
+      setDocumentsValidate(true)
+    }
   }, [(DateTimer = newHours + ":" + newMinutes + ":" + newSeconds)]);
 
   // ----------------------------------------------------------------------- //
@@ -78,53 +84,90 @@ export const ScreenWork = () => {
     textAlign: "center",
   };
   let ModalValidator = () => {
-    return (
-      <Provider>
-        <Portal>
-          <Modal visible={visible} contentContainerStyle={containerStyle}>
-            <Icon
-              name="information-circle-outline"
-              type="ionicon"
-              size={100}
-              color="#E85D75"
-            />
-            <Text style={styles.textModal}>
-              Vas a empezar una nueva jornada?
-            </Text>
-            <View style={{ flexDirection: "row", padding: 50 }}>
-              <View style={{ paddingHorizontal: 20 }}>
-                <Button
-                  style={styles.buttonStyleModalTrue}
-                  labelStyle={styles.buttonTextStyle}
-                  onPress={async () => {
-                    hideModal();
-                    setStateModal(true); // ABRIR EL MODAL
-                    await updateStateWork("WORKING"); // ACTUALIZAR EL ESTADO EN LA BASE
-                    saveTimeUser(startTime, "startWork"); // GUARDAR EL ESTADO
-                    setStateModal(false); // CERRAR EL MODAL
-                    navigation.navigate("WORKINGTIME")
-                  }}
-                >
-                  CONTINUAR
-                </Button>
+    if(documentsValidate==true){
+      return (
+        <Provider>
+          <Portal>
+            <Modal visible={documentsValidate} contentContainerStyle={containerStyle}>
+              <Icon
+                name="information-circle-outline"
+                type="ionicon"
+                size={100}
+                color="#E85D75"
+              />
+              <Text style={styles.textModal}>
+                Para comenzar a registrar tu tiempo, debes registrar los
+                documentos
+              </Text>
+              <View style={{ padding: 50 }}>
+                <View>
+                  <Button
+                    style={styles.buttonStyleModalTrue}
+                    labelStyle={styles.buttonTextStyle}
+                    onPress={async () => {
+                      hideModal();
+                      navigation.navigate("DOCUMENTSVALIDATE");
+                    }}
+                  >
+                    CONTINUAR
+                  </Button>
+                </View>
               </View>
-              <View style={{ paddingHorizontal: 20 }}>
-                <Button
-                  style={styles.buttonStyleModalFalse}
-                  labelStyle={styles.buttonTextStyle}
-                  onPress={async () => {
-                    hideModal();
-                  }}
-                >
-                  CANCELAR
-                </Button>
+            </Modal>
+          </Portal>
+        </Provider>
+      );
+    }else{
+      return (
+        <Provider>
+          <Portal>
+            <Modal visible={visible} contentContainerStyle={containerStyle}>
+              <Icon
+                name="information-circle-outline"
+                type="ionicon"
+                size={100}
+                color="#E85D75"
+              />
+              <Text style={styles.textModal}>
+                Vas a empezar una nueva jornada?
+              </Text>
+              <View style={{ flexDirection: "row", padding: 50 }}>
+                <View style={{ paddingHorizontal: 20 }}>
+                  <Button
+                    style={styles.buttonStyleModalTrue}
+                    labelStyle={styles.buttonTextStyle}
+                    onPress={async () => {
+                      hideModal();
+                      setStateModal(true); // ABRIR EL MODAL
+                      await updateStateWork("WORKING"); // ACTUALIZAR EL ESTADO EN LA BASE
+                      saveTimeUser(startTime, "startWork"); // GUARDAR EL ESTADO
+                      setStateModal(false); // CERRAR EL MODAL
+                      navigation.navigate("WORKINGTIME");
+                    }}
+                  >
+                    CONTINUAR
+                  </Button>
+                </View>
+                <View style={{ paddingHorizontal: 20 }}>
+                  <Button
+                    style={styles.buttonStyleModalFalse}
+                    labelStyle={styles.buttonTextStyle}
+                    onPress={async () => {
+                      hideModal();
+                    }}
+                  >
+                    CANCELAR
+                  </Button>
+                </View>
               </View>
-            </View>
-          </Modal>
-        </Portal>
-      </Provider>
-    );
+            </Modal>
+          </Portal>
+        </Provider>
+      );
+    }
+ 
   };
+
   // VALIDACION DEL AM/PM ICON
   let IconDays = () => {
     return (
@@ -221,7 +264,7 @@ export const ScreenWork = () => {
           <Text style={styles.textBlackContainer}>REGISTRA TU HORA!</Text>
         </View>
       </View>
-
+    
       <View style={[styles.container3, { shadowColor: Newcolor }]}>
         <TextNotWorking />
       </View>
