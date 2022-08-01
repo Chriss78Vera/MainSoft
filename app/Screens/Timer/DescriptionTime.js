@@ -331,6 +331,7 @@ export const DescriptionTime = ({ route }) => {
               mode="contained"
               disabled={DescriptionValidation}
               onPress={async () => {
+            
                 setModalVisible(true);
                 if (imageUserBreak != null || imageUserFinish != null) {
                   await uploadFile();

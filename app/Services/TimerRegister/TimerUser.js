@@ -32,9 +32,6 @@ export const createTask = async () => {
   const setTimer = {
     notChange: null,
   };
-  const totals = {
-    totalMonth: 0,
-  };
 
   try {
     await updateDoc(
@@ -52,7 +49,6 @@ export const createTask = async () => {
       ),
       setTime
     );
-    await updateDoc(doc(global.dbCon, "/Usuarios", global.id), totals);
   }
 };
 // SAVE TIME
@@ -74,9 +70,9 @@ export const saveTimeUser = async (time, state, Description, Image) => {
   let saveMonth = getMonth(date.getMonth() + 1) + "_" + date.getFullYear();
   let saveDayControl = nombreDia + "_" + date.getDate();
   let saveDay;
-  if(date.getDate()>=1 && date.getDate()<=9){
+  if (date.getDate() >= 1 && date.getDate() <= 9) {
     saveDay = "0" + date.getDate();
-  }else{
+  } else {
     saveDay = date.getDate();
   }
 
@@ -191,6 +187,26 @@ export const getTimers = async (refreshScreen, dayNumber) => {
   }
   console.log("SALE");
 };
+// TRAE DATOS DEL MES
+export const getTimersMonth = async (refreshScreen, dayNumber) => {
+  console.log("TRAIGO EL TIEMPO");
+  const monthDate =
+    getMonth(dayNumber.getMonth() + 1) + "_" + dayNumber.getFullYear();
+
+  const q = doc(
+    global.dbCon,
+    "/Usuarios/" + global.id + "/" + "MONTHLY_REGISTER" + "/" + monthDate
+  );
+  const docSnap = await getDoc(q);
+  let timerInformation = [];
+  timerInformation=(docSnap.data().totalHours);
+  console.log(timerInformation);
+  if (timerInformation == undefined) {
+    refreshScreen(null);
+  } else {
+    refreshScreen(timerInformation);
+  }
+};
 // CONTAR LAS HORAS DE CADA COSA
 
 export const sumarHoras = async () => {
@@ -302,8 +318,8 @@ export const sumarHoras = async () => {
 
   let horaFinalRegistro =
     horaFinalView + ":" + minFinalView + ":" + secFinalView;
-
   console.log("Tiempo trabajado", horaFinalRegistro);
+
   const timer = {
     totalDay: horaFinalRegistro,
   };
@@ -314,6 +330,69 @@ export const sumarHoras = async () => {
     ),
     timer
   );
+  try {
+    const q = doc(
+      global.dbCon,
+      "/Usuarios/" + global.id + "/" + "MONTHLY_REGISTER" + "/" + saveMonth
+    );
+    const docSnap = await getDoc(q);
+    timerInformation = docSnap.data().totalHours;
+    console.log("Tiempo trabajados", timerInformation);
+    let separacion = timerInformation.split(":");
+    let horaMonthFinal = Number(separacion[0]) * 3600;
+    let minutosMonthFinal = Number(separacion[1]) * 60;
+    let segundosMonth = Number(separacion[2]);
+    let sumaMonth = Number(horaMonthFinal + minutosMonthFinal + segundosMonth);
+    let sumaFinal = Number(sumaMonth + hoursTotalDay);
+
+    let horaFinalMonth = Math.round(sumaFinal / 3600);
+    let horaFinalViewMonth;
+    if (horaFinalMonth < 10) {
+      horaFinalViewMonth = "0" + horaFinalMonth;
+    } else {
+      horaFinalViewMonth = horaFinalMonth;
+    }
+
+    let restoHoraFinalMonth = sumaFinal % 3600;
+    let minFinalMonth = Math.round(restoHoraFinalMonth / 60);
+    let minFinalViewMonth;
+    if (minFinalMonth < 10) {
+      minFinalViewMonth = "0" + minFinalMonth;
+    } else {
+      minFinalViewMonth = minFinalMonth;
+    }
+    let secFinalMonth = restoHoraFinalMonth % 60;
+    let secFinalViewMonth;
+    if (secFinalMonth < 10) {
+      secFinalViewMonth = "0" + secFinalMonth;
+    } else {
+      secFinalViewMonth = secFinalMonth;
+    }
+    let month =
+      horaFinalViewMonth + ":" + minFinalViewMonth + ":" + secFinalViewMonth;
+    console.log(month);
+    const monthTime = {
+      totalHours: month,
+    };
+    await updateDoc(
+      doc(
+        global.dbCon,
+        "/Usuarios/" + global.id + "/" + "MONTHLY_REGISTER" + "/" + saveMonth
+      ),
+      monthTime
+    );
+  } catch (error) {
+    const monthTime = {
+      totalHours: horaFinalRegistro,
+    };
+    await setDoc(
+      doc(
+        global.dbCon,
+        "/Usuarios/" + global.id + "/" + "MONTHLY_REGISTER" + "/" + saveMonth
+      ),
+      monthTime
+    );
+  }
 };
 export const saveDay = async () => {
   const finishDay = {

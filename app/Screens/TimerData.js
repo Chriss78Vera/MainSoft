@@ -12,7 +12,7 @@ import { getAuth, signOut } from "firebase/auth";
 import { MenuPicture } from "../Components/ProfilePicture";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { dateComplete, dateMonth, ShowMonth } from "../Components/Date";
-import { getTimers } from "../Services/TimerRegister/TimerUser";
+import { getTimers, getTimersMonth } from "../Services/TimerRegister/TimerUser";
 import { ModalReload } from "../Components/Modal";
 import { DateTimer, DateTimerData } from "../Components/Calendar";
 import MonthPicker from "react-native-month-year-picker";
@@ -24,6 +24,7 @@ export const TimerData = () => {
   const [mode, setMode] = React.useState("date");
   // DATE PICKER DATE
   const [dateDay, setDateDay] = React.useState(dateComplete());
+  const [month,setMonth] = React.useState();
   const [dateNotChange, setDateNotChange] = React.useState(dateComplete());
   const [date1, setDate1] = React.useState(new Date());
   const [showDay, setShowDay] = React.useState(false);
@@ -40,6 +41,7 @@ export const TimerData = () => {
   }
   React.useEffect(() => {
     getTimers(setDataTime, date1);
+    getTimersMonth(setMonth,date1);
   }, []);
   let ActualizacionTime = () => {
     if (change == true) {
@@ -59,8 +61,11 @@ export const TimerData = () => {
           onPress={async () => {
             setChange(true);
             getTimers(setDataTime, date1);
+            getTimersMonth(setMonth,date1)
             setChange(false);
             setSearch(true);
+            
+          
           }}
         >
           Buscar
@@ -116,7 +121,7 @@ export const TimerData = () => {
             </View>
             <View style={{ flexDirection: "row" }}>
               <Text style={styles.textTitle}> HORAS MENSUALES: </Text>
-              <Text style={styles.textSubtitle}>{global.totalMonth} HORAS</Text>
+              <Text style={styles.textSubtitle}>{month!=null?month:"00:00:00"} HORAS</Text>
             </View>
             <View>
               <Text style={styles.textMonthDetails}>DETALLES</Text>
@@ -139,7 +144,7 @@ export const TimerData = () => {
             </View>
             <View style={{ flexDirection: "row" }}>
               <Text style={styles.textTitle}> HORAS MENSUALES: </Text>
-              <Text style={styles.textSubtitle}>{global.totalMonth} HORAS</Text>
+              <Text style={styles.textSubtitle}>{month} HORAS</Text>
             </View>
             <View>
               <Text style={styles.textMonthDetails}>DETALLES</Text>
