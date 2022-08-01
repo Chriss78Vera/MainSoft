@@ -35,8 +35,8 @@ export const DescriptionTime = ({ route }) => {
   const navigation = useNavigation();
   const [Description, setDescription] = React.useState();
   const [DescriptionValidation, setDescriptionValidation] = React.useState();
-  const [imageUserBreak, setImageUserBreak] = React.useState();
-  const [imageUserFinish, setImageUserFinish] = React.useState();
+  const [imageUserBreak, setImageUserBreak] = React.useState(null);
+  const [imageUserFinish, setImageUserFinish] = React.useState(null);
   const [nameImageBreak, setNameImageBreak] = React.useState();
   const [nameImageFinish, setNameImageFinish] = React.useState();
   const [status, requestPermission] = useMediaLibraryPermissions();
@@ -332,20 +332,45 @@ export const DescriptionTime = ({ route }) => {
               disabled={DescriptionValidation}
               onPress={async () => {
                 setModalVisible(true);
-                await uploadFile();
-                saveTimeUser(
-                  StartTime,
-                  State,
-                  Description,
-                  global.pictureDescription
-                );
-                await updateStateWork(DBstate);
-                if (DBstate == "FINISHED") {
-                  await sumarHoras();
-                  navigation.navigate("FINISHWORK");
+                if (imageUserBreak != null || imageUserFinish != null) {
+                  await uploadFile();
+                 await saveTimeUser(
+                    StartTime,
+                    State,
+                    Description,
+                    global.pictureDescription
+                  );
+                  await updateStateWork(DBstate);
+                  if (DBstate == "FINISHED") {
+                    await sumarHoras();
+                    navigation.navigate("FINISHWORK");
+                    setDescription(null);
+                    setImageUserFinish(null);
+                  } else {
+                    console.log("NADA");
+                    navigation.navigate("BREAKTIME");
+                    setDescription(null);
+                    setImageUserBreak(null);
+                  }
                 } else {
-                  console.log("NADA")
-                  navigation.navigate("BREAKTIME");
+                  await saveTimeUser(
+                    StartTime,
+                    State,
+                    Description,
+                    global.pictureDescription
+                  );
+                  if (DBstate == "FINISHED") {
+                    await sumarHoras();
+                    navigation.navigate("FINISHWORK");
+                    setDescription(null);
+                    setImageUserFinish(null);
+                  } else {
+                    console.log("NADA");
+                    navigation.navigate("BREAKTIME");
+                    setDescription(null);
+                    setImageUserBreak(null);
+                  }
+                  await updateStateWork(DBstate);
                 }
                 setModalVisible(false);
               }}
@@ -359,7 +384,11 @@ export const DescriptionTime = ({ route }) => {
               style={styles.buttonStyleBack}
               mode="contained"
               onPress={async () => {
-                navigation.goBack();
+                if (DBstate != "BREAK") {
+                  navigation.navigate("RETURNBREAK");
+                } else {
+                  navigation.navigate("WORKINGTIME");
+                }
               }}
             >
               REGRESAR

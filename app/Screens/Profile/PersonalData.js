@@ -287,6 +287,20 @@ export const PersonalData = ({ route }) => {
                 />
               </View>
             </View>
+            <View> 
+              <TouchableOpacity   onPress={() => {navigation.navigate("RECOVERYPASSWORD")}}>
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "bold",
+                  color: "green",
+                  textAlign: "center",
+                }}
+              >
+                *Cambiar la contraseña*
+              </Text>
+              </TouchableOpacity>
+            </View>
             {/* INFORMACION PERSONAL */}
             <Text style={styles.textTittle}> INFORMACION PERSONAL </Text>
             <View style={styles.viewTextInput}>

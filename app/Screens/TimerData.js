@@ -31,14 +31,12 @@ export const TimerData = () => {
   const [search, setSearch] = React.useState(false);
   let textMonth = ShowMonth(dateDay);
   let totalDay = 0;
-  let totalExtra = 0;
   let date =  new Date().getFullYear()-1
   // ESTADO
   // DATE PICKER MONTH
   const [dataTime, setDataTime] = React.useState();
   if (dataTime != null || dataTime != undefined) {
     totalDay = dataTime.totalDay;
-    totalExtra = dataTime.totalExtraDay;
   }
   React.useEffect(() => {
     getTimers(setDataTime, date1);
@@ -120,20 +118,12 @@ export const TimerData = () => {
               <Text style={styles.textTitle}> HORAS MENSUALES: </Text>
               <Text style={styles.textSubtitle}>{global.totalMonth} HORAS</Text>
             </View>
-            <View style={{ flexDirection: "row" }}>
-              <Text style={styles.textTitle}> HORAS EXTRAS: </Text>
-              <Text style={styles.textSubtitle}>{global.extraMonth} HORAS</Text>
-            </View>
             <View>
               <Text style={styles.textMonthDetails}>DETALLES</Text>
             </View>
             <DateTimerData dayNumber={date1.getDay()} />
             <View style={{ flexDirection: "row" }}>
               <Text style={styles.textTitle}> JORNADA DIARIA: </Text>
-              <Text style={styles.textSubtitle}>0 HORAS</Text>
-            </View>
-            <View style={{ flexDirection: "row" }}>
-              <Text style={styles.textTitle}> HORAS EXTRA: </Text>
               <Text style={styles.textSubtitle}>0 HORAS</Text>
             </View>
             <Text style={{ fontSize: 15, color: "red", fontWeight: "bold" }}>
@@ -151,10 +141,6 @@ export const TimerData = () => {
               <Text style={styles.textTitle}> HORAS MENSUALES: </Text>
               <Text style={styles.textSubtitle}>{global.totalMonth} HORAS</Text>
             </View>
-            <View style={{ flexDirection: "row" }}>
-              <Text style={styles.textTitle}> HORAS EXTRAS: </Text>
-              <Text style={styles.textSubtitle}>{global.extraMonth} HORAS</Text>
-            </View>
             <View>
               <Text style={styles.textMonthDetails}>DETALLES</Text>
             </View>
@@ -163,12 +149,6 @@ export const TimerData = () => {
               <Text style={styles.textTitle}> JORNADA DIARIA: </Text>
               <Text style={styles.textSubtitle}>
                 {dataTime == null ? "0" : totalDay} HORAS
-              </Text>
-            </View>
-            <View style={{ flexDirection: "row" }}>
-              <Text style={styles.textTitle}> HORAS EXTRA: </Text>
-              <Text style={styles.textSubtitle}>
-                {dataTime == null ? "0" : totalExtra} HORAS
               </Text>
             </View>
           </>
@@ -240,7 +220,8 @@ export const TimerData = () => {
             is24Hour={true}
             display="default"
             onChange={onChangeDay}
-            maximumDate={new Date()}
+            maximumDate={new Date("12/31/2022")}
+            minimumDate={new Date("01/01/2022")}
           />
         )}
       </View>

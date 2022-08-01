@@ -33,7 +33,6 @@ export const createTask = async () => {
     notChange: null,
   };
   const totals = {
-    totalExtraMonth: 0,
     totalMonth: 0,
   };
 
@@ -73,7 +72,14 @@ export const saveTimeUser = async (time, state, Description, Image) => {
   const numeroDia = new Date().getDay();
   const nombreDia = dias[numeroDia].toUpperCase();
   let saveMonth = getMonth(date.getMonth() + 1) + "_" + date.getFullYear();
-  let saveDay = nombreDia + "_" + date.getDate();
+  let saveDayControl = nombreDia + "_" + date.getDate();
+  let saveDay;
+  if(date.getDate()>=1 && date.getDate()<=9){
+    saveDay = "0" + date.getDate();
+  }else{
+    saveDay = date.getDate();
+  }
+
   if (state == "startWork") {
     const timer = {
       startWork: time,
@@ -85,14 +91,14 @@ export const saveTimeUser = async (time, state, Description, Image) => {
     await updateDoc(
       doc(
         global.dbCon,
-        "/Usuarios/" + global.id + "/" + saveMonth + "/" + saveDay
+        "/Usuarios/" + global.id + "/" + saveMonth + "/" + saveDayControl
       ),
       timer
     );
     await updateDoc(
       doc(
         global.dbCon,
-        "/Usuarios/" + global.id + "/" + saveMonth + "/" + saveDay
+        "/Usuarios/" + global.id + "/" + saveMonth + "/" + saveDayControl
       ),
       timerSet
     );
@@ -106,7 +112,7 @@ export const saveTimeUser = async (time, state, Description, Image) => {
     await updateDoc(
       doc(
         global.dbCon,
-        "/Usuarios/" + global.id + "/" + saveMonth + "/" + saveDay
+        "/Usuarios/" + global.id + "/" + saveMonth + "/" + saveDayControl
       ),
       timers
     );
@@ -123,7 +129,7 @@ export const saveTimeUser = async (time, state, Description, Image) => {
     await updateDoc(
       doc(
         global.dbCon,
-        "/Usuarios/" + global.id + "/" + saveMonth + "/" + saveDay
+        "/Usuarios/" + global.id + "/" + saveMonth + "/" + saveDayControl
       ),
       timers
     );
@@ -140,7 +146,7 @@ export const saveTimeUser = async (time, state, Description, Image) => {
     await updateDoc(
       doc(
         global.dbCon,
-        "/Usuarios/" + global.id + "/" + saveMonth + "/" + saveDay
+        "/Usuarios/" + global.id + "/" + saveMonth + "/" + saveDayControl
       ),
       timers
     );
@@ -300,7 +306,6 @@ export const sumarHoras = async () => {
   console.log("Tiempo trabajado", horaFinalRegistro);
   const timer = {
     totalDay: horaFinalRegistro,
-    totalExtraDay: 0,
   };
   await updateDoc(
     doc(
@@ -309,13 +314,6 @@ export const sumarHoras = async () => {
     ),
     timer
   );
-  // let suma = parseInt(global.totalMonth) + parseInt(totalHoursDay);
-  // const data = {
-  //   totalMonth: suma,
-  //   totalExtraMonth: 0,
-  // };
-  // await updateDoc(doc(global.dbCon, "/Usuarios", global.id), data);
-  // console.log("GUARDO LOS DATOS");
 };
 export const saveDay = async () => {
   const finishDay = {

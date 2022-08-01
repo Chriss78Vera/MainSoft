@@ -1,12 +1,19 @@
 import { useNavigation } from "@react-navigation/native";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import React from "react";
 import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { ModalReload } from "../Components/Modal";
-import { ModalInfoError } from "../Components/Modals";
+import { ModalInfoError, ModalInfoConfirmation } from "../Components/Modals";
 import { createTask } from "../Services/TimerRegister/TimerUser";
-import { getDocumentsData, getPersonalRol } from "../Services/UserInformation/InfoUser";
+import {
+  getDocumentsData,
+  getPersonalRol,
+} from "../Services/UserInformation/InfoUser";
 export const LoginScreenPassword = ({ route }) => {
   // AUTH CON FIREBASE
   const auth = getAuth();
@@ -17,11 +24,21 @@ export const LoginScreenPassword = ({ route }) => {
   const [emailUser, setEmailUser] = React.useState(UserEmail);
   const [password, setPassword] = React.useState();
   const [active, setActive] = React.useState(false);
+  const [activeConfirmation, setActiveConfirmation] = React.useState(false);
   const [change, setChange] = React.useState(false);
   // PERSONAL INFORMATION
   const [stateModal, setStateModal] = React.useState(false);
   const navigation = useNavigation();
-
+  const recuperarContraseña = (email) => {
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        console.log("VALIO");
+        setActiveConfirmation(true)
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <View style={styles.container}>
       <View style={styles.containerTop}>
@@ -41,20 +58,27 @@ export const LoginScreenPassword = ({ route }) => {
             activeOutlineColor="white"
             left={<TextInput.Icon name="lock" color="#6DC0D5" />}
             onChangeText={(password) => setPassword(password)}
+            right={
+              <TextInput.Icon
+                onPress={() => {
+                  setChange(!change);
+                }}
+                name="eye"
+                color="#6DC0D5"
+              />
+            }
             style={{ backgroundColor: "#3D3D3D" }}
             activeUnderlineColor="white"
             underlineColor="white"
             theme={{ colors: { text: "white", placeholder: "white" } }}
           />
           <Button
-            icon={"eye"}
-            color={"#6DC0D5"}
-            labelStyle={styles.buttonTextStyle}
+            labelStyle={[styles.buttonSubtittleStyle, { color: "white" }]}
             onPress={() => {
-              setChange(!change);
+              recuperarContraseña(emailUser);
             }}
           >
-            {change == true ? "OCULTAR CONTRASEÑA" : "MOSTRAR CONTRASEÑA"}
+            OLVIDASTE TU CONTRASEÑA
           </Button>
           <ModalReload
             modalVisible={stateModal}
@@ -67,25 +91,24 @@ export const LoginScreenPassword = ({ route }) => {
           style={styles.buttonStyle}
           labelStyle={styles.buttonTextStyle}
           onPress={() => {
-            console.log(emailUser)
+            console.log(emailUser);
             signInWithEmailAndPassword(auth, emailUser, password)
               .then(async (userCredential) => {
-                // setStateModal(true);
+                setStateModal(true);
                 global.email = emailUser;
                 await getPersonalRol();
-                if ( global.rol == "Empleado") {
-                  await getDocumentsData()
-                   await createTask();
-                   navigation.navigate("TIMER");
-                   console.log(global.documents)
-                   setStateModal(false);
+                if (global.rol == "Empleado") {
+                  await getDocumentsData();
+                  await createTask();
+                  navigation.navigate("TIMER");
                   
-                }else{
+                  setStateModal(false);
+                } else {
                   // navigation.navigate("LOGINS");
                 }
               })
               .catch((error) => {
-                console.log(error)
+                console.log(error);
                 setActive(true);
                 // setStateModal(false);
               });
@@ -109,6 +132,12 @@ export const LoginScreenPassword = ({ route }) => {
         message={"CREDENCIALES ERRONEAS"}
         description={"REVISA LAS CREDENCIALES DE ACCESO"}
       ></ModalInfoError>
+      <ModalInfoConfirmation
+        modalVisible={activeConfirmation}
+        setModalVisible={setActiveConfirmation}
+        message={"CORREO ENVIADO: "+ emailUser}
+        description={"Revisa las bandejas de SMAP y NO DESEADOS"}
+      ></ModalInfoConfirmation>
     </View>
   );
 };
@@ -122,7 +151,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContext: "center",
     alignItems: "center",
-    padding: 16,
+    paddingTop: Dimensions.get("window").height / 70,
   },
   containerTop: {
     flex: 1,

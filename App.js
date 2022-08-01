@@ -21,6 +21,7 @@ import { ScreenWorking } from "./app/Screens/HomeScreens/ScreenWorking";
 import { ScreenBreak } from "./app/Screens/HomeScreens/ScreenBreak";
 import { ScreenBack } from "./app/Screens/HomeScreens/ScreenBack";
 import { ScreenFinish } from "./app/Screens/HomeScreens/ScreenFinish";
+import { PasswordScreen } from "./app/Screens/Profile/Password";
 //CONSTANTES USADAS //
 const NativeStackNav = createNativeStackNavigator();
 const TabNav = createBottomTabNavigator();
@@ -53,6 +54,11 @@ const DataPersonal = () => {
       <NativeStackNav.Screen
         name="DATAPERSONAL"
         component={Profile}
+        options={{ headerShown: false }}
+      ></NativeStackNav.Screen>
+      <NativeStackNav.Screen
+        name="RECOVERYPASSWORD"
+        component={PasswordScreen}
         options={{ headerShown: false }}
       ></NativeStackNav.Screen>
       <NativeStackNav.Screen

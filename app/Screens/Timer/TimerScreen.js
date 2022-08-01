@@ -18,9 +18,6 @@ export const TimerScreen = ({ route }) => {
   const [dayTime, setDayTime] = React.useState(
     timeMoreData.totalDay == null ? "0" : timeMoreData.totalDay
   );
-  const [extraTime, setExtraTime] = React.useState(
-    timeMoreData.totalExtraDay == null ? "0" : timeMoreData.totalExtraDay
-  );
   const [startTime, setStartTime] = React.useState(
     timeMoreData.startWork == null ? "00:00:00" : timeMoreData.startWork
   );
@@ -199,10 +196,6 @@ export const TimerScreen = ({ route }) => {
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.textTitle}> JORNADA DIARIA: </Text>
           <Text style={styles.textSubtitle}>{dayTime} HORAS</Text>
-        </View>
-        <View style={{ flexDirection: "row" }}>
-          <Text style={styles.textTitle}> HORAS EXTRA: </Text>
-          <Text style={styles.textSubtitle}>{extraTime} HORAS</Text>
         </View>
       </View>
       <View style={styles.container2}>

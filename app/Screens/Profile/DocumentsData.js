@@ -7,6 +7,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import * as DocumentPicker from "expo-document-picker";
 import { saveDocumentPersonal } from "../../Services/UserInformation/DocumentsUser";
 import { ModalReload } from "../../Components/Modal";
+import { getAuth, signOut } from "firebase/auth";
 export const DocumentsData = ({ route }) => {
   const navigation = useNavigation();
   let InfoDocument = null;
@@ -14,10 +15,12 @@ export const DocumentsData = ({ route }) => {
   const [firstName, setFirstName] = React.useState(global.name);
   const [lastName, setLastName] = React.useState(global.lastName);
   // PERMISOS PARA INGRESAR AL ALMACENAMIENTO
-  const [documentHojaVida, setDocumentHojaVida] = React.useState();
+  const [documentHojaVida, setDocumentHojaVida] = React.useState(null);
   const [nameHoja, setNameHoja] = React.useState();
-  const [documentCedula, setDocumentCedula] = React.useState();
+  const [documentCedula, setDocumentCedula] = React.useState(null);
   const [nameCedula, setNameCedula] = React.useState();
+  const [documentPapeleta, setDocumentPapeleta] = React.useState(null);
+  const [namePapeleta, setNamePapeleta] = React.useState();
   const [active, setActive] = React.useState();
   const [modalVisible, setModalVisible] = React.useState(false);
 
@@ -38,6 +41,16 @@ export const DocumentsData = ({ route }) => {
     setNameCedula(result.name);
     setDocumentCedula(result.uri);
   };
+
+  const pickDocumentpapeleta = async () => {
+    let result = await DocumentPicker.getDocumentAsync({});
+    if (result != null) {
+      console.log(result.name);
+    }
+    setNamePapeleta(result.name);
+    setDocumentPapeleta(result.uri);
+  };
+
   // ENLACE CON FIREBASE
   const uploadFileHojaVida = async () => {
     const blob = await new Promise((resolve, reject) => {
@@ -54,15 +67,43 @@ export const DocumentsData = ({ route }) => {
     });
 
     const storage = getStorage();
-    let nameFile =  firstName +"-"+ lastName
+    let nameFile = firstName + "-" + lastName;
 
     var d = new Date();
-    const fileStorage = ref(storage, "Documents/" + nameFile +"/"+ nameHoja);
+    const fileStorage = ref(storage, "Documents/" + nameFile + "/" + nameHoja);
     const uploadResult = await uploadBytes(fileStorage, blob);
     blob.close();
     const url = await getDownloadURL(fileStorage);
     console.log(url);
-    global.hoja=url
+    global.hoja = url;
+  };
+  const uploadFilePapeleta = async () => {
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", documentPapeleta, true);
+      xhr.send(null);
+    });
+
+    const storage = getStorage();
+    let nameFile = firstName + "-" + lastName;
+
+    var d = new Date();
+    const fileStorage = ref(
+      storage,
+      "Documents/" + nameFile + "/" + namePapeleta
+    );
+    const uploadResult = await uploadBytes(fileStorage, blob);
+    blob.close();
+    const url = await getDownloadURL(fileStorage);
+    console.log(url);
+    global.hojaPapeleta = url;
   };
   const uploadFileCedula = async () => {
     const blob = await new Promise((resolve, reject) => {
@@ -79,105 +120,214 @@ export const DocumentsData = ({ route }) => {
     });
 
     const storage = getStorage();
-    let nameFile =  firstName +"-"+ lastName
+    let nameFile = firstName + "-" + lastName;
 
     var d = new Date();
-    const fileStorage = ref(storage, "Documents/" + nameFile +"/"+ nameCedula);
+    const fileStorage = ref(
+      storage,
+      "Documents/" + nameFile + "/" + nameCedula
+    );
     const uploadResult = await uploadBytes(fileStorage, blob);
     blob.close();
     const url = await getDownloadURL(fileStorage);
     console.log(url);
-    global.cedula=url
+    global.cedula = url;
   };
-  React.useEffect(()=>{
-    if(documentCedula != null && documentHojaVida !=null){
-      setActive(false)
-    }else{
-      setActive(true)
+  React.useEffect(() => {
+    if (documentCedula != null && documentHojaVida != null && documentPapeleta != null) {
+      setActive(false);
+    } else {
+      setActive(true);
     }
-  })
-  // SUBIR DATOS A LA BASE //
+  });
+  const cerrar = () => {
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {
+        navigation.navigate("LOGINS");
+        global.email=null;
+        global.password=null;
+      })
+      .catch((error) => {
+        // An error happened.
+      });
+  };
   const saveData = async () => {
-    setModalVisible(true)
-    setActive(true)
-      await uploadFileHojaVida();
-      await uploadFileCedula();
-      const data={
-        account:2,
-        nameDocumentCedula:nameCedula,
-        urlDocumentCedula:global.cedula,
-        nameDocumentHojaVida:nameHoja,
-        urlDocumentHojaVida:global.hoja,
-      }
+    setModalVisible(true);
+    setActive(true);
+    await uploadFileHojaVida();
+    await uploadFileCedula();
+    await uploadFilePapeleta();
+    
+      const data = {
+        alldocuments: true,
+        nameDocumentCedula: nameCedula,
+        urlDocumentCedula: global.cedula,
+        nameDocumentHojaVida: nameHoja,
+        urlDocumentHojaVida: global.hoja,
+        nameDocumentPapeleta: namePapeleta,
+        urlDocumentPapeleta: global.hojaPapeleta,
+      };
       saveDocumentPersonal(data);
-      navigation.goBack()
-      setModalVisible(false)
+      cerrar();
+      setModalVisible(false);
+   
   };
-  let Documents =()=>{
-    if(global.documents==0){
-      return(
+  let Documents = () => {
+    if (global.documents == false) {
+      return (
         <>
-        <Text style={{ fontSize: 20, fontWeight: "bold", }}> HOJA DE VIDA </Text>
-        <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
-        <Text style={{fontSize: 12, fontWeight: "bold"}}>{nameHoja==null ? "Escoje el archivo que necesites: " : nameHoja}</Text>
-        <IconButton
-              icon={"calendar-month"}
+          <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+            {" "}
+            HOJA DE VIDA{" "}
+          </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ fontSize: 12, fontWeight: "bold" }}>
+              {nameHoja == null
+                ? "Escoje el archivo que necesites: "
+                : nameHoja}
+            </Text>
+            <IconButton
+              icon={"file"}
               iconColor={"black"}
               size={Dimensions.get("window").width / 12}
               onPress={async () => {
                 pickDocumentHojaVida();
               }}
             />
-        </View>
-        <View style={{ alignItems: "center"}}>
-        <Text style={{ fontSize: 20, fontWeight: "bold"}}> CEDULA </Text>
-        </View>
-        <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
-        <Text style={{fontSize: 15, fontWeight: "bold"}}>{nameCedula==null ? "Escoje el archivo que necesites: " : nameCedula}</Text>
-        <IconButton
-              icon={"calendar-month"}
+          </View>
+          <View style={{ alignItems: "center" }}>
+            <Text style={{ fontSize: 20, fontWeight: "bold" }}> CEDULA </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ fontSize: 12, fontWeight: "bold" }}>
+              {nameCedula == null
+                ? "Escoje el archivo que necesites: "
+                : nameCedula}
+            </Text>
+            <IconButton
+              icon={"image"}
               iconColor={"black"}
               size={Dimensions.get("window").width / 12}
               onPress={async () => {
-                pickDocumentCedula()
+                pickDocumentCedula();
               }}
             />
-        </View>
+          </View>
+          <View style={{ alignItems: "center" }}>
+            <Text style={{ fontSize: 20, fontWeight: "bold" }}> PAPELETA </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ fontSize: 12, fontWeight: "bold" }}>
+              {namePapeleta == null
+                ? "Escoje el archivo que necesites: "
+                : namePapeleta}
+            </Text>
+            <IconButton
+              icon={"image"}
+              iconColor={"black"}
+              size={Dimensions.get("window").width / 12}
+              onPress={async () => {
+                pickDocumentpapeleta();
+              }}
+            />
+          </View>
         </>
-      )
-    }else{
-      return(
+      );
+    } else {
+      return (
         <>
-        <Text style={{ fontSize: 20, fontWeight: "bold", }}> HOJA DE VIDA </Text>
-        <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
-        <Text style={{fontSize: 12, fontWeight: "bold"}}>{InfoDocument.nameDocumentHojaVida}</Text>
-        <IconButton
-              icon={"calendar-month"}
+          <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+            {" "}
+            HOJA DE VIDA{" "}
+          </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ fontSize: 12, fontWeight: "bold" }}>
+              {nameHoja == null ? InfoDocument.nameDocumentHojaVida : nameHoja}
+            </Text>
+            <IconButton
+              icon={"file"}
               iconColor={"black"}
               size={Dimensions.get("window").width / 12}
               onPress={async () => {
                 pickDocumentHojaVida();
               }}
             />
-        </View>
-        <View style={{ alignItems: "center"}}>
-        <Text style={{ fontSize: 20, fontWeight: "bold"}}> CEDULA </Text>
-        </View>
-        <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
-        <Text style={{fontSize: 15, fontWeight: "bold"}}>{InfoDocument.nameDocumentCedula}</Text>
-        <IconButton
-              icon={"calendar-month"}
+          </View>
+          <View style={{ alignItems: "center" }}>
+            <Text style={{ fontSize: 20, fontWeight: "bold" }}> CEDULA </Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ fontSize: 12, fontWeight: "bold" }}>
+              {nameCedula == null
+                ? InfoDocument.nameDocumentCedula
+                : nameCedula}
+            </Text>
+            <IconButton
+              icon={"image"}
               iconColor={"black"}
               size={Dimensions.get("window").width / 12}
               onPress={async () => {
-                pickDocumentCedula()
+                pickDocumentCedula();
               }}
             />
-        </View>
+          </View>
+          <Text style={{ fontSize: 20, fontWeight: "bold" }}> PAPELETA</Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ fontSize: 12, fontWeight: "bold" }}>
+              {namePapeleta == null
+                ? InfoDocument.nameDocumentPapeleta
+                : namePapeleta}
+            </Text>
+            <IconButton
+              icon={"file"}
+              iconColor={"black"}
+              size={Dimensions.get("window").width / 12}
+              onPress={async () => {
+                pickDocumentpapeleta();
+              }}
+            />
+          </View>
         </>
-      )
+      );
     }
-  }
+  };
   return (
     <View style={styles.container}>
       <View style={styles.containerTop}>
@@ -195,34 +345,40 @@ export const DocumentsData = ({ route }) => {
           {global.workStation}
         </Text>
       </View>
-      <View style={{ alignItems: "center",flex:3, minHeight: Dimensions.get("window").height/100}}>
-          <Documents/>
-      <View style={styles.containerBottom}>
-        <View style={{ flexDirection: "row" }}>
-          <Button
-            icon="archive"
-            style={styles.buttonStyle}
-            mode="contained"
-            disabled={active}
-            onPress={async() => 
-              await saveData()
-            }
-          >
-            Guardar
-          </Button>
-          <Button
-            icon="close-outline"
-            style={styles.buttonStyle}
-            mode="contained"
-            onPress={() => navigation.goBack()}
-          >
-            Volver
-          </Button>
+      <View
+        style={{
+          alignItems: "center",
+          flex: 3,
+          minHeight: Dimensions.get("window").height / 100,
+        }}
+      >
+        <Documents />
+        <View style={styles.containerBottom}>
+          <View style={{ flexDirection: "row" }}>
+            <Button
+              icon="archive"
+              style={styles.buttonStyle}
+              mode="contained"
+              disabled={active}
+              onPress={async () => await saveData()}
+            >
+              Guardar
+            </Button>
+            <Button
+              icon="close-outline"
+              style={styles.buttonStyle}
+              mode="contained"
+              onPress={() => navigation.goBack()}
+            >
+              Volver
+            </Button>
+          </View>
         </View>
-        </View>
-        <ModalReload modalVisible={modalVisible} textModal={"SUBIENDO LOS DOCUMENTOS"}/>
+        <ModalReload
+          modalVisible={modalVisible}
+          textModal={"SUBIENDO LOS DOCUMENTOS"}
+        />
       </View>
-      
     </View>
   );
 };

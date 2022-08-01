@@ -22,7 +22,6 @@ export const getPersonalRol = async (Show) => {
       global.lastName = personalInformation[i].lastName;
       global.picture = personalInformation[i].imageUser;
       global.totalMonth = personalInformation[i].totalMonth;
-      global.extraMonth = personalInformation[i].totalExtraMonth;
       global.stateBreak = personalInformation[i].stateBreak;
       global.workStation = personalInformation[i].workstation;
     }
@@ -78,10 +77,10 @@ export const getDocumentsData = async () => {
   try {
     const q = doc(global.dbCon, "/Usuarios/" + global.id +"/DOCUMENTS/"+"DATA");
     const docSnap = await getDoc(q);
-    global.documents = docSnap.data().account;
+    global.documents = docSnap.data().alldocuments;
     console.log(global.documents)
   } catch (error) {
-    global.documents=0;
+    global.documents=false;
   }
  
 };

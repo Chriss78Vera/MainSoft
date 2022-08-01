@@ -2,7 +2,7 @@
   "expo": {
     "name": "MainSoft_Proyect",
     "slug": "MainSoft_Proyect",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
