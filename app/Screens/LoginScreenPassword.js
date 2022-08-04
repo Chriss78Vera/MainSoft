@@ -39,6 +39,7 @@ export const LoginScreenPassword = ({ route }) => {
         console.log(error);
       });
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.containerTop}>

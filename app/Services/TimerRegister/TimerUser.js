@@ -199,7 +199,7 @@ export const getTimersMonth = async (refreshScreen, dayNumber) => {
   );
   const docSnap = await getDoc(q);
   let timerInformation = [];
-  timerInformation=(docSnap.data().totalHours);
+  timerInformation = docSnap.data().totalHours;
   console.log(timerInformation);
   if (timerInformation == undefined) {
     refreshScreen(null);
@@ -373,6 +373,8 @@ export const sumarHoras = async () => {
     console.log(month);
     const monthTime = {
       totalHours: month,
+      id: global.id,
+      completeName: global.name + " " + global.lastName,
     };
     await updateDoc(
       doc(
@@ -384,6 +386,8 @@ export const sumarHoras = async () => {
   } catch (error) {
     const monthTime = {
       totalHours: horaFinalRegistro,
+      id: global.id,
+      completeName: global.name + " " + global.lastName,
     };
     await setDoc(
       doc(
