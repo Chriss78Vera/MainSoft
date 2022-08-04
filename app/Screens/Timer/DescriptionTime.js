@@ -24,7 +24,6 @@ import {
 } from "expo-image-picker";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { ModalReload } from "../../Components/Modal";
-import { ModalReloadPicture } from "../../Components/ModalPicture";
 export const DescriptionTime = ({ route }) => {
   let StartTime = null;
   StartTime = route.params.StartTime;

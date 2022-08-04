@@ -14,7 +14,7 @@ export const createTask = async () => {
     "domingo", // 0
     "lunes", // 1
     "martes",
-    "miércoles",
+    "miercoles",
     "jueves",
     "viernes",
     "sábado",
@@ -22,7 +22,12 @@ export const createTask = async () => {
   const numeroDia = new Date().getDay();
   const nombreDia = dias[numeroDia].toUpperCase();
   let saveMonth = getMonth(date.getMonth() + 1) + "_" + date.getFullYear();
-  let saveDay = nombreDia + "_" + date.getDate();
+  let saveDay;
+  if (date.getDate() >= 1 && date.getDate() <= 9) {
+    saveDay = nombreDia + "_" +"0" + date.getDate();
+  } else {
+    saveDay = nombreDia + "_" +date.getDate();
+  }
   const setTime = {
     startWork: null,
     startBreak: null,
@@ -60,7 +65,7 @@ export const saveTimeUser = async (time, state, Description, Image) => {
     "domingo", // 0
     "lunes", // 1
     "martes",
-    "miércoles",
+    "miercoles",
     "jueves",
     "viernes",
     "sábado",
@@ -68,12 +73,14 @@ export const saveTimeUser = async (time, state, Description, Image) => {
   const numeroDia = new Date().getDay();
   const nombreDia = dias[numeroDia].toUpperCase();
   let saveMonth = getMonth(date.getMonth() + 1) + "_" + date.getFullYear();
-  let saveDayControl = nombreDia + "_" + date.getDate();
+  let saveDayControl;
   let saveDay;
   if (date.getDate() >= 1 && date.getDate() <= 9) {
     saveDay = "0" + date.getDate();
+    saveDayControl=nombreDia + "_" +"0"+ date.getDate();
   } else {
     saveDay = date.getDate();
+    saveDayControl=nombreDia + "_" + date.getDate();
   }
 
   if (state == "startWork") {
@@ -162,7 +169,7 @@ export const getTimers = async (refreshScreen, dayNumber) => {
     "domingo", // 0
     "lunes", // 1
     "martes",
-    "miércoles",
+    "miercoles",
     "jueves",
     "viernes",
     "sábado",
@@ -171,7 +178,12 @@ export const getTimers = async (refreshScreen, dayNumber) => {
   const nombreDia = dias[numeroDia].toUpperCase();
   let saveMonth =
     getMonth(dayNumber.getMonth() + 1) + "_" + dayNumber.getFullYear();
-  let saveDay = nombreDia + "_" + dayNumber.getDate();
+  let saveDay;
+  if(dayNumber.getDate() >= 1 && dayNumber.getDate() <= 9){
+    saveDay=nombreDia + "_" + "0"+dayNumber.getDate();
+  }else{
+    saveDay=nombreDia + "_" + dayNumber.getDate();
+  }
   console.log(saveDay);
   const q = doc(
     global.dbCon,
@@ -218,7 +230,7 @@ export const sumarHoras = async () => {
     "domingo", // 0
     "lunes", // 1
     "martes",
-    "miércoles",
+    "miercoles",
     "jueves",
     "viernes",
     "sábado",
@@ -226,7 +238,13 @@ export const sumarHoras = async () => {
   const numeroDia = new Date().getDay();
   const nombreDia = dias[numeroDia].toUpperCase();
   let saveMonth = getMonth(date.getMonth() + 1) + "_" + date.getFullYear();
-  let saveDay = nombreDia + "_" + date.getDate();
+  let saveDay;
+  if(date.getDate() >= 1 && date.getDate() <= 9){
+    saveDay=nombreDia + "_" + "0"+date.getDate();
+  }else{
+    saveDay=nombreDia + "_" + date.getDate();
+  }
+  console.log(saveDay);
   let startWork;
   let startBreak;
   let startBack;

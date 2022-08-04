@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { Icon } from "react-native-elements";
 import { Input } from "@rneui/themed";
-import { getAuth, updatePassword } from "firebase/auth";
+import { getAuth, signOut, updatePassword } from "firebase/auth";
 // NAVIGATIONS IMPORT
 export const PasswordScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -44,11 +44,24 @@ export const PasswordScreen = ({ route }) => {
       </>
     );
   };
+  const cerrar = () => {
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {
+        navigation.navigate("LOGINS");
+        global.email=null;
+        global.password=null;
+      })
+      .catch((error) => {
+        // An error happened.
+      });
+  };
   const resetUserPassword = async (password) => {
     const auth = getAuth();
     const user = auth.currentUser;
     updatePassword(user, password).then(() => {
       console.log("SI FUNCIONO")
+      cerrar();
     }).catch((error) => {
         console.log("No funciono", error)
     });
