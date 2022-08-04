@@ -10,7 +10,6 @@ export const LoginScreenMail = () => {
   const [emailUser, setEmailUser] = React.useState("");
   const [active, setActive] = React.useState(false);
   const [internet, setInternet] = React.useState();
-
   // REACT NAVIGATION
   const navigation = useNavigation();
   // VALIDATION EMAIL ///

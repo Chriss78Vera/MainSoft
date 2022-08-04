@@ -102,16 +102,15 @@ export const LoginScreenPassword = ({ route }) => {
                   await getDocumentsData();
                   await createTask();
                   navigation.navigate("TIMER");
-                  
                   setStateModal(false);
                 } else {
-                  // navigation.navigate("LOGINS");
+                  navigation.navigate("LOGINS");
+                  setStateModal(false);
                 }
               })
               .catch((error) => {
                 console.log(error);
                 setActive(true);
-                // setStateModal(false);
               });
           }}
         >
