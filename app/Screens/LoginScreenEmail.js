@@ -61,7 +61,7 @@ export const LoginScreenMail = () => {
   return (
     <View style={styles.container}>
       <View style={styles.containerTop}>
-        <View style={styles.containerLogo}>
+        <View style={styles.containerLogo} focusable={false}>
           <Image source={require("../../Resources/Images/logo.png")} />
           <Text style={styles.textLogo}>BIENVENIDO A MAINSOFT!</Text>
         </View>
