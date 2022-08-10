@@ -82,7 +82,7 @@ export const ScreenFinish= () => {
             <IconDays />
           </View>
           <View style={[styles.containerText]}>
-            <Text style={styles.informationText}>Finalizaste tu dia!</Text>
+            <Text style={styles.informationText}>Finalizaste tu día!</Text>
             <Text style={[styles.informationText, { color: "#2FDAA7" }]}>
               Felicitaciones!
             </Text>
@@ -106,11 +106,11 @@ export const ScreenFinish= () => {
           ]}
         >
           <View style={{ width: Dimensions.get("window").width / 2.3 }}>
-            <Text style={styles.textinContainer2}>BIENVENIDO</Text>
-
-            <Text style={styles.text2inContainer2}>
-              {name} {lastName}
+          <Text style={styles.textinContainer2}>
+              {global.name} {global.lastName}
             </Text>
+            <Text style={styles.text2inContainer2}>{global.workStation}</Text>
+
           </View>
           <View>
             <MenuPicture colorBackground={Newcolor} />
@@ -121,7 +121,13 @@ export const ScreenFinish= () => {
           <CalendarDay colors={Newcolor} />
         </View>
         <View style={styles.containerTextBlackContainer}>
-          <Text style={styles.textBlackContainer}>REGISTRA TU HORA!</Text>
+        <Text style={styles.textBlackContainerInformation}>
+            {global.timeToWork == "04"
+              ? "HORARIO CON PERMISO"
+              : global.timeToWork == "06"
+              ? "HORARIO MATERNO"
+              : "HORARIO NORMAL"}
+          </Text>
         </View>
       </View>
 
@@ -250,7 +256,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
   },
-
+  textBlackContainerInformation: {
+    fontSize: 15,
+    fontWeight: "bold",
+    color: "#E85D75",
+  },
   // BOTONES
   buttonStyle: {
     borderRadius: 15,

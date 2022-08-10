@@ -12,7 +12,7 @@ export const getPersonalRol = async (Show) => {
     const q = doc(global.dbCon, "/Usuarios/" + Rol);
     const docSnap = await getDoc(q);
     let personalInformation = [];
-    console.log(personalInformation)
+
     personalInformation.push(docSnap.data());
     for (let i = 0; i < personalInformation.length; i++) {
       global.id = personalInformation[i].id;
@@ -24,8 +24,11 @@ export const getPersonalRol = async (Show) => {
       global.totalMonth = personalInformation[i].totalMonth;
       global.stateBreak = personalInformation[i].stateBreak;
       global.workStation = personalInformation[i].workstation;
+      global.timetoWork = personalInformation[i].timetowork;
     }
-    
+  
+    let time=global.timetoWork.split(':')
+    global.timeToWork=time[0]
     let date = new Date();
     // IGUALA SI EL DIA ACTUAL ES IGUAL AL DIA ALMACENADO EN LA BASE
     if (global.finishDay == null || global.workState == null) {
@@ -52,14 +55,10 @@ export const getPersonalRol = async (Show) => {
         await updateDoc(doc(global.dbCon, "/Usuarios", global.id), finishDay);
       }
     }
-  } else {
-    console.log("NO LEE EL ESTADO");
   }
   if(global.totalMonth==null){
     global.totalMonth =0
-    console.log(global.totalMonth)
-  }else{
-    "NO HAY NADA"
+
   }
   
 };
@@ -78,7 +77,7 @@ export const getDocumentsData = async () => {
     const q = doc(global.dbCon, "/Usuarios/" + global.id +"/DOCUMENTS/"+"DATA");
     const docSnap = await getDoc(q);
     global.documents = docSnap.data().alldocuments;
-    console.log(global.documents)
+    
   } catch (error) {
     global.documents=false;
   }

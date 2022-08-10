@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width / 1.2,
     backgroundColor: "white",
     borderRadius: 20,
-    bottom: 140,
+    bottom: Dimensions.get("window").height/7,
     minHeight: Dimensions.get("window").height / 5,
     shadowOffset: {
       width: 0,

@@ -25,7 +25,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.zantycb89.MainSoft_Proyect"
+      "package": "com.zantycb89.MainSoft_Project"
     },
     "web": {
       "favicon": "./assets/favicon.png"

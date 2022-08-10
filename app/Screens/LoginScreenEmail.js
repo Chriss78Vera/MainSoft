@@ -59,18 +59,19 @@ export const LoginScreenMail = () => {
   }
   return (
     <View style={styles.container}>
-      <View style={styles.containerTop}>
+      <View style={styles.containerTop} >
         <View style={styles.containerLogo} focusable={false}>
           <Image source={require("../../Resources/Images/logo.png")} />
           <Text style={styles.textLogo}>BIENVENIDO A MAINSOFT!</Text>
         </View>
       </View>
-      <View style={styles.containerBottom}>
+      <View style={styles.containerBottom} focusable={false}>
         <Text style={styles.textLogoBottom}>
-          INGRESA TU CORREO ELECTRONICO!
+          INGRESA TU CORREO ELECTRÓNICO!
         </Text>
         <View style={styles.textInput}>
           <TextInput
+          focusable={false}
             label="Email"
             disabled={!internet}
             mode="outlined"
@@ -116,10 +117,12 @@ const styles = StyleSheet.create({
     elevation: 24,
     shadowColor: "white",
     shadowOpacity: 1,
+    
   },
   containerLogo: {
     alignItems: "center",
     justifyContent: "center",
+    
   },
   textInput: {
     width: 300,
@@ -135,17 +138,17 @@ const styles = StyleSheet.create({
     width: 175,
   },
   textLogo: {
-    marginTop: 45,
+    marginTop: Dimensions.get("window").height/200,
     textShadowColor: "rgba(0,0,0,0.25) 100%",
     textShadowOffset: { width: 0, height: 2.5 },
     textShadowRadius: 1,
-    fontSize: 25,
+    fontSize: Dimensions.get("window").width/15,
     fontWeight: "bold",
     color: "#3D3D3D",
   },
   textLogoBottom: {
-    marginTop: 45,
-    fontSize: 20,
+    marginTop: Dimensions.get("window").height/200,
+    fontSize: Dimensions.get("window").width/20,
     textAlign: "center",
     fontWeight: "bold",
     color: "white",

@@ -26,27 +26,20 @@ export const DocumentsData = ({ route }) => {
 
   const pickDocumentHojaVida = async () => {
     let result = await DocumentPicker.getDocumentAsync({});
-    if (result != null) {
-      console.log(result.name);
-    }
+  
     setNameHoja(result.name);
     setDocumentHojaVida(result.uri);
   };
   const pickDocumentCedula = async () => {
     let result = await DocumentPicker.getDocumentAsync({});
-    if (result != null) {
-      const r = await fetch(result.uri);
-      console.log(result.name);
-    }
+  
     setNameCedula(result.name);
     setDocumentCedula(result.uri);
   };
 
   const pickDocumentpapeleta = async () => {
     let result = await DocumentPicker.getDocumentAsync({});
-    if (result != null) {
-      console.log(result.name);
-    }
+
     setNamePapeleta(result.name);
     setDocumentPapeleta(result.uri);
   };
@@ -74,7 +67,7 @@ export const DocumentsData = ({ route }) => {
     const uploadResult = await uploadBytes(fileStorage, blob);
     blob.close();
     const url = await getDownloadURL(fileStorage);
-    console.log(url);
+   ;
     global.hoja = url;
   };
   const uploadFilePapeleta = async () => {
@@ -102,7 +95,7 @@ export const DocumentsData = ({ route }) => {
     const uploadResult = await uploadBytes(fileStorage, blob);
     blob.close();
     const url = await getDownloadURL(fileStorage);
-    console.log(url);
+
     global.hojaPapeleta = url;
   };
   const uploadFileCedula = async () => {
@@ -130,11 +123,15 @@ export const DocumentsData = ({ route }) => {
     const uploadResult = await uploadBytes(fileStorage, blob);
     blob.close();
     const url = await getDownloadURL(fileStorage);
-    console.log(url);
+  
     global.cedula = url;
   };
   React.useEffect(() => {
-    if (documentCedula != null && documentHojaVida != null && documentPapeleta != null) {
+    if (
+      documentCedula != null &&
+      documentHojaVida != null &&
+      documentPapeleta != null
+    ) {
       setActive(false);
     } else {
       setActive(true);
@@ -145,8 +142,8 @@ export const DocumentsData = ({ route }) => {
     signOut(auth)
       .then(() => {
         navigation.navigate("LOGINS");
-        global.email=null;
-        global.password=null;
+        global.email = null;
+        global.password = null;
       })
       .catch((error) => {
         // An error happened.
@@ -158,20 +155,18 @@ export const DocumentsData = ({ route }) => {
     await uploadFileHojaVida();
     await uploadFileCedula();
     await uploadFilePapeleta();
-    
-      const data = {
-        alldocuments: true,
-        nameDocumentCedula: nameCedula,
-        urlDocumentCedula: global.cedula,
-        nameDocumentHojaVida: nameHoja,
-        urlDocumentHojaVida: global.hoja,
-        nameDocumentPapeleta: namePapeleta,
-        urlDocumentPapeleta: global.hojaPapeleta,
-      };
-      saveDocumentPersonal(data);
-      cerrar();
-      setModalVisible(false);
-   
+    const data = {
+      alldocuments: true,
+      nameDocumentCedula: nameCedula,
+      urlDocumentCedula: global.cedula,
+      nameDocumentHojaVida: nameHoja,
+      urlDocumentHojaVida: global.hoja,
+      nameDocumentPapeleta: namePapeleta,
+      urlDocumentPapeleta: global.hojaPapeleta,
+    };
+   await saveDocumentPersonal(data);
+    setModalVisible(false);
+    cerrar();
   };
   let Documents = () => {
     if (global.documents == false) {
@@ -186,6 +181,7 @@ export const DocumentsData = ({ route }) => {
               flexDirection: "row",
               justifyContent: "center",
               alignItems: "center",
+              width: Dimensions.get("window").width/1.5,
             }}
           >
             <Text style={{ fontSize: 12, fontWeight: "bold" }}>
@@ -203,13 +199,14 @@ export const DocumentsData = ({ route }) => {
             />
           </View>
           <View style={{ alignItems: "center" }}>
-            <Text style={{ fontSize: 20, fontWeight: "bold" }}> CEDULA </Text>
+            <Text style={{ fontSize: 20, fontWeight: "bold" }}> CÉDULA </Text>
           </View>
           <View
             style={{
               flexDirection: "row",
               justifyContent: "center",
               alignItems: "center",
+              width: Dimensions.get("window").width/1.5,
             }}
           >
             <Text style={{ fontSize: 12, fontWeight: "bold" }}>
@@ -233,6 +230,7 @@ export const DocumentsData = ({ route }) => {
             style={{
               flexDirection: "row",
               justifyContent: "center",
+              width: Dimensions.get("window").width/1.5,
               alignItems: "center",
             }}
           >
@@ -264,6 +262,7 @@ export const DocumentsData = ({ route }) => {
               flexDirection: "row",
               justifyContent: "center",
               alignItems: "center",
+              width: Dimensions.get("window").width/1.5,
             }}
           >
             <Text style={{ fontSize: 12, fontWeight: "bold" }}>
@@ -286,6 +285,7 @@ export const DocumentsData = ({ route }) => {
               flexDirection: "row",
               justifyContent: "center",
               alignItems: "center",
+              width: Dimensions.get("window").width/1.5,
             }}
           >
             <Text style={{ fontSize: 12, fontWeight: "bold" }}>
@@ -308,6 +308,7 @@ export const DocumentsData = ({ route }) => {
               flexDirection: "row",
               justifyContent: "center",
               alignItems: "center",
+              width: Dimensions.get("window").width/1.5,
             }}
           >
             <Text style={{ fontSize: 12, fontWeight: "bold" }}>
@@ -341,7 +342,14 @@ export const DocumentsData = ({ route }) => {
         >
           {firstName} {lastName}
         </Text>
-        <Text style={{ fontSize: 20, fontWeight: "bold", color: "white" }}>
+        <Text
+          style={{
+            fontSize: 20,
+            paddingBottom: Dimensions.get("window").width / 15,
+            fontWeight: "bold",
+            color: "white",
+          }}
+        >
           {global.workStation}
         </Text>
       </View>
@@ -352,7 +360,14 @@ export const DocumentsData = ({ route }) => {
           minHeight: Dimensions.get("window").height / 100,
         }}
       >
-        <Documents />
+        <View
+          style={{
+            alignItems: "center",
+            paddingTop: Dimensions.get("window").height / 20,
+          }}
+        >
+          <Documents />
+        </View>
         <View style={styles.containerBottom}>
           <View style={{ flexDirection: "row" }}>
             <Button
@@ -401,6 +416,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#3D3D3D",
     borderBottomEndRadius: 25,
+    paddingTop: Dimensions.get("window").height / 10,
     borderBottomStartRadius: 25,
     justifyContent: "center",
     alignItems: "center",
@@ -435,6 +451,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     margin: 10,
     width: Dimensions.get("window").width / 2.5,
+    minHeight: Dimensions.get("window").height / 18,
     backgroundColor: "#6DC0D5",
   },
 });

@@ -18,7 +18,7 @@ export const CalendarDay = (colors) => {
     const nombreDia = dias[numeroDia];
     setDay(numeroDia);
 
-    console.log("Nombre de día de la semana: ", nombreDia);
+
   };
   // VALIDATION //
   React.useEffect(() => {
@@ -293,7 +293,7 @@ export const DateTimer = (dayNumber) => {
     const numeroDia = dayNumber.dayNumber
     const nombreDia = dias[numeroDia];
     setDay(numeroDia);
-    console.log("Nombre de día de la semana: ", numeroDia);
+   
   };
   // VALIDATION //
   React.useEffect(() => {
@@ -366,7 +366,6 @@ export const DateTimerData = (dayNumber) => {
     const numeroDia = dayNumber.dayNumber
     const nombreDia = dias[numeroDia];
     setDay(numeroDia);
-    console.log("Nombre de día de la semana: ", numeroDia);
   };
   // VALIDATION //
   React.useEffect(() => {

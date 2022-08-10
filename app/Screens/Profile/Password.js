@@ -60,10 +60,9 @@ export const PasswordScreen = ({ route }) => {
     const auth = getAuth();
     const user = auth.currentUser;
     updatePassword(user, password).then(() => {
-      console.log("SI FUNCIONO")
       cerrar();
     }).catch((error) => {
-        console.log("No funciono", error)
+        
     });
   };
   return (

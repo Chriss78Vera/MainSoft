@@ -32,7 +32,7 @@ export const ModalInfoError = ({ modalVisible, setModalVisible, message,descript
               />
             </View>
           </View>
-          <Text style={styles.modalTitle}>{message}</Text>
+          <Text style={[styles.modalTitle,{color: "#E85D75"}]}>{message}</Text>
           <View style={[styles.viewFlex]}>
             <Text style={styles.textMessage}>{description}</Text>
           </View>
@@ -72,7 +72,7 @@ export const ModalInfoConfirmation = ({ modalVisible, setModalVisible, message,d
               />
             </View>
           </View>
-          <Text style={styles.modalTitle}>{message}</Text>
+          <Text style={[styles.modalTitle,{color: "#6DC0D5"}]}>{message}</Text>
           <View style={[styles.viewFlex]}>
             <Text style={styles.textMessage}>{description}</Text>
           </View>
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     fontSize: 20,
     fontWeight: "bold",
-    color: "#6DC0D5",
+    
     textAlign: "center",
   },
   itemModalStyle: {

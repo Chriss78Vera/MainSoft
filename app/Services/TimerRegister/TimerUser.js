@@ -24,9 +24,9 @@ export const createTask = async () => {
   let saveMonth = getMonth(date.getMonth() + 1) + "_" + date.getFullYear();
   let saveDay;
   if (date.getDate() >= 1 && date.getDate() <= 9) {
-    saveDay = nombreDia + "_" +"0" + date.getDate();
+    saveDay = nombreDia + "_" + "0" + date.getDate();
   } else {
-    saveDay = nombreDia + "_" +date.getDate();
+    saveDay = nombreDia + "_" + date.getDate();
   }
   const setTime = {
     startWork: null,
@@ -58,9 +58,9 @@ export const createTask = async () => {
 };
 // SAVE TIME
 export const saveTimeUser = async (time, state, Description, Image) => {
-  console.log("GUARDA DATOS");
+
   let date = new Date();
-  console.log(time);
+
   const dias = [
     "domingo", // 0
     "lunes", // 1
@@ -77,10 +77,10 @@ export const saveTimeUser = async (time, state, Description, Image) => {
   let saveDay;
   if (date.getDate() >= 1 && date.getDate() <= 9) {
     saveDay = "0" + date.getDate();
-    saveDayControl=nombreDia + "_" +"0"+ date.getDate();
+    saveDayControl = nombreDia + "_" + "0" + date.getDate();
   } else {
     saveDay = date.getDate();
-    saveDayControl=nombreDia + "_" + date.getDate();
+    saveDayControl = nombreDia + "_" + date.getDate();
   }
 
   if (state == "startWork") {
@@ -88,7 +88,7 @@ export const saveTimeUser = async (time, state, Description, Image) => {
       startWork: time,
     };
     const timerSet = {
-      completeName: global.name + global.lastName,
+      completeName: global.name + " " + global.lastName,
       id: saveDay,
     };
     await updateDoc(
@@ -159,11 +159,11 @@ export const saveTimeUser = async (time, state, Description, Image) => {
     };
     await updateDoc(doc(global.dbCon, "/Usuarios", global.id), finishDay);
   }
-  console.log("SALE");
+
 };
 // TRAER DATOS
 export const getTimers = async (refreshScreen, dayNumber) => {
-  console.log("TRAIGO EL TIEMPO");
+ 
   let date = new Date();
   const dias = [
     "domingo", // 0
@@ -179,12 +179,12 @@ export const getTimers = async (refreshScreen, dayNumber) => {
   let saveMonth =
     getMonth(dayNumber.getMonth() + 1) + "_" + dayNumber.getFullYear();
   let saveDay;
-  if(dayNumber.getDate() >= 1 && dayNumber.getDate() <= 9){
-    saveDay=nombreDia + "_" + "0"+dayNumber.getDate();
-  }else{
-    saveDay=nombreDia + "_" + dayNumber.getDate();
+  if (dayNumber.getDate() >= 1 && dayNumber.getDate() <= 9) {
+    saveDay = nombreDia + "_" + "0" + dayNumber.getDate();
+  } else {
+    saveDay = nombreDia + "_" + dayNumber.getDate();
   }
-  console.log(saveDay);
+  
   const q = doc(
     global.dbCon,
     "/Usuarios/" + global.id + "/" + saveMonth + "/" + saveDay
@@ -197,11 +197,11 @@ export const getTimers = async (refreshScreen, dayNumber) => {
   } else {
     refreshScreen(timerInformation[0]);
   }
-  console.log("SALE");
+
 };
 // TRAE DATOS DEL MES
 export const getTimersMonth = async (refreshScreen, dayNumber) => {
-  console.log("TRAIGO EL TIEMPO");
+ 
   const monthDate =
     getMonth(dayNumber.getMonth() + 1) + "_" + dayNumber.getFullYear();
 
@@ -211,8 +211,13 @@ export const getTimersMonth = async (refreshScreen, dayNumber) => {
   );
   const docSnap = await getDoc(q);
   let timerInformation = [];
-  timerInformation = docSnap.data().totalHours;
-  console.log(timerInformation);
+  try {
+    timerInformation = docSnap.data().totalHours;
+  }catch (error) {
+    timerInformation=0;
+  }
+  
+  
   if (timerInformation == undefined) {
     refreshScreen(null);
   } else {
@@ -222,7 +227,6 @@ export const getTimersMonth = async (refreshScreen, dayNumber) => {
 // CONTAR LAS HORAS DE CADA COSA
 
 export const sumarHoras = async () => {
-  console.log("SUMA LOS DIAS");
   // TRAER DE LA BASE LOS DATOS
   let timerInformation = [];
   let date = new Date();
@@ -239,12 +243,12 @@ export const sumarHoras = async () => {
   const nombreDia = dias[numeroDia].toUpperCase();
   let saveMonth = getMonth(date.getMonth() + 1) + "_" + date.getFullYear();
   let saveDay;
-  if(date.getDate() >= 1 && date.getDate() <= 9){
-    saveDay=nombreDia + "_" + "0"+date.getDate();
-  }else{
-    saveDay=nombreDia + "_" + date.getDate();
+  if (date.getDate() >= 1 && date.getDate() <= 9) {
+    saveDay = nombreDia + "_" + "0" + date.getDate();
+  } else {
+    saveDay = nombreDia + "_" + date.getDate();
   }
-  console.log(saveDay);
+ 
   let startWork;
   let startBreak;
   let startBack;
@@ -257,7 +261,7 @@ export const sumarHoras = async () => {
     const docSnap = await getDoc(q);
     timerInformation.push(docSnap.data());
   } catch (error) {
-    console.log("NO HAY NADA QUE LEER");
+   
   }
   for (let i = 0; i < timerInformation.length; i++) {
     startWork = timerInformation[i].startWork;
@@ -281,21 +285,21 @@ export const sumarHoras = async () => {
   let sec1 = Number(horaInicioArray[2]);
 
   let horaIncioaSegundos = Number(hour1 + min1 + sec1);
-  console.log("HoraInicioSegundos: " + horaIncioaSegundos);
+  
 
   let hour2 = Number(horaBreakArray[0]) * 3600;
   let min2 = Number(horaBreakArray[1]) * 60;
   let sec2 = Number(horaBreakArray[2]);
 
   let horaBreakaSegundos = Number(hour2 + min2 + sec2);
-  console.log("horaBreakaSegundos", horaBreakaSegundos);
+  
 
   let hour3 = Number(horaBackArray[0]) * 3600;
   let min3 = Number(horaBackArray[1]) * 60;
   let sec3 = Number(horaBackArray[2]);
 
   let horaBackaSegundos = Number(hour3 + min3 + sec3);
-  console.log("horaBackaSegundos", horaBackaSegundos);
+ 
 
   let hour4 = Number(horaFinishArray[0]) * 3600;
   let min4 = Number(horaFinishArray[1]) * 60;
@@ -303,7 +307,7 @@ export const sumarHoras = async () => {
 
   let horaFinishaSegundos = Number(hour4 + min4 + sec4);
 
-  console.log("horaFinishaSegundos", horaFinishaSegundos);
+
 
   let restaHoraBreakInicio = horaBreakaSegundos - horaIncioaSegundos;
   let restaHorsFinishBack = horaFinishaSegundos - horaBackaSegundos;
@@ -336,26 +340,43 @@ export const sumarHoras = async () => {
 
   let horaFinalRegistro =
     horaFinalView + ":" + minFinalView + ":" + secFinalView;
-  console.log("Tiempo trabajado", horaFinalRegistro);
 
-  const timer = {
-    totalDay: horaFinalRegistro,
-  };
-  await updateDoc(
-    doc(
-      global.dbCon,
-      "/Usuarios/" + global.id + "/" + saveMonth + "/" + saveDay
-    ),
-    timer
-  );
+  if (global.timeToWork == "04" || global.timeToWork == "06") {
+    const timer = {
+      totalDay: horaFinalRegistro,
+      permissionType: true,
+    };
+    await updateDoc(
+      doc(
+        global.dbCon,
+        "/Usuarios/" + global.id + "/" + saveMonth + "/" + saveDay
+      ),
+      timer
+    );
+  } else {
+    const timer = {
+      totalDay: horaFinalRegistro,
+      permissionType: false,
+    };
+    await updateDoc(
+      doc(
+        global.dbCon,
+        "/Usuarios/" + global.id + "/" + saveMonth + "/" + saveDay
+      ),
+      timer
+    );
+  }
+
   try {
     const q = doc(
       global.dbCon,
       "/Usuarios/" + global.id + "/" + "MONTHLY_REGISTER" + "/" + saveMonth
     );
     const docSnap = await getDoc(q);
+
     timerInformation = docSnap.data().totalHours;
-    console.log("Tiempo trabajados", timerInformation);
+
+ 
     let separacion = timerInformation.split(":");
     let horaMonthFinal = Number(separacion[0]) * 3600;
     let minutosMonthFinal = Number(separacion[1]) * 60;
@@ -388,7 +409,7 @@ export const sumarHoras = async () => {
     }
     let month =
       horaFinalViewMonth + ":" + minFinalViewMonth + ":" + secFinalViewMonth;
-    console.log(month);
+
     const monthTime = {
       totalHours: month,
       id: global.id,

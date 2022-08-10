@@ -1,8 +1,11 @@
 import { useNavigation } from "@react-navigation/native";
 import {
+  EmailAuthProvider,
   getAuth,
+  sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
+  verifyBeforeUpdateEmail,
 } from "firebase/auth";
 import React from "react";
 import { Dimensions, Image, StyleSheet, Text, View } from "react-native";
@@ -24,6 +27,7 @@ export const LoginScreenPassword = ({ route }) => {
   const [emailUser, setEmailUser] = React.useState(UserEmail);
   const [password, setPassword] = React.useState();
   const [active, setActive] = React.useState(false);
+  const [email, setEmail] = React.useState(false);
   const [activeConfirmation, setActiveConfirmation] = React.useState(false);
   const [change, setChange] = React.useState(false);
   // PERSONAL INFORMATION
@@ -32,14 +36,13 @@ export const LoginScreenPassword = ({ route }) => {
   const recuperarContraseña = (email) => {
     sendPasswordResetEmail(auth, email)
       .then(() => {
-        console.log("VALIO");
-        setActiveConfirmation(true)
+        
+        setActiveConfirmation(true);
       })
       .catch((error) => {
-        console.log(error);
+    
       });
   };
-
   return (
     <View style={styles.container}>
       <View style={styles.containerTop}>
@@ -83,7 +86,7 @@ export const LoginScreenPassword = ({ route }) => {
           </Button>
           <ModalReload
             modalVisible={stateModal}
-            textModal={"Iniciando Sesion"}
+            textModal={"Iniciando Sesión"}
           />
         </View>
         <Button
@@ -92,29 +95,36 @@ export const LoginScreenPassword = ({ route }) => {
           style={styles.buttonStyle}
           labelStyle={styles.buttonTextStyle}
           onPress={() => {
-            console.log(emailUser);
             signInWithEmailAndPassword(auth, emailUser, password)
               .then(async (userCredential) => {
-                setStateModal(true);
-                global.email = emailUser;
-                await getPersonalRol();
-                if (global.rol == "Empleado") {
-                  await getDocumentsData();
-                  await createTask();
-                  navigation.navigate("TIMER");
-                  setStateModal(false);
-                } else {
-                  navigation.navigate("LOGINS");
-                  setStateModal(false);
+                if(userCredential.user.emailVerified==false){
+                  setEmail(true);
+                  setActive(true);
+                }else{
+                  setStateModal(true);
+                  setEmail(false);
+                  global.email = emailUser;
+                  await getPersonalRol();
+                  if (global.rol == "Empleado") {
+                    await getDocumentsData();
+                    await createTask();
+                    navigation.navigate("TIMER");
+                    setStateModal(false);
+                  } else {
+                    navigation.navigate("LOGINS");
+                    setStateModal(false);
+                  }
                 }
               })
               .catch((error) => {
-                console.log(error);
+                setEmail(false);
+             
                 setActive(true);
+                setStateModal(false);
               });
           }}
         >
-          INICIAR SESION
+          INICIAR SESIÓN
         </Button>
         <Button
           icon={(20, "arrow-left")}
@@ -129,13 +139,13 @@ export const LoginScreenPassword = ({ route }) => {
       <ModalInfoError
         modalVisible={active}
         setModalVisible={setActive}
-        message={"CREDENCIALES ERRONEAS"}
-        description={"REVISA LAS CREDENCIALES DE ACCESO"}
+        message={"ACCESO ERRÓNEO"}
+        description={email==true? "Verifica tu correo, en las bandejas de SPAM o No deseados":"Revisa tus credenciales de acesso"}
       ></ModalInfoError>
       <ModalInfoConfirmation
         modalVisible={activeConfirmation}
         setModalVisible={setActiveConfirmation}
-        message={"CORREO ENVIADO: "+ emailUser}
+        message={"CORREO ENVIADO: " + emailUser}
         description={"Revisa las bandejas de SMAP y NO DESEADOS"}
       ></ModalInfoConfirmation>
     </View>
@@ -181,14 +191,17 @@ const styles = StyleSheet.create({
     width: 175,
   },
   textLogo: {
-    marginTop: 45,
-    fontSize: 25,
+    marginTop: Dimensions.get("window").height/200,
+    textShadowColor: "rgba(0,0,0,0.25) 100%",
+    textShadowOffset: { width: 0, height: 2.5 },
+    textShadowRadius: 1,
+    fontSize: Dimensions.get("window").width/15,
     fontWeight: "bold",
     color: "#3D3D3D",
   },
   textLogoBottom: {
-    marginTop: 45,
-    fontSize: 20,
+    marginTop: Dimensions.get("window").height/200,
+    fontSize: Dimensions.get("window").width/20,
     textAlign: "center",
     fontWeight: "bold",
     color: "white",

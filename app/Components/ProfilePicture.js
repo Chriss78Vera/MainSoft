@@ -105,8 +105,8 @@ export const MenuPicture = (props) => {
             : global.picture,
       }}
       style={{
-        width: 80,
-        height: 80,
+        width: Dimensions.get("window").width/5,
+        height: Dimensions.get("window").height/10,
         borderRadius: 100,
         top: Dimensions.get("window").height/122,
         left: Dimensions.get("window").width/6,

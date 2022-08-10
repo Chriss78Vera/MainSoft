@@ -193,11 +193,10 @@ export const ScreenWorking = () => {
           ]}
         >
           <View style={{ width: Dimensions.get("window").width / 2.3 }}>
-            <Text style={styles.textinContainer2}>BIENVENIDO</Text>
-
-            <Text style={styles.text2inContainer2}>
-              {name} {lastName}
+          <Text style={styles.textinContainer2}>
+              {global.name} {global.lastName}
             </Text>
+            <Text style={styles.text2inContainer2}>{global.workStation}</Text>
 
             <ModalReload
               modalVisible={stateModal}
@@ -214,6 +213,13 @@ export const ScreenWorking = () => {
         </View>
         <View style={styles.containerTextBlackContainer}>
           <Text style={styles.textBlackContainer}>REGISTRA TU HORA!</Text>
+          <Text style={styles.textBlackContainerInformation}>
+            {global.timeToWork == "04"
+              ? "HORARIO CON PERMISO"
+              : global.timeToWork == "06"
+              ? "HORARIO MATERNO"
+              : "HORARIO NORMAL"}
+          </Text>
         </View>
       </View>
 
@@ -258,10 +264,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     width: Dimensions.get("window").width / 1.14,
+    minHeight: Dimensions.get("window").height/15,
     backgroundColor: "white",
     borderRadius: 20,
-    bottom: Dimensions.get("window").height / 50,
-    minHeight: Dimensions.get("window").height / 11,
     shadowOffset: {
       width: 0,
       height: 15,
@@ -302,10 +307,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   containerTextBlackContainer: {
+    alignItems: "center",
     paddingTop: Dimensions.get("window").height / 120,
   },
   containerButton: {
-    position: "relative",
+    alignItems: "center",
+    paddingTop: Dimensions.get("window").height/40,
+   
   },
   // TEXTO
   textTimer: {
@@ -346,7 +354,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
   },
-
+  textBlackContainerInformation: {
+    fontSize: 15,
+    fontWeight: "bold",
+    color: "#E85D75",
+  },
   // BOTONES
   buttonStyle: {
     borderRadius: 15,

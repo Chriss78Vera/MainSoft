@@ -2,10 +2,10 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 export const loadFirebaseConfiguration = () => {
-  console.log("FUNCIONA")
+  
   const app = initializeApp(firebaseConfig);
   global.dbCon = getFirestore();
-  console.log("TERMINA EL FIREBASE")
+ 
 };
 
 const firebaseConfig = {

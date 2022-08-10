@@ -8,7 +8,7 @@ import {
   Image,
   Modal,
 } from "react-native";
-import { Button, IconButton } from "react-native-paper";
+import { Button, IconButton, TextInput } from "react-native-paper";
 import { MenuPicture } from "../../Components/ProfilePicture";
 import { Input } from "@rneui/themed";
 import { useNavigation } from "@react-navigation/native";
@@ -97,7 +97,7 @@ export const DescriptionTime = ({ route }) => {
     blob.close();
     const url = await getDownloadURL(fileStorage);
     global.pictureDescription = url;
-    console.log(global.pictureDescription);
+    
   };
   let ModalBreak = () => {
     return (
@@ -200,8 +200,6 @@ export const DescriptionTime = ({ route }) => {
             onPress={() => {
               if (imageUserBreak != null) {
                 setModalPicture(true);
-              } else {
-                console.log("NO DEBERIA INGRESAR");
               }
             }}
           >
@@ -223,17 +221,13 @@ export const DescriptionTime = ({ route }) => {
             modalVisible={modalVisible}
             textModal={"Actualizando los cambios"}
           />
-          <ModalBreak />
-          <ModalFinish />
+
           <IconButton
             icon="camera"
             iconColor={"black"}
             size={30}
             onPress={() => chooseFile()}
           />
-        </View>
-        <View style={styles.viewTextTittle}>
-          <Text style={styles.textTittle}> REGISTRA TU DÍA: </Text>
         </View>
       </>
     );
@@ -247,8 +241,6 @@ export const DescriptionTime = ({ route }) => {
             onPress={() => {
               if (imageUserFinish != null) {
                 setModalPictureFinish(true);
-              } else {
-                console.log("NO DEBERIA INGRESAR");
               }
             }}
           >
@@ -270,17 +262,13 @@ export const DescriptionTime = ({ route }) => {
             modalVisible={modalVisible}
             textModal={"Actualizando los cambios"}
           />
-          <ModalBreak />
-          <ModalFinish />
+
           <IconButton
             icon="camera"
             iconColor={"black"}
             size={30}
             onPress={() => chooseFile()}
           />
-        </View>
-        <View style={styles.viewTextTittle}>
-          <Text style={styles.textTittle}> REGISTRA TU DÍA: </Text>
         </View>
       </>
     );
@@ -294,34 +282,70 @@ export const DescriptionTime = ({ route }) => {
   });
   return (
     <View style={styles.container}>
-      <View style={[styles.container2]}>
+      <View style={styles.container3}>
         <View style={[styles.incontainer2]}>
-          <View style={{ width: Dimensions.get("window").width / 2.3 }}>
-            <Text style={styles.textinContainer2}>BIENVENIDO</Text>
-            <Text style={styles.text2inContainer2}>
+          <View style={{ width: Dimensions.get("window").width / 2 }}>
+          <Text style={styles.textinContainer2}>
               {global.name} {global.lastName}
             </Text>
+            <Text style={styles.text2inContainer2}>{global.workStation}</Text>
+
           </View>
           <View>
             <MenuPicture colorBackground={"black"} />
           </View>
         </View>
-        <View style={styles.containerTextBlackContainer}>
-          <Text style={styles.textBlackContainer}>INGRESA UNA DESCRIPCION</Text>
-        </View>
       </View>
-      <View style={[styles.container3]}>
-        {State == "startBreak" ? <ViewBreak /> : <ViewFinish />}
-        <View style={styles.viewDescription}>
-          <Input
+
+      <View style={styles.container2}>
+        <View
+          style={{
+            paddingTop: Dimensions.get("window").height / 30,
+          }}
+        >
+          <Text style={{fontSize: Dimensions.get("window").width/25, fontWeight: "bold", color:"#3D3D3D"}}> INGRESA LA DESCRIPCIÓN DEL {DBstate == "BREAK"? "DESCANSO" : "FINAL"}</Text>
+          {State == "startBreak" ? <ViewBreak /> : <ViewFinish />}
+        </View>
+        <View
+          style={{
+            paddingTop: Dimensions.get("window").height / 30,
+          }}
+        ></View>
+        <View
+          style={{
+            width: Dimensions.get("window").width / 1.1,
+            paddingBottom: Dimensions.get("window").height / 45,
+          }}
+        >
+          <TextInput
+            label="Ingresa una descripción!"
+            mode="outlined"
             multiline
-            numberOfLines={5}
-            value={Description}
-            inputStyle={{ fontSize: 15, textAlign: "justify" }}
-            onChangeText={setDescription}
-            maxLength={255}
+            activeOutlineColor="black"
+            onChangeText={(Description) => setDescription(Description)}
+            style={{ backgroundColor: "white", fontWeight: "bold" }}
+            activeUnderlineColor="black"
+            underlineColor="black"
+            theme={{ colors: { text: "black", placeholder: "black" } }}
           />
         </View>
+        <View style={styles.viewTextInput}>
+          <View
+            style={{
+              width: Dimensions.get("window").width / 1.1,
+              paddingVertical: Dimensions.get("window").height / 45,
+            }}
+          ></View>
+        </View>
+        <View style={styles.viewTextInput}>
+          <View
+            style={{
+              width: Dimensions.get("window").width / 1.1,
+              paddingBottom: Dimensions.get("window").height / 45,
+            }}
+          ></View>
+        </View>
+        {/* BOTONES */}
         <View style={{ flexDirection: "row" }}>
           <View>
             <Button
@@ -330,11 +354,10 @@ export const DescriptionTime = ({ route }) => {
               mode="contained"
               disabled={DescriptionValidation}
               onPress={async () => {
-            
                 setModalVisible(true);
                 if (imageUserBreak != null || imageUserFinish != null) {
                   await uploadFile();
-                 await saveTimeUser(
+                  await saveTimeUser(
                     StartTime,
                     State,
                     Description,
@@ -347,7 +370,7 @@ export const DescriptionTime = ({ route }) => {
                     setDescription(null);
                     setImageUserFinish(null);
                   } else {
-                    console.log("NADA");
+                   
                     navigation.navigate("BREAKTIME");
                     setDescription(null);
                     setImageUserBreak(null);
@@ -365,7 +388,7 @@ export const DescriptionTime = ({ route }) => {
                     setDescription(null);
                     setImageUserFinish(null);
                   } else {
-                    console.log("NADA");
+                    
                     navigation.navigate("BREAKTIME");
                     setDescription(null);
                     setImageUserBreak(null);
@@ -380,7 +403,7 @@ export const DescriptionTime = ({ route }) => {
           </View>
           <View>
             <Button
-              icon="archive"
+              icon="arrow-left"
               style={styles.buttonStyleBack}
               mode="contained"
               onPress={async () => {
@@ -396,6 +419,8 @@ export const DescriptionTime = ({ route }) => {
           </View>
         </View>
       </View>
+      <ModalBreak />
+      <ModalFinish />
     </View>
   );
 };
@@ -404,45 +429,32 @@ const styles = StyleSheet.create({
   //----------------------------------------//
   container: {
     flex: 1,
-    flexDirection: "column",
+    justifyContent: "center",
     alignItems: "center",
     backgroundColor: "white",
-  },
-  //CONTAINER NEGRO Y BLANCO//
-  //----------------------------------------//
-  container2: {
-    flex: 2,
-    position: "relative",
-    backgroundColor: "#3D3D3D",
-    alignItems: "center",
-    borderBottomEndRadius: 20,
-    width: Dimensions.get("window").width,
-    borderBottomStartRadius: 20,
-    shadowOffset: {
-      width: 0,
-      height: 15,
-    },
-    shadowOpacity: 1,
-    shadowRadius: 16.0,
-    elevation: 24,
   },
   container3: {
-    flex: 2,
-    position: "relative",
-    alignItems: "center",
+    minHeight: Dimensions.get("window").height / 5,
     justifyContent: "center",
-    width: Dimensions.get("window").width / 1.15,
-    backgroundColor: "white",
-    borderRadius: 20,
-    bottom: Dimensions.get("window").height / 6,
-    minHeight: Dimensions.get("window").height / 10,
+    backgroundColor: "#3D3D3D",
+    alignItems: "center",
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height / 4.5,
+    borderBottomEndRadius: 25,
+    borderBottomStartRadius: 25,
     shadowOffset: {
       width: 0,
       height: 15,
     },
     shadowOpacity: 1,
     shadowRadius: 16.0,
-    elevation: 24,
+    shadowColor: "black",
+  },
+  container2: {
+    flex: 2,
+    alignItems: "center",
+    backgroundColor: "white",
+    width: Dimensions.get("window").width,
   },
   //----------------------------------------//
   // DENTRO DEL CONTAINER NEGRO //
@@ -453,7 +465,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     position: "relative",
     width: Dimensions.get("window").width / 1.09,
-    maxHeight: 100,
+    maxHeight: Dimensions.get("window").height / 2,
     marginTop: 50,
     marginBottom: 10,
     borderRadius: 20,
@@ -477,9 +489,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   // CALENDARIO //
-  containerTextBlackContainer: {
-    paddingTop: Dimensions.get("window").height / 60,
-  },
+
   textBlackContainer: {
     fontSize: 17,
     fontWeight: "bold",

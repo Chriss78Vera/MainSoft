@@ -15,9 +15,6 @@ export const ScreenBack = () => {
   const navigation = useNavigation();
   const [stateModal, setStateModal] = React.useState(false);
   const { seconds, minutes, hours } = useTime({ format: "24-hour" });
-  const [timeWork, setTimeWork] = React.useState(7);
-  const [name, setName] = React.useState(global.name);
-  const [lastName, setLastName] = React.useState(global.lastName);
   const [startTime, setStartTime] = React.useState();
   const [visible, setVisible] = React.useState(false);
 
@@ -54,6 +51,7 @@ export const ScreenBack = () => {
   let DateTimer;
   React.useEffect(() => {
     setStartTime(DateTimer);
+    
   }, [(DateTimer = newHours + ":" + newMinutes + ":" + newSeconds)]);
 
   // ----------------------------------------------------------------------- //
@@ -170,6 +168,7 @@ export const ScreenBack = () => {
           <Button
             mode="contained"
             color={"#6DC0D5"}
+          
             style={styles.buttonStyleWorking}
             labelStyle={styles.buttonTextStyle}
             onPress={async () => {
@@ -195,11 +194,10 @@ export const ScreenBack = () => {
           ]}
         >
           <View style={{ width: Dimensions.get("window").width / 2.3 }}>
-            <Text style={styles.textinContainer2}>BIENVENIDO</Text>
-
-            <Text style={styles.text2inContainer2}>
-              {name} {lastName}
+          <Text style={styles.textinContainer2}>
+              {global.name} {global.lastName}
             </Text>
+            <Text style={styles.text2inContainer2}>{global.workStation}</Text>
 
             <ModalReload
               modalVisible={stateModal}
@@ -216,6 +214,13 @@ export const ScreenBack = () => {
         </View>
         <View style={styles.containerTextBlackContainer}>
           <Text style={styles.textBlackContainer}>REGISTRA TU HORA!</Text>
+          <Text style={styles.textBlackContainerInformation}>
+            {global.timeToWork == "04"
+              ? "HORARIO CON PERMISO"
+              : global.timeToWork == "06"
+              ? "HORARIO MATERNO"
+              : "HORARIO NORMAL"}
+          </Text>
         </View>
       </View>
 
@@ -260,10 +265,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     width: Dimensions.get("window").width / 1.14,
+    minHeight: Dimensions.get("window").height / 15,
     backgroundColor: "white",
     borderRadius: 20,
-    bottom: Dimensions.get("window").height / 50,
-    minHeight: Dimensions.get("window").height / 11,
     shadowOffset: {
       width: 0,
       height: 15,
@@ -305,6 +309,7 @@ const styles = StyleSheet.create({
   },
   containerTextBlackContainer: {
     paddingTop: Dimensions.get("window").height / 120,
+    alignItems: "center",
   },
   containerButton: {
     position: "relative",
@@ -348,7 +353,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
   },
-
+  textBlackContainerInformation: {
+    fontSize: 15,
+    fontWeight: "bold",
+    color: "#E85D75",
+  },
+  // BOTON
   // BOTONES
   buttonStyle: {
     borderRadius: 15,

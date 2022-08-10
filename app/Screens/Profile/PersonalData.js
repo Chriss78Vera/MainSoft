@@ -128,7 +128,6 @@ export const PersonalData = ({ route }) => {
     blob.close();
     const url = await getDownloadURL(fileStorage);
     global.picture = url;
-    console.log(global.picture);
   };
   React.useEffect(() => {
     if (regexNumber.test(phoneNumber)) {
@@ -162,8 +161,8 @@ export const PersonalData = ({ route }) => {
       setValidationMother(false);
     }
     if (
-      gender != "1" &&
-      civilState != "1" &&
+      gender != "" &&
+      civilState != "" &&
       motherLastName != "" &&
       address != "" &&
       validationHouse == true &&
@@ -241,7 +240,7 @@ export const PersonalData = ({ route }) => {
         >
           <ScrollView style={styles.containerScroll}>
             {/* INFORMACION DEL USUARIO  */}
-            <Text style={styles.textTittle}> INFORMACION DEL USUARIO </Text>
+            <Text style={styles.textTittle}> INFORMACIÓN DEL USUARIO </Text>
             <View>
               <Text
                 style={{
@@ -302,7 +301,7 @@ export const PersonalData = ({ route }) => {
               </TouchableOpacity>
             </View>
             {/* INFORMACION PERSONAL */}
-            <Text style={styles.textTittle}> INFORMACION PERSONAL </Text>
+            <Text style={styles.textTittle}> INFORMACIÓN PERSONAL </Text>
             <View style={styles.viewTextInput}>
               <View style={{ paddingTop: 10 }}>
                 <Text style={styles.textInfo}> Primer </Text>
@@ -385,7 +384,7 @@ export const PersonalData = ({ route }) => {
             </View>
             <View style={styles.viewTextInput}>
               <View style={{ paddingTop: 10, paddingLeft: 10 }}>
-                <Text style={styles.textInfo}> Numero </Text>
+                <Text style={styles.textInfo}> Número </Text>
                 <Text style={styles.textInfo}> Celular: </Text>
               </View>
               <View style={{ width: Dimensions.get("window").width }}>
@@ -405,7 +404,7 @@ export const PersonalData = ({ route }) => {
             </View>
             <View style={styles.viewTextInput}>
               <View style={{ paddingTop: 10 }}>
-                <Text style={styles.textInfo}> Telefono: </Text>
+                <Text style={styles.textInfo}> Teléfono: </Text>
               </View>
               <View style={{ width: Dimensions.get("window").width }}>
                 <Input
@@ -424,7 +423,7 @@ export const PersonalData = ({ route }) => {
             </View>
             <View style={styles.viewTextInput}>
               <View style={{ paddingTop: 10 }}>
-                <Text style={styles.textInfo}> Dirreción: </Text>
+                <Text style={styles.textInfo}> Dirrección: </Text>
               </View>
               <View style={{ width: Dimensions.get("window").width }}>
                 <Input
@@ -473,11 +472,11 @@ export const PersonalData = ({ route }) => {
                   paddingLeft: 30,
                 }}
               >
-                <Text style={styles.textInfo}> Genero: </Text>
+                <Text style={styles.textInfo}> Género: </Text>
               </View>
               <View
                 style={{
-                  width: Dimensions.get("window").width / 1.5,
+                  width: Dimensions.get("window").width / 1.7,
                   maxHeight: Dimensions.get("window").height / 15,
                 }}
               >
@@ -488,7 +487,7 @@ export const PersonalData = ({ route }) => {
                   selectedValue={gender}
                   onValueChange={(itemValue, itemIndex) => setGender(itemValue)}
                 >
-                  <Picker.Item label="Selecciona la opcion:" value="1" />
+                  <Picker.Item label="Selecciona la opción:" value="" />
                   <Picker.Item label="Hombre" value="Male" />
                   <Picker.Item label="Mujer" value="Female" />
                 </Picker>
@@ -502,7 +501,7 @@ export const PersonalData = ({ route }) => {
               </View>
               <View
                 style={{
-                  width: Dimensions.get("window").width / 1.5,
+                  width: Dimensions.get("window").width / 1.7,
                   maxHeight: Dimensions.get("window").height / 15,
                 }}
               >
@@ -514,7 +513,7 @@ export const PersonalData = ({ route }) => {
                     setCivilState(itemValue)
                   }
                 >
-                  <Picker.Item label="Selecciona la opcion:" value="1" />
+                  <Picker.Item label="Selecciona la opción:" value="" />
                   <Picker.Item label="Casado" value="Married" />
                   <Picker.Item label="Divorciado" value="Divorced" />
                   <Picker.Item label="Soltero" value="Single" />
@@ -531,7 +530,7 @@ export const PersonalData = ({ route }) => {
             </Text>
           ) : (
             <Text style={{ fontSize: 15, fontWeight: "bold", color: "red" }}>
-              Datos erroneos
+              Datos Erróneos
             </Text>
           )}
         </View>
@@ -569,7 +568,8 @@ export const PersonalData = ({ route }) => {
           is24Hour={true}
           display="default"
           onChange={onChange}
-          maximumDate={new Date()}
+          maximumDate={new Date("12/31/2022")}
+          minimumDate={new Date("01/01/1960")}
         />
       )}
     </View>
@@ -596,6 +596,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#3D3D3D",
     borderBottomEndRadius: 25,
     borderBottomStartRadius: 25,
+    paddingTop: Dimensions.get("window").height / 30,
     justifyContent: "center",
     alignItems: "center",
     elevation: 24,

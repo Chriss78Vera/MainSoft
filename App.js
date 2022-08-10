@@ -93,16 +93,20 @@ const TimeData = () => {
 const HomeRegisterTime = () => {
   if (global.workState == "NOTWORKING") {
     global.navigation = "HOMETIME";
-  } else if (global.workState == "WORKING") {
+  } else if (
+    global.workState == "WORKING"
+  ) {
     if (global.stateBreak == false) {
       global.navigation = "WORKINGTIME";
     } else {
       global.navigation = "RETURNBREAK";
     }
+  } else if (global.workState == "WORKINGPERMISSIONS") {
+    global.navigation = "RETURNBREAK";
   } else if (global.workState == "BREAK") {
     global.navigation = "BREAKTIME";
-  }else{
-    global.navigation = "FINISHWORK"
+  } else {
+    global.navigation = "FINISHWORK";
   }
   return (
     <NativeStackNav.Navigator initialRouteName={global.navigation}>

@@ -24,7 +24,7 @@ export const TimerData = () => {
   const [mode, setMode] = React.useState("date");
   // DATE PICKER DATE
   const [dateDay, setDateDay] = React.useState(dateComplete());
-  const [month,setMonth] = React.useState();
+  const [month, setMonth] = React.useState();
   const [dateNotChange, setDateNotChange] = React.useState(dateComplete());
   const [date1, setDate1] = React.useState(new Date());
   const [showDay, setShowDay] = React.useState(false);
@@ -32,7 +32,7 @@ export const TimerData = () => {
   const [search, setSearch] = React.useState(false);
   let textMonth = ShowMonth(dateDay);
   let totalDay = 0;
-  let date =  new Date().getFullYear()-1
+  let date = new Date().getFullYear() - 1;
   // ESTADO
   // DATE PICKER MONTH
   const [dataTime, setDataTime] = React.useState();
@@ -41,7 +41,7 @@ export const TimerData = () => {
   }
   React.useEffect(() => {
     getTimers(setDataTime, date1);
-    getTimersMonth(setMonth,date1);
+    getTimersMonth(setMonth, date1);
   }, []);
   let ActualizacionTime = () => {
     if (change == true) {
@@ -61,11 +61,9 @@ export const TimerData = () => {
           onPress={async () => {
             setChange(true);
             getTimers(setDataTime, date1);
-            getTimersMonth(setMonth,date1)
+            getTimersMonth(setMonth, date1);
             setChange(false);
             setSearch(true);
-            
-          
           }}
         >
           Buscar
@@ -80,10 +78,6 @@ export const TimerData = () => {
             style={styles.buttonStyle}
             disabled={true}
             labelStyle={styles.buttonTextStyle}
-            onPress={async () => {
-           
-             console.log(date)
-            }}
           >
             MAS DETALLES
           </Button>
@@ -97,12 +91,10 @@ export const TimerData = () => {
             disabled={false}
             labelStyle={styles.buttonTextStyle}
             onPress={async () => {
-             navigation.navigate("TIMERMOREDATA", {
-               timeMoreData: dataTime,
-               DayEfe: date1.getDay(),
-             });
-          
-           
+              navigation.navigate("TIMERMOREDATA", {
+                timeMoreData: dataTime,
+                DayEfe: date1.getDay(),
+              });
             }}
           >
             MAS DETALLES
@@ -121,7 +113,9 @@ export const TimerData = () => {
             </View>
             <View style={{ flexDirection: "row" }}>
               <Text style={styles.textTitle}> HORAS MENSUALES: </Text>
-              <Text style={styles.textSubtitle}>{month!=null?month:"00:00:00"} HORAS</Text>
+              <Text style={styles.textSubtitle}>
+                {month != null ? month : "00:00:00"} HORAS
+              </Text>
             </View>
             <View>
               <Text style={styles.textMonthDetails}>DETALLES</Text>
@@ -132,7 +126,7 @@ export const TimerData = () => {
               <Text style={styles.textSubtitle}>0 HORAS</Text>
             </View>
             <Text style={{ fontSize: 15, color: "red", fontWeight: "bold" }}>
-              NO HAY DATOS REGISTRADOS EL DIA {date1.getDate()}
+              NO HAY DATOS REGISTRADOS EL DÍA {date1.getDate()}
             </Text>
           </>
         );
@@ -144,7 +138,9 @@ export const TimerData = () => {
             </View>
             <View style={{ flexDirection: "row" }}>
               <Text style={styles.textTitle}> HORAS MENSUALES: </Text>
-              <Text style={styles.textSubtitle}>{month} HORAS</Text>
+              <Text style={styles.textSubtitle}> {month == undefined || month == null
+                  ? "NO TIENES NINGUN REGISTRO"
+                  : month + " HORAS"}</Text>
             </View>
             <View>
               <Text style={styles.textMonthDetails}>DETALLES</Text>
@@ -153,7 +149,9 @@ export const TimerData = () => {
             <View style={{ flexDirection: "row" }}>
               <Text style={styles.textTitle}> JORNADA DIARIA: </Text>
               <Text style={styles.textSubtitle}>
-                {dataTime == null ? "0" : totalDay} HORAS
+                {totalDay == undefined || totalDay == null
+                  ? "NO TIENES NINGUN REGISTRO"
+                  : totalDay + " HORAS"}
               </Text>
             </View>
           </>
@@ -209,7 +207,7 @@ export const TimerData = () => {
             iconColor={"black"}
             size={Dimensions.get("window").width / 12}
             onPress={async () => {
-              showModeDay()
+              showModeDay();
             }}
           />
         </View>

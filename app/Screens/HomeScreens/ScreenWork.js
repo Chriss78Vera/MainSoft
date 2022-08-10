@@ -14,6 +14,7 @@ import {
   saveTimeUser,
   updateStateWork,
 } from "../../Services/TimerRegister/TimerUser"; // GUARDAR EL TIEMPO DEL EMPLEADO EN LA BASE
+
 // CODIFICACION DE LA PAGINA
 export const ScreenWork = () => {
   const navigation = useNavigation();
@@ -105,10 +106,18 @@ export const ScreenWork = () => {
                   onPress={async () => {
                     hideModal();
                     setStateModal(true); // ABRIR EL MODAL
-                    await updateStateWork("WORKING"); // ACTUALIZAR EL ESTADO EN LA BASE
                     saveTimeUser(startTime, "startWork"); // GUARDAR EL ESTADO
                     setStateModal(false); // CERRAR EL MODAL
-                    navigation.navigate("WORKINGTIME");
+                    if (
+                      global.timeToWork == "04" ||
+                      global.timeToWork == "06"
+                    ) {
+                      navigation.navigate("RETURNBREAK");
+                      await updateStateWork("WORKINGPERMISSIONS");
+                    } else {
+                      navigation.navigate("WORKINGTIME");
+                      await updateStateWork("WORKING");
+                    }
                   }}
                 >
                   CONTINUAR
@@ -162,7 +171,8 @@ export const ScreenWork = () => {
           <Text style={styles.informationText}>
             Hora de ingreso: {timeWork}:00
           </Text>
-          {hours > timeWork ? (
+          
+          {hours < timeWork ? (
             <Text style={[styles.informationText, { color: Newcolor }]}>
               Llegas Temprano!
             </Text>
@@ -196,22 +206,18 @@ export const ScreenWork = () => {
   // ----------------------------------------------------------------------- //
   return (
     <View style={styles.container}>
-      <View
-        style={[styles.container2, { shadowColor: Newcolor, minHeight: Tops }]}
-      >
+      <View style={[styles.container2, { shadowColor: Newcolor }]}>
         <View
           style={[
             styles.incontainer2,
             { shadowColor: Newcolor, borderColor: Newcolor },
           ]}
         >
-          <View style={{ width: Dimensions.get("window").width / 2.3 }}>
+          <View style={{ width: Dimensions.get("window").width / 2 }}>
             <Text style={styles.textinContainer2}>BIENVENIDO</Text>
-
             <Text style={styles.text2inContainer2}>
               {name} {lastName}
             </Text>
-
             <ModalReload
               modalVisible={stateModal}
               textModal={"Registrando el tiempo!"}
@@ -225,8 +231,16 @@ export const ScreenWork = () => {
         <View style={styles.containerCalendar}>
           <CalendarDay colors={Newcolor} />
         </View>
+
         <View style={styles.containerTextBlackContainer}>
           <Text style={styles.textBlackContainer}>REGISTRA TU HORA!</Text>
+          <Text style={styles.textBlackContainerInformation}>
+            {global.timeToWork == "04"
+              ? "HORARIO CON PERMISO"
+              : global.timeToWork == "06"
+              ? "HORARIO MATERNO"
+              : "HORARIO NORMAL"}
+          </Text>
         </View>
       </View>
 
@@ -235,8 +249,21 @@ export const ScreenWork = () => {
       </View>
       <View style={styles.containerButton}>
         <ButtonValidator />
-        {documentsValidate==true?<Text style={{textAlign: 'center', fontWeight: "bold", color: "#E85D75"}}>*Ingresa todos los documentos para poder continuar*</Text>:<></>}
+        {documentsValidate == true ? (
+          <Text
+            style={{
+              textAlign: "center",
+              fontWeight: "bold",
+              color: "#E85D75",
+            }}
+          >
+            *Ingresa todos los documentos para poder continuar*
+          </Text>
+        ) : (
+          <></>
+        )}
       </View>
+
       <ModalValidator />
     </View>
   );
@@ -272,10 +299,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     width: Dimensions.get("window").width / 1.14,
+    minHeight: Dimensions.get("window").height / 15,
     backgroundColor: "white",
     borderRadius: 20,
-    bottom: Dimensions.get("window").height / 50,
-    minHeight: Dimensions.get("window").height / 12,
     shadowOffset: {
       width: 0,
       height: 15,
@@ -312,15 +338,16 @@ const styles = StyleSheet.create({
   },
   containerCalendar: {
     flexDirection: "row",
+    marginBottom: 10,
     justifyContent: "center",
     alignItems: "center",
   },
   containerTextBlackContainer: {
-    paddingTop: Dimensions.get("window").height / 120,
+    alignItems: "center",
   },
   containerButton: {
-    position: "relative",
     alignItems: "center",
+    paddingTop: Dimensions.get("window").height / 40,
   },
   // TEXTO
   textTimer: {
@@ -361,7 +388,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
   },
-
+  textBlackContainerInformation: {
+    fontSize: 15,
+    fontWeight: "bold",
+    color: "#E85D75",
+  },
   // BOTONES
   buttonStyle: {
     borderRadius: 15,

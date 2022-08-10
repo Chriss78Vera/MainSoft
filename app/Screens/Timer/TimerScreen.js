@@ -60,7 +60,7 @@ export const TimerScreen = ({ route }) => {
     } else {
       return (
         <View style={styles.viewDescanso}>
-          <Text style={styles.textTitleBreak}> DESCRIPCION </Text>
+          <Text style={styles.textTitleBreak}> DESCRIPCIÓN </Text>
           <View style={styles.viewTimeBreak}>
             <Text style={styles.descrptionTextBreak}>{descriptionBreak}</Text>
             <View
@@ -95,7 +95,7 @@ export const TimerScreen = ({ route }) => {
     } else {
       return (
         <View style={styles.viewFin}>
-          <Text style={styles.textTitleFinsih}> DESCRIPCION FINAL </Text>
+          <Text style={styles.textTitleFinsih}> DESCRIPCIÓN FINAL </Text>
           <View style={styles.viewTimeFinish}>
             <Text style={styles.descrptionTextFinish}>{descriptionFinish}</Text>
             <View
@@ -183,7 +183,7 @@ export const TimerScreen = ({ route }) => {
             icon={(20, "arrow-left")}
             labelStyle={[styles.buttonSubtittleStyle, { color: "white" }]}
             onPress={() => {
-              navigation.goBack();
+             navigation.goBack();
             }}
           >
             VOLVER
@@ -193,10 +193,12 @@ export const TimerScreen = ({ route }) => {
         <View style={{ flexDirection: "row" }}>
           <DateTimer dayNumber={DayEfe} />
         </View>
+        {timeMoreData.permissionType == true? <Text style={styles.textSubtitlePermissions}>Dia con permiso</Text>:<></>}
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.textTitle}> JORNADA DIARIA: </Text>
           <Text style={styles.textSubtitle}>{dayTime} HORAS</Text>
         </View>
+        
       </View>
       <View style={styles.container2}>
         <ComponentView />
@@ -244,6 +246,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#2FDAA7",
     paddingVertical: Dimensions.get("window").width / 35,
+  },
+  textSubtitlePermissions: {
+    fontSize: 15,
+    fontWeight: "bold",
+    color: "#ED6A5E",
+  
   },
   buttonSubtittleStyle: {
     fontWeight: "bold",
