@@ -257,7 +257,7 @@ export const ScreenWork = () => {
               color: "#E85D75",
             }}
           >
-            *Ingresa todos los documentos para poder continuar*
+            *Ingresa todos los archivos en la pantalla del usuario para poder continuar*
           </Text>
         ) : (
           <></>

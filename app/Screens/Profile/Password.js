@@ -34,12 +34,12 @@ export const PasswordScreen = ({ route }) => {
   let Information = () => {
     return (
       <>
-        <Text style={styles.textError}>*Es muy debil</Text>
+        <Text style={styles.textError}>*La contraseña es muy débil</Text>
         <Text style={styles.textError}>
-          *Debe tener 6 caracteres entre mayuscular y minusculas
+          *Debe tener 6 caracteres entre mayúsculas y minúsculas
         </Text>
         <Text style={styles.textError}>
-          *Debe contener algun caracter especial: ! @ # $ % ^ & *
+          *Debe contener algún caracter especial: ! @ # $ % ^ & *
         </Text>
       </>
     );
@@ -178,9 +178,9 @@ export const PasswordScreen = ({ route }) => {
         </Button>
         <View style={{ paddingVertical: Dimensions.get("window").height / 50 }}>
           {active == true ? (
-            <Text style={styles.textError}>No son iguales</Text>
+            <Text style={styles.textError}> Las contraseñas no son iguales</Text>
           ) : (
-            <Text style={styles.textConfirmation}>Son iguales</Text>
+            <Text style={styles.textConfirmation}>Las contraseñas son iguales</Text>
           )}
         </View>
       </View>

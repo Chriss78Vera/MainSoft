@@ -167,7 +167,7 @@ const UserNav = () => {
           return <Ionicons name={iconName} size={25} color={color} />;
         },
         //EDICION DE LA BARRA DE MENU
-        tabBarActiveTintColor: "#6DC0D5",
+        tabBarActiveTintColor:"#6DC0D5",
         tabBarActiveBackgroundColor: "#282828",
         tabBarInactiveBackgroundColor: "#3D3D3D",
         tabBarInactiveTintColor: "white",

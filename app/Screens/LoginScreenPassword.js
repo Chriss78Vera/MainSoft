@@ -140,13 +140,13 @@ export const LoginScreenPassword = ({ route }) => {
         modalVisible={active}
         setModalVisible={setActive}
         message={"ACCESO ERRÓNEO"}
-        description={email==true? "Verifica tu correo, en las bandejas de SPAM o No deseados":"Revisa tus credenciales de acesso"}
+        description={email==true? "Verifica tu correo, en la bandeja de Spam o No deseados":"Revisa tus credenciales de acesso"}
       ></ModalInfoError>
       <ModalInfoConfirmation
         modalVisible={activeConfirmation}
         setModalVisible={setActiveConfirmation}
         message={"CORREO ENVIADO: " + emailUser}
-        description={"Revisa las bandejas de SMAP y NO DESEADOS"}
+        description={"Revisa la bandeja de Spam o No deseados"}
       ></ModalInfoConfirmation>
     </View>
   );
