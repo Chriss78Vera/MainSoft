@@ -135,7 +135,7 @@ export const TimerData = () => {
                   flexDirection: "row",
                 }}
               >
-                <Text style={styles.textMenuDia}>DIA</Text>
+                <Text style={styles.textMenuDia}>DÍA</Text>
                 <Text style={styles.textMenuInicio}>INICIO</Text>
                 <Text style={styles.textMenuFin}>FIN</Text>
                 <Text style={styles.textMenuTotal}>TOTAL</Text>
@@ -209,7 +209,7 @@ export const TimerData = () => {
             display="default"
             onChange={onChangeDay}
             maximumDate={new Date("12/31/2022")}
-            minimumDate={new Date("01/01/2022")}
+            minimumDate={new Date("07/01/2022")}
           />
         )}
       </View>
@@ -322,26 +322,27 @@ const styles = StyleSheet.create({
   },
   textMenuDia: {
     fontWeight: "bold",
-
+    fontSize:Dimensions.get("window").width /25,
     paddingHorizontal: Dimensions.get("window").width / 40,
   },
   textMenuInicio: {
     fontWeight: "bold",
-
+    fontSize:Dimensions.get("window").width /25,
     paddingHorizontal: Dimensions.get("window").width / 20,
   },
   textMenuFin: {
     fontWeight: "bold",
-
+    fontSize:Dimensions.get("window").width /25,
     paddingHorizontal: Dimensions.get("window").width / 20,
   },
   textMenuTotal: {
     fontWeight: "bold",
-
+    fontSize:Dimensions.get("window").width /25,
     paddingHorizontal: Dimensions.get("window").width / 15,
   },
   textMenuTotalMore: {
     fontWeight: "bold",
-
+    fontSize:Dimensions.get("window").width /25,
+    paddingRight: Dimensions.get("window").width / 50,
   },
 });
