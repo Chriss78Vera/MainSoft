@@ -1,4 +1,12 @@
-import { doc, setDoc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  getDoc,
+  updateDoc,
+  getDocs,
+  query,
+  collection,
+} from "firebase/firestore";
 import { getMonth } from "../../Components/Date";
 export const updateStateWork = async (state) => {
   const docRefUser = doc(global.dbCon, "/Usuarios", global.id);
@@ -58,7 +66,6 @@ export const createTask = async () => {
 };
 // SAVE TIME
 export const saveTimeUser = async (time, state, Description, Image) => {
-
   let date = new Date();
 
   const dias = [
@@ -159,49 +166,25 @@ export const saveTimeUser = async (time, state, Description, Image) => {
     };
     await updateDoc(doc(global.dbCon, "/Usuarios", global.id), finishDay);
   }
-
 };
 // TRAER DATOS
 export const getTimers = async (refreshScreen, dayNumber) => {
- 
-  let date = new Date();
-  const dias = [
-    "domingo", // 0
-    "lunes", // 1
-    "martes",
-    "miercoles",
-    "jueves",
-    "viernes",
-    "sábado",
-  ];
-  const numeroDia = dayNumber.getDay();
-  const nombreDia = dias[numeroDia].toUpperCase();
   let saveMonth =
     getMonth(dayNumber.getMonth() + 1) + "_" + dayNumber.getFullYear();
-  let saveDay;
-  if (dayNumber.getDate() >= 1 && dayNumber.getDate() <= 9) {
-    saveDay = nombreDia + "_" + "0" + dayNumber.getDate();
-  } else {
-    saveDay = nombreDia + "_" + dayNumber.getDate();
-  }
-  
-  const q = doc(
-    global.dbCon,
-    "/Usuarios/" + global.id + "/" + saveMonth + "/" + saveDay
-  );
-  const docSnap = await getDoc(q);
-  let timerInformation = [];
-  timerInformation.push(docSnap.data());
-  if (timerInformation[0] == undefined) {
-    refreshScreen(null);
-  } else {
-    refreshScreen(timerInformation[0]);
-  }
 
+  const q = query(
+    collection(global.dbCon, "/Usuarios/" + global.id + "/" + saveMonth)
+  );
+  const docSnap = await getDocs(q);
+  let timerInformation = [];
+  docSnap.forEach((doc) => {
+    timerInformation.push(doc.data());
+  });
+  refreshScreen(timerInformation)
+  console.log(timerInformation)
 };
 // TRAE DATOS DEL MES
 export const getTimersMonth = async (refreshScreen, dayNumber) => {
- 
   const monthDate =
     getMonth(dayNumber.getMonth() + 1) + "_" + dayNumber.getFullYear();
 
@@ -213,11 +196,10 @@ export const getTimersMonth = async (refreshScreen, dayNumber) => {
   let timerInformation = [];
   try {
     timerInformation = docSnap.data().totalHours;
-  }catch (error) {
-    timerInformation=0;
+  } catch (error) {
+    timerInformation = 0;
   }
-  
-  
+
   if (timerInformation == undefined) {
     refreshScreen(null);
   } else {
@@ -248,7 +230,7 @@ export const sumarHoras = async () => {
   } else {
     saveDay = nombreDia + "_" + date.getDate();
   }
- 
+
   let startWork;
   let startBreak;
   let startBack;
@@ -260,9 +242,7 @@ export const sumarHoras = async () => {
     );
     const docSnap = await getDoc(q);
     timerInformation.push(docSnap.data());
-  } catch (error) {
-   
-  }
+  } catch (error) {}
   for (let i = 0; i < timerInformation.length; i++) {
     startWork = timerInformation[i].startWork;
     startBreak = timerInformation[i].startBreak;
@@ -285,29 +265,24 @@ export const sumarHoras = async () => {
   let sec1 = Number(horaInicioArray[2]);
 
   let horaIncioaSegundos = Number(hour1 + min1 + sec1);
-  
 
   let hour2 = Number(horaBreakArray[0]) * 3600;
   let min2 = Number(horaBreakArray[1]) * 60;
   let sec2 = Number(horaBreakArray[2]);
 
   let horaBreakaSegundos = Number(hour2 + min2 + sec2);
-  
 
   let hour3 = Number(horaBackArray[0]) * 3600;
   let min3 = Number(horaBackArray[1]) * 60;
   let sec3 = Number(horaBackArray[2]);
 
   let horaBackaSegundos = Number(hour3 + min3 + sec3);
- 
 
   let hour4 = Number(horaFinishArray[0]) * 3600;
   let min4 = Number(horaFinishArray[1]) * 60;
   let sec4 = Number(horaFinishArray[2]);
 
   let horaFinishaSegundos = Number(hour4 + min4 + sec4);
-
-
 
   let restaHoraBreakInicio = horaBreakaSegundos - horaIncioaSegundos;
   let restaHorsFinishBack = horaFinishaSegundos - horaBackaSegundos;
@@ -376,7 +351,6 @@ export const sumarHoras = async () => {
 
     timerInformation = docSnap.data().totalHours;
 
- 
     let separacion = timerInformation.split(":");
     let horaMonthFinal = Number(separacion[0]) * 3600;
     let minutosMonthFinal = Number(separacion[1]) * 60;

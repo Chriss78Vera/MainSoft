@@ -95,6 +95,7 @@ export const ScreenBreak= () => {
                     setStateModal(false);
                     hideModal();
                     navigation.navigate("RETURNBREAK")
+                    global.navigation="RETURNBREAK"
                   }}
                 >
                   CONTINUAR

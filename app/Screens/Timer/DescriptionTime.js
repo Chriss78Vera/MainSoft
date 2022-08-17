@@ -300,10 +300,10 @@ export const DescriptionTime = ({ route }) => {
       <View style={styles.container2}>
         <View
           style={{
-            paddingTop: Dimensions.get("window").height / 30,
+            paddingTop: Dimensions.get("window").height / 30, marginHorizontal: Dimensions.get("window").width/10
           }}
         >
-          <Text style={{fontSize: Dimensions.get("window").width/25, fontWeight: "bold", color:"#3D3D3D"}}> INGRESA LA DESCRIPCIÓN DEL {DBstate == "BREAK"? "DESCANSO" : "FINAL"}</Text>
+          <Text style={{fontSize: Dimensions.get("window").width/25, fontWeight: "bold", color:"#3D3D3D", textAlign: "center"}}> INGRESA LA DESCRIPCIÓN DE TU JORNADA ANTES {DBstate == "BREAK"? "DEL DESCANSO" : "DE FINALIZAR TU DÍA"}</Text>
           {State == "startBreak" ? <ViewBreak /> : <ViewFinish />}
         </View>
         <View
@@ -367,11 +367,13 @@ export const DescriptionTime = ({ route }) => {
                   if (DBstate == "FINISHED") {
                     await sumarHoras();
                     navigation.navigate("FINISHWORK");
+                    global.navigation="FINISHWORK"
                     setDescription(null);
                     setImageUserFinish(null);
                   } else {
                    
                     navigation.navigate("BREAKTIME");
+                    global.navigation="BREAKTIME"
                     setDescription(null);
                     setImageUserBreak(null);
                   }

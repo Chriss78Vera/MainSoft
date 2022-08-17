@@ -3,46 +3,52 @@ import React from "react";
 import {
   View,
   Text,
+  FlatList,
   StyleSheet,
   Dimensions,
+  TouchableOpacity,
   ActivityIndicator,
+  SafeAreaView,
 } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Button, IconButton } from "react-native-paper";
 import { getAuth, signOut } from "firebase/auth";
 import { MenuPicture } from "../Components/ProfilePicture";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { dateComplete, dateMonth, ShowMonth } from "../Components/Date";
+import {
+  dateComplete,
+  dateMonth,
+  ShowMonth,
+  getMonth,
+} from "../Components/Date";
 import { getTimers, getTimersMonth } from "../Services/TimerRegister/TimerUser";
 import { ModalReload } from "../Components/Modal";
 import { DateTimer, DateTimerData } from "../Components/Calendar";
 import MonthPicker from "react-native-month-year-picker";
+import { Picker } from "@react-native-picker/picker";
+import { ListDays } from "../Components/ListDays";
 // NAVIGATIONS IMPORT
 export const TimerData = () => {
-  const navigation = useNavigation();
   // DATE PICKER MONTH
-  const [dateTmp, setDateTmp] = React.useState(dateMonth());
   const [mode, setMode] = React.useState("date");
   // DATE PICKER DATE
   const [dateDay, setDateDay] = React.useState(dateComplete());
   const [month, setMonth] = React.useState();
-  const [dateNotChange, setDateNotChange] = React.useState(dateComplete());
   const [date1, setDate1] = React.useState(new Date());
   const [showDay, setShowDay] = React.useState(false);
   const [change, setChange] = React.useState(false);
   const [search, setSearch] = React.useState(false);
+  const [dataTime, setDataTime] = React.useState();
   let textMonth = ShowMonth(dateDay);
   let totalDay = 0;
   let date = new Date().getFullYear() - 1;
   // ESTADO
   // DATE PICKER MONTH
-  const [dataTime, setDataTime] = React.useState();
+
   if (dataTime != null || dataTime != undefined) {
     totalDay = dataTime.totalDay;
   }
-  React.useEffect(() => {
-    getTimers(setDataTime, date1);
-    getTimersMonth(setMonth, date1);
-  }, []);
   let ActualizacionTime = () => {
     if (change == true) {
       return <></>;
@@ -70,37 +76,17 @@ export const TimerData = () => {
         </Button>
       );
     } else {
-      if (dataTime == null) {
-        return (
-          <Button
-            mode="contained"
-            color={"#6DC0D5"}
-            style={styles.buttonStyle}
-            disabled={true}
-            labelStyle={styles.buttonTextStyle}
-          >
-            MAS DETALLES
-          </Button>
-        );
-      } else {
-        return (
-          <Button
-            mode="contained"
-            color={"#6DC0D5"}
-            style={styles.buttonStyle}
-            disabled={false}
-            labelStyle={styles.buttonTextStyle}
-            onPress={async () => {
-              navigation.navigate("TIMERMOREDATA", {
-                timeMoreData: dataTime,
-                DayEfe: date1.getDay(),
-              });
+      return (
+        <View>
+          <FlatList
+            data={dataTime}
+            renderItem={({ item }) => {
+              return <ListDays days={item} date={date1.getDay()} />;
             }}
-          >
-            MAS DETALLES
-          </Button>
-        );
-      }
+            keyExtractor={(item) => item.id}
+          />
+        </View>
+      );
     }
   };
   let ComponenteCarga = () => {
@@ -120,14 +106,6 @@ export const TimerData = () => {
             <View>
               <Text style={styles.textMonthDetails}>DETALLES</Text>
             </View>
-            <DateTimerData dayNumber={date1.getDay()} />
-            <View style={{ flexDirection: "row" }}>
-              <Text style={styles.textTitle}> JORNADA DIARIA: </Text>
-              <Text style={styles.textSubtitle}>0 HORAS</Text>
-            </View>
-            <Text style={{ fontSize: 15, color: "red", fontWeight: "bold" }}>
-              NO HAY DATOS REGISTRADOS EL DÍA {date1.getDate()}
-            </Text>
           </>
         );
       } else {
@@ -138,21 +116,31 @@ export const TimerData = () => {
             </View>
             <View style={{ flexDirection: "row" }}>
               <Text style={styles.textTitle}> HORAS MENSUALES: </Text>
-              <Text style={styles.textSubtitle}> {month == undefined || month == null
-                  ? "NO TIENES NINGUN REGISTRO"
-                  : month + " HORAS"}</Text>
-            </View>
-            <View>
-              <Text style={styles.textMonthDetails}>DETALLES</Text>
-            </View>
-            <DateTimerData dayNumber={date1.getDay()} />
-            <View style={{ flexDirection: "row" }}>
-              <Text style={styles.textTitle}> JORNADA DIARIA: </Text>
               <Text style={styles.textSubtitle}>
-                {totalDay == undefined || totalDay == null
+                {" "}
+                {month == undefined || month == null
                   ? "NO TIENES NINGUN REGISTRO"
-                  : totalDay + " HORAS"}
+                  : month + " HORAS"}
               </Text>
+            </View>
+
+            <View style={{ alignItems: "center" }}>
+              <Text style={styles.textMonthDetails}>DETALLES</Text>
+              <View
+                style={{
+                  minWidth: Dimensions.get("window").width / 1.3,
+                  borderRadius: 7,
+                  borderColor: "#3D3D3D",
+                  borderWidth: 2,
+                  flexDirection: "row",
+                }}
+              >
+                <Text style={styles.textMenuDia}>DIA</Text>
+                <Text style={styles.textMenuInicio}>INICIO</Text>
+                <Text style={styles.textMenuFin}>FIN</Text>
+                <Text style={styles.textMenuTotal}>TOTAL</Text>
+                <Text style={styles.textMenuTotalMore}>INFO</Text>
+              </View>
             </View>
           </>
         );
@@ -173,9 +161,6 @@ export const TimerData = () => {
     setDate1(currentDate);
     let tempDate = new Date(currentDate);
     let fDate =
-      (tempDate.getDate() < 10 ? "0" : "") +
-      tempDate.getDate() +
-      "-" +
       (tempDate.getMonth() < 9 ? "0" : "") +
       (tempDate.getMonth() + 1) +
       "-" +
@@ -217,7 +202,7 @@ export const TimerData = () => {
         </View>
         {showDay && (
           <DateTimePicker
-            testID="dateTimePicker"
+            testID="dateMonthPicker"
             value={date1}
             mode={mode}
             is24Hour={true}
@@ -334,5 +319,29 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
     fontSize: 15,
+  },
+  textMenuDia: {
+    fontWeight: "bold",
+
+    paddingHorizontal: Dimensions.get("window").width / 40,
+  },
+  textMenuInicio: {
+    fontWeight: "bold",
+
+    paddingHorizontal: Dimensions.get("window").width / 20,
+  },
+  textMenuFin: {
+    fontWeight: "bold",
+
+    paddingHorizontal: Dimensions.get("window").width / 20,
+  },
+  textMenuTotal: {
+    fontWeight: "bold",
+
+    paddingHorizontal: Dimensions.get("window").width / 15,
+  },
+  textMenuTotalMore: {
+    fontWeight: "bold",
+
   },
 });

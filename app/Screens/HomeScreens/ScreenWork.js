@@ -26,7 +26,7 @@ export const ScreenWork = () => {
   const [startTime, setStartTime] = React.useState();
   const [visible, setVisible] = React.useState(false);
   const [documentsValidate, setDocumentsValidate] = React.useState(false);
-
+  const [time, setTime] = React.useState(false)
   // TEXT DEL BOTON //
   let newHours;
   let newSeconds;
@@ -65,8 +65,15 @@ export const ScreenWork = () => {
     setStartTime(DateTimer);
     if (global.documents != false) {
       setDocumentsValidate(false);
+      if(hours < timeWork){
+        setTime(true);
+      }else{
+        setTime(false);
+      }
     } else {
       setDocumentsValidate(true);
+  
+     
     }
   }, [(DateTimer = newHours + ":" + newMinutes + ":" + newSeconds)]);
 
@@ -113,9 +120,11 @@ export const ScreenWork = () => {
                       global.timeToWork == "06"
                     ) {
                       navigation.navigate("RETURNBREAK");
+                      global.navigation="RETURNBREAK"
                       await updateStateWork("WORKINGPERMISSIONS");
                     } else {
                       navigation.navigate("WORKINGTIME");
+                      global.navigation="WORKINGTIME"
                       await updateStateWork("WORKING");
                     }
                   }}
@@ -169,7 +178,7 @@ export const ScreenWork = () => {
         </View>
         <View style={[styles.containerText]}>
           <Text style={styles.informationText}>
-            Hora de ingreso: {timeWork}:00
+            Hora de ingreso: 0{timeWork}:00
           </Text>
           
           {hours < timeWork ? (
@@ -192,7 +201,7 @@ export const ScreenWork = () => {
       <Button
         mode="contained"
         color={Newcolor}
-        disabled={documentsValidate}
+        disabled={documentsValidate || time}
         style={styles.buttonStyle}
         labelStyle={styles.buttonTextStyle}
         onPress={async () => {

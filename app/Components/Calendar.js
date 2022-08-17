@@ -17,8 +17,6 @@ export const CalendarDay = (colors) => {
     const numeroDia = new Date().getDay();
     const nombreDia = dias[numeroDia];
     setDay(numeroDia);
-
-
   };
   // VALIDATION //
   React.useEffect(() => {
@@ -278,6 +276,19 @@ export const CalendarDay = (colors) => {
   );
 };
 export const DateTimer = (dayNumber) => {
+  let dateTotal = new Date();
+  let dateMonth = dateTotal.getMonth() + 1;
+  let dateYear = dateTotal.getFullYear();
+
+  let date;
+  if (dateMonth < 10) {
+    date = new Date(
+      "0" + dateMonth + "/" + dayNumber.dayNumber + "/" + dateYear
+    );
+  } else {
+    date = new Date(dateMonth + "/" + dayNumber.dayNumber + "/" + dateYear);
+  }
+
   const [day, setDay] = React.useState();
   let nuevosColores = "white";
   const calcularDia = () => {
@@ -290,17 +301,16 @@ export const DateTimer = (dayNumber) => {
       "viernes",
       "sábado",
     ];
-    const numeroDia = dayNumber.dayNumber
+    const numeroDia = date.getDay();
     const nombreDia = dias[numeroDia];
     setDay(numeroDia);
-   
   };
   // VALIDATION //
   React.useEffect(() => {
     calcularDia();
   }, []);
   let ValidateDay = () => {
-    if ((day == 0)) {
+    if (day == 0) {
       return (
         <>
           <Text style={styles.textCalendarDay}> DOMINGO </Text>
@@ -363,7 +373,7 @@ export const DateTimerData = (dayNumber) => {
       "viernes",
       "sábado",
     ];
-    const numeroDia = dayNumber.dayNumber
+    const numeroDia = dayNumber.dayNumber;
     const nombreDia = dias[numeroDia];
     setDay(numeroDia);
   };
@@ -372,7 +382,7 @@ export const DateTimerData = (dayNumber) => {
     calcularDia();
   }, []);
   let ValidateDay = () => {
-    if ((day == 0)) {
+    if (day == 0) {
       return (
         <>
           <Text style={styles.textCalendarDayData}> DOMINGO </Text>
