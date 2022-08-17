@@ -181,7 +181,6 @@ export const getTimers = async (refreshScreen, dayNumber) => {
     timerInformation.push(doc.data());
   });
   refreshScreen(timerInformation)
-  console.log(timerInformation)
 };
 // TRAE DATOS DEL MES
 export const getTimersMonth = async (refreshScreen, dayNumber) => {
