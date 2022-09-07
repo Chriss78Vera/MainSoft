@@ -3,7 +3,9 @@
 * Para poder iniciar la aplicación de manera local, se deberá ingresar los siguientes comandos en una terminal de windows: 
 
       > git clone https://github.com/Chriss78Vera/MainSoft.git
-    
+* Luego nos diriguimos a la carpeta creada del proyecto, para lo cual pondremos en el terminal `cd Mainsoft`
+* Después ejecutaremos el siguiente comando, el cual nos permite instalar las dependencias necesarias para que la aplicación móvil funciones sin problemas
+
       > npm i 
     
 * Una vez clonado el proyeto e instalado las dependecias se pocederá a cambiar las credenciales de la base de datos en la siguiente ruta
