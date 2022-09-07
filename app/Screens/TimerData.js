@@ -5,12 +5,12 @@ import {
   Text,
   FlatList,
   StyleSheet,
+  ScrollView,
   Dimensions,
   TouchableOpacity,
   ActivityIndicator,
   SafeAreaView,
 } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Button, IconButton } from "react-native-paper";
 import { getAuth, signOut } from "firebase/auth";
@@ -77,7 +77,7 @@ export const TimerData = () => {
       );
     } else {
       return (
-        <View>
+        <SafeAreaView style={styles.listCounts}>
           <FlatList
             data={dataTime}
             renderItem={({ item }) => {
@@ -85,7 +85,7 @@ export const TimerData = () => {
             }}
             keyExtractor={(item) => item.id}
           />
-        </View>
+        </SafeAreaView>
       );
     }
   };
@@ -197,9 +197,11 @@ export const TimerData = () => {
           />
         </View>
         <ActualizacionTime />
-        <View>
+
+        <ScrollView>
           <ComponenteBottom />
-        </View>
+        </ScrollView>
+
         {showDay && (
           <DateTimePicker
             testID="dateMonthPicker"
@@ -322,27 +324,27 @@ const styles = StyleSheet.create({
   },
   textMenuDia: {
     fontWeight: "bold",
-    fontSize:Dimensions.get("window").width /25,
+    fontSize: Dimensions.get("window").width / 25,
     paddingHorizontal: Dimensions.get("window").width / 40,
   },
   textMenuInicio: {
     fontWeight: "bold",
-    fontSize:Dimensions.get("window").width /25,
+    fontSize: Dimensions.get("window").width / 25,
     paddingHorizontal: Dimensions.get("window").width / 20,
   },
   textMenuFin: {
     fontWeight: "bold",
-    fontSize:Dimensions.get("window").width /25,
+    fontSize: Dimensions.get("window").width / 25,
     paddingHorizontal: Dimensions.get("window").width / 20,
   },
   textMenuTotal: {
     fontWeight: "bold",
-    fontSize:Dimensions.get("window").width /25,
+    fontSize: Dimensions.get("window").width / 25,
     paddingHorizontal: Dimensions.get("window").width / 15,
   },
   textMenuTotalMore: {
     fontWeight: "bold",
-    fontSize:Dimensions.get("window").width /25,
+    fontSize: Dimensions.get("window").width / 25,
     paddingRight: Dimensions.get("window").width / 50,
   },
 });

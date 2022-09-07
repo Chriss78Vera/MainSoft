@@ -9,49 +9,9 @@ export const ListDays = ({ days, date }) => {
 
   if (days.id == null) {
     return (
-      <ListItem
-        containerStyle={{
-          minWidth: Dimensions.get("window").width / 1.2,
-          borderRadius: 7,
-          borderColor: "#3D3D3D",
-          borderWidth: 2,
-          marginVertical: Dimensions.get("window").width / 100,
-        
-        }}
-      >
-        <ListItem.Content style={{ flexDirection: "row" }}>
-          <ListItem.Title
-            style={{
-              fontWeight: "bold",
-              fontSize:Dimensions.get("window").width /25,
-              paddingHorizontal: Dimensions.get("window").width / 20,
-              color: "#ED6A5E",
-            }}
-          >
-            00:00:00
-          </ListItem.Title>
-          <ListItem.Title
-            style={{
-              fontWeight: "bold",
-              fontSize:Dimensions.get("window").width /25,
-              paddingRight: Dimensions.get("window").width / 20,
-              color: "#6DC0D5",
-            }}
-          >
-            00:00:00
-          </ListItem.Title>
-          <ListItem.Title
-            style={{
-              fontWeight: "bold",
-              fontSize:Dimensions.get("window").width /25,
-              paddingRight: Dimensions.get("window").width / 20,
-              color: "#2FDAA7",
-            }}
-          >
-            00:00:00
-          </ListItem.Title>
-        </ListItem.Content>
-      </ListItem>
+     
+      <></>
+    
     );
   } else {
     return (
@@ -69,7 +29,7 @@ export const ListDays = ({ days, date }) => {
             style={{
               fontWeight: "bold",
               color: "black",
-              fontSize:Dimensions.get("window").width /25,
+              fontSize: Dimensions.get("window").width / 25,
               paddingLeft: Dimensions.get("window").width / 20,
             }}
           >
@@ -78,7 +38,7 @@ export const ListDays = ({ days, date }) => {
           <ListItem.Title
             style={{
               fontWeight: "bold",
-              fontSize:Dimensions.get("window").width /25,
+              fontSize: Dimensions.get("window").width / 25,
               paddingHorizontal: Dimensions.get("window").width / 20,
               color: "#ED6A5E",
             }}
@@ -88,7 +48,7 @@ export const ListDays = ({ days, date }) => {
           <ListItem.Title
             style={{
               fontWeight: "bold",
-              fontSize:Dimensions.get("window").width /25,
+              fontSize: Dimensions.get("window").width / 25,
               paddingRight: Dimensions.get("window").width / 20,
               color: "#6DC0D5",
             }}
@@ -98,7 +58,7 @@ export const ListDays = ({ days, date }) => {
           <ListItem.Title
             style={{
               fontWeight: "bold",
-              fontSize:Dimensions.get("window").width /25,
+              fontSize: Dimensions.get("window").width / 25,
               paddingRight: Dimensions.get("window").width / 20,
               color: "#2FDAA7",
             }}
@@ -114,7 +74,7 @@ export const ListDays = ({ days, date }) => {
             {days.totalDay == null ? (
               <IconButton
                 icon="arrow-right"
-                size={Dimensions.get("window").width /25}
+                size={Dimensions.get("window").width / 25}
                 disabled={true}
                 onPress={async () => {
                   navigation.navigate("TIMERMOREDATA", {
